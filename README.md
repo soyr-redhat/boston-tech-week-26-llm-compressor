@@ -1,4 +1,4 @@
-# MIT Build & Brew: LLM Quantization Workshop
+# Boston Tech Week 2026: LLM Quantization Workshop
 
 Hands-on workshop for quantizing and deploying LLMs using `llm-compressor` and `vllm`.
 
