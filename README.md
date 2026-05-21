@@ -93,12 +93,46 @@ jupyter notebook workshop_notebook.ipynb
 On **Linux with CUDA**, the script installs full dependencies (llmcompressor, vLLM).  
 On **macOS**, it installs minimal dev dependencies for reviewing materials only.
 
+## Quick Reference
+
+### Environment Setup
+```bash
+# Activate environment
+source .venv/bin/activate
+
+# Check GPU
+nvidia-smi
+
+# Verify CUDA in Python
+python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+```
+
+### Expected Results (Qwen2.5-0.5B)
+
+| Model | Size | Compression | Memory |
+|-------|------|-------------|--------|
+| FP16 (original) | ~1.0 GB | - | ~2 GB |
+| INT8 (quantized) | ~0.5 GB | ~50% | ~1.5 GB |
+| INT4 (quantized) | ~0.25 GB | ~75% | ~1 GB |
+
+### Common Commands
+```bash
+# Watch GPU memory in real-time
+watch -n 1 nvidia-smi
+
+# Start Jupyter notebook
+jupyter notebook workshop_notebook.ipynb
+
+# Install additional package
+uv pip install <package-name>
+```
+
 ## Repository Contents
 
-- `workshop_notebook.ipynb` - Main hands-on notebook
-- `scripts/` - Helper scripts for quantization and benchmarking
-- `configs/` - Sample llm-compressor configurations
-- `checkpoints/` - Pre-quantized models (backup)
+- `workshop_notebook.ipynb` - Main hands-on notebook with all exercises
+- `setup.sh` - Automated setup script
+- `requirements.txt` - Full dependencies for Linux/GPU environments
+- `requirements-dev.txt` - Minimal dependencies for local development
 
 ## Resources
 
