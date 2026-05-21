@@ -55,31 +55,6 @@ We'll use [Qwen2.5-0.5B](https://huggingface.co/Qwen/Qwen2.5-0.5B) - small enoug
    ```
 4. Open `workshop_notebook.ipynb` and follow along!
 
-### For Local Development
-
-**Note:** Full workshop requires Linux with CUDA GPUs. On macOS, only dev dependencies will be installed for viewing materials.
-
-```bash
-# Clone the repository
-git clone https://github.com/soyr-redhat/MIT-build-n-brew-llm-compressor.git
-cd MIT-build-n-brew-llm-compressor
-
-# Install uv if not already installed
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Run setup script (auto-detects platform)
-./setup.sh
-
-# Activate environment
-source .venv/bin/activate
-
-# Start Jupyter
-jupyter notebook workshop_notebook.ipynb
-```
-
-On **Linux with CUDA**, the script installs full dependencies (llmcompressor, vLLM).  
-On **macOS**, it installs minimal dev dependencies for reviewing materials only.
-
 ## Quick Reference
 
 ### Environment Setup
