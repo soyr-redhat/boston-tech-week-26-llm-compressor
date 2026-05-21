@@ -1,0 +1,25 @@
+[project]
+name = "mit-build-n-brew-llm-compressor"
+version = "0.1.0"
+description = "Workshop materials for LLM quantization with llm-compressor and vLLM"
+requires-python = ">=3.10"
+dependencies = [
+    "llmcompressor>=0.10.0",
+    "vllm>=0.6.0",
+    "transformers>=4.40.0",
+    "datasets>=2.18.0",
+    "torch>=2.1.0",
+    "accelerate>=0.27.0",
+    "sentencepiece>=0.2.0",
+    "protobuf>=4.25.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.0.0",
+    "ipykernel>=6.29.0",
+]
