@@ -41,19 +41,6 @@ We'll use [Qwen2.5-0.5B](https://huggingface.co/Qwen/Qwen2.5-0.5B) - small enoug
 - Benchmark throughput and latency
 - Analyze memory usage
 
-### Part 5: Q&A (5 min)
-
-## Prerequisites
-
-### For Workshop (Required)
-- Linux environment with CUDA-capable GPU (L40S)
-- OpenShift user account with JupyterHub access
-- Python 3.10+
-
-### For Local Development (Optional)
-- macOS/Linux with Python 3.10+
-- Dev dependencies only (no GPU required for viewing materials)
-
 ## Quick Start
 
 ### For Workshop Attendees (OpenShift/JupyterHub)
