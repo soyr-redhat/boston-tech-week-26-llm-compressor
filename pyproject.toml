@@ -1,7 +1,7 @@
 [project]
-name = "mit-build-n-brew-llm-compressor"
+name = "boston-tech-week-26-llm-compressor"
 version = "0.1.0"
-description = "Workshop materials for LLM quantization with llm-compressor and vLLM"
+description = "Boston Tech Week 2026: LLM quantization workshop with llm-compressor and vLLM"
 requires-python = ">=3.10"
 dependencies = [
     "llmcompressor>=0.10.0",
