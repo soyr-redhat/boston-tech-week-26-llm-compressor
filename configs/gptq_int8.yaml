@@ -1,0 +1,18 @@
+# GPTQ INT8 Quantization Recipe
+# Reduces weights to 8-bit integers
+# Expected compression: ~50% size reduction
+# Better quality than INT4, larger than INT4
+
+quant_stage:
+    quant_modifiers:
+        GPTQModifier:
+            sequential_update: false
+            ignore: ["lm_head"]
+            config_groups:
+                group_0:
+                    weights:
+                        num_bits: 8
+                        type: "int"
+                        symmetric: true
+                        strategy: "channel"
+                    targets: ["Linear"]
