@@ -49,8 +49,8 @@ We'll use [Qwen2.5-0.5B](https://huggingface.co/Qwen/Qwen2.5-0.5B) - small enoug
 2. Launch JupyterHub notebook
 3. Clone this repo and run setup:
    ```bash
-   git clone https://github.com/soyr-redhat/MIT-build-n-brew-llm-compressor.git
-   cd MIT-build-n-brew-llm-compressor
+   git clone https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor.git
+   cd boston-tech-week-26-llm-compressor
    ./setup.sh
    ```
 4. Open `workshop_notebook.ipynb` and follow along!
