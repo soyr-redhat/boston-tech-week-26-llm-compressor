@@ -7,10 +7,11 @@ Boston Tech Week 2026 - LLM Quantization Workshop
 import gradio as gr
 import requests
 import time
+import json
 from typing import Dict, Tuple
 
-def query_vllm(port: str, prompt: str, max_tokens: int = 100) -> Tuple[str, Dict]:
-    """Query a vLLM endpoint and return response with metrics"""
+def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
+    """Query a vLLM endpoint with streaming and yield chunks"""
     # Support both localhost:port and service:port formats
     if ':' in port:
         base_url = f"http://{port}"
@@ -33,63 +34,95 @@ def query_vllm(port: str, prompt: str, max_tokens: int = 100) -> Tuple[str, Dict
         "max_tokens": max_tokens,
         "temperature": 0.7,
         "top_p": 0.9,
+        "stream": True
     }
 
     url = f"{base_url}/v1/completions"
 
     try:
         start_time = time.time()
-        response = requests.post(url, json=payload, timeout=60)
+        response = requests.post(url, json=payload, stream=True, timeout=60)
+
+        if response.status_code != 200:
+            yield f"Error {response.status_code}: {response.text}", {}
+            return
+
+        full_text = ""
+        token_count = 0
+
+        for line in response.iter_lines():
+            if line:
+                line = line.decode('utf-8')
+                if line.startswith('data: '):
+                    data_str = line[6:]
+                    if data_str == '[DONE]':
+                        break
+                    try:
+                        data = json.loads(data_str)
+                        if 'choices' in data and len(data['choices']) > 0:
+                            delta = data['choices'][0].get('text', '')
+                            if delta:
+                                full_text += delta
+                                token_count += 1
+                                yield full_text, None
+                    except:
+                        pass
+
         elapsed = time.time() - start_time
+        metrics = {
+            "latency_ms": round(elapsed * 1000, 2),
+            "tokens": token_count,
+            "tokens_per_sec": round(token_count / elapsed, 2) if elapsed > 0 else 0,
+            "total_time": round(elapsed, 2)
+        }
 
-        if response.status_code == 200:
-            data = response.json()
-            text = data['choices'][0]['text']
-
-            metrics = {
-                "latency_ms": round(elapsed * 1000, 2),
-                "tokens": data['usage']['completion_tokens'],
-                "tokens_per_sec": round(data['usage']['completion_tokens'] / elapsed, 2),
-                "total_time": round(elapsed, 2)
-            }
-
-            return text, metrics
-        else:
-            return f"Error {response.status_code}: {response.text}", {}
+        yield full_text, metrics
 
     except requests.exceptions.ConnectionError:
         endpoint = port if ':' in port else f"localhost:{port}"
-        return f"❌ Cannot connect to {endpoint}. Is vLLM running?", {}
+        yield f"❌ Cannot connect to {endpoint}. Is vLLM running?", {}
     except Exception as e:
-        return f"❌ Error: {str(e)}", {}
+        yield f"❌ Error: {str(e)}", {}
 
 def compare_models(prompt: str, original_port: str, quantized_port: str, max_tokens: int):
-    """Compare responses from both models"""
+    """Compare responses from both models with streaming"""
 
     if not prompt.strip():
-        return "⚠️ Please enter a prompt", "", ""
+        yield "⚠️ Please enter a prompt", "", ""
+        return
 
-    # Query both models
-    orig_text, orig_metrics = query_vllm(original_port, prompt, max_tokens)
-    quant_text, quant_metrics = query_vllm(quantized_port, prompt, max_tokens)
+    orig_metrics = None
+    quant_metrics = None
 
-    # Format original model output
-    orig_result = f"**Response:**\n{orig_text}\n\n"
-    if orig_metrics:
-        orig_result += f"**Metrics:**\n"
-        orig_result += f"⏱️ Latency: {orig_metrics['latency_ms']}ms\n"
-        orig_result += f"🚀 Speed: {orig_metrics['tokens_per_sec']} tokens/sec\n"
-        orig_result += f"📊 Tokens: {orig_metrics['tokens']}"
+    # Stream original model
+    for orig_text, metrics in query_vllm_stream(original_port, prompt, max_tokens):
+        orig_result = f"**Response:**\n{orig_text}\n\n"
+        if metrics:
+            orig_metrics = metrics
+            orig_result += f"**Metrics:**\n"
+            orig_result += f"⏱️ Latency: {metrics['latency_ms']}ms\n"
+            orig_result += f"🚀 Speed: {metrics['tokens_per_sec']} tokens/sec\n"
+            orig_result += f"📊 Tokens: {metrics['tokens']}"
+        else:
+            orig_result += f"*Generating...*"
 
-    # Format quantized model output
-    quant_result = f"**Response:**\n{quant_text}\n\n"
-    if quant_metrics:
-        quant_result += f"**Metrics:**\n"
-        quant_result += f"⏱️ Latency: {quant_metrics['latency_ms']}ms\n"
-        quant_result += f"🚀 Speed: {quant_metrics['tokens_per_sec']} tokens/sec\n"
-        quant_result += f"📊 Tokens: {quant_metrics['tokens']}"
+        yield orig_result, "⏳ Waiting for original model to finish...", ""
 
-    # Comparison summary
+    # Stream quantized model
+    for quant_text, metrics in query_vllm_stream(quantized_port, prompt, max_tokens):
+        quant_result = f"**Response:**\n{quant_text}\n\n"
+        if metrics:
+            quant_metrics = metrics
+            quant_result += f"**Metrics:**\n"
+            quant_result += f"⏱️ Latency: {metrics['latency_ms']}ms\n"
+            quant_result += f"🚀 Speed: {metrics['tokens_per_sec']} tokens/sec\n"
+            quant_result += f"📊 Tokens: {metrics['tokens']}"
+        else:
+            quant_result += f"*Generating...*"
+
+        yield orig_result, quant_result, ""
+
+    # Final comparison summary
     if orig_metrics and quant_metrics:
         speedup = quant_metrics['tokens_per_sec'] / orig_metrics['tokens_per_sec']
         latency_reduction = ((orig_metrics['latency_ms'] - quant_metrics['latency_ms']) / orig_metrics['latency_ms']) * 100
@@ -111,7 +144,7 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
     else:
         summary = "⚠️ Could not generate comparison (one or both models failed to respond)"
 
-    return orig_result, quant_result, summary
+    yield orig_result, quant_result, summary
 
 # Gradio UI
 with gr.Blocks(title="vLLM Model Comparison", theme=gr.themes.Soft()) as demo:
