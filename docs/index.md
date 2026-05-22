@@ -8,7 +8,7 @@ title: Home
 
 Welcome to the hands-on workshop on LLM quantization and performance benchmarking!
 
-## 🚀 Quick Links
+## Quick Links
 
 ### For Participants
 - **[Quick Start Guide](quick-start)** - Get benchmarking in 2 minutes
@@ -19,7 +19,7 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 - **[Instructor Walkthrough](instructor-guide)** - Step-by-step teaching guide
 - **[Cluster Status](cluster-status)** - Infrastructure and management
 
-## 📊 Workshop Overview
+## Workshop Overview
 
 **Duration:** 60 minutes  
 **Format:** Instructor demo (30 min) + Hands-on benchmarking (30 min)
@@ -34,7 +34,7 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 - Benchmark real production endpoints
 - Compare throughput, latency, and quality
 
-## 🔧 What You'll Learn
+## What You'll Learn
 
 1. **Model Quantization Fundamentals**
    - FP16, INT8, INT4, FP8 precision formats
@@ -51,14 +51,14 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
    - Measure actual speedup (1.5-2x typical)
    - Understand quality vs performance balance
 
-## 🎯 Prerequisites
+## Prerequisites
 
 - **Laptop** with internet access
 - **Python 3.9+** installed
 - **Terminal/Command Prompt** access
 - No GPU or cluster access required!
 
-## 📦 Setup (Before Workshop)
+## Setup (Before Workshop)
 
 ```bash
 # Install guidellm (5 seconds)
@@ -70,7 +70,7 @@ guidellm --version
 
 That's it! The vLLM models are already running in the cloud for you.
 
-## 🌐 Live Infrastructure
+## Live Infrastructure
 
 ### Model Endpoints (Public)
 - **Original Model (FP16):** https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
@@ -82,7 +82,7 @@ That's it! The vLLM models are already running in the cloud for you.
 - Real-time metrics
 - Everforest theme
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -104,21 +104,21 @@ That's it! The vLLM models are already running in the cloud for you.
               OpenShift Cluster
 ```
 
-## 📚 Resources
+## Resources
 
 - **vLLM Documentation:** [docs.vllm.ai](https://docs.vllm.ai/)
 - **guidellm GitHub:** [neuralmagic/guidellm](https://github.com/neuralmagic/guidellm)
 - **LLM Compressor:** [vllm-project/llm-compressor](https://github.com/vllm-project/llm-compressor)
 - **RedHat AI Models:** [huggingface.co/RedHatAI](https://huggingface.co/RedHatAI)
 
-## 🎓 After the Workshop
+## After the Workshop
 
 - Quantize your own models with `llm-compressor`
 - Deploy in production with vLLM
 - Experiment with INT8, FP8, structured pruning
 - Join the discussion in Boston Tech Week Slack
 
-## 🤝 Questions?
+## Questions?
 
 - Raise your hand during the workshop
 - Ask in Boston Tech Week Slack

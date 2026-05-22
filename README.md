@@ -6,12 +6,12 @@
 
 ---
 
-## 🚀 Quick Links
+## Quick Links
 
-- **📖 Workshop Documentation:** [WORKSHOP_GUIDE.md](WORKSHOP_GUIDE.md)
-- **🎯 Live Comparison UI:** https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
-- **⚡ Original API:** `https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1`
-- **⚡ Quantized API:** `https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1`
+- **Workshop Documentation:** [WORKSHOP_GUIDE.md](WORKSHOP_GUIDE.md)
+- **Live Comparison UI:** https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+- **Original API:** `https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1`
+- **Quantized API:** `https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1`
 
 ---
 
@@ -62,7 +62,7 @@ guidellm \
   --request-count 10
 ```
 
-**📚 Full Guide:** [WORKSHOP_GUIDE.md](WORKSHOP_GUIDE.md) | [Quick Start](QUICK_START.md)
+**Full Guide:** [WORKSHOP_GUIDE.md](WORKSHOP_GUIDE.md) | [Quick Start](QUICK_START.md)
 
 ---
 
@@ -87,7 +87,7 @@ open https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 2. **Hands-On:** Guide participants through guidellm installation and benchmarking
 3. **Discussion:** Review metrics and discuss production considerations
 
-**📖 Full Walkthrough:** [INSTRUCTOR_GUIDE.md](INSTRUCTOR_GUIDE.md)
+**Full Walkthrough:** [INSTRUCTOR_GUIDE.md](INSTRUCTOR_GUIDE.md)
 
 ---
 
