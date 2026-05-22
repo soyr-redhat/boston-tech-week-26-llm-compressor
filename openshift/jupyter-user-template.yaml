@@ -367,8 +367,8 @@ objects:
           - name: RESTARTABLE
             value: "yes"
           volumeMounts:
-          - name: notebooks
-            mountPath: /home/jovyan/work
+          - name: home
+            mountPath: /home/jovyan
           - name: workshop-notebook
             mountPath: /home/jovyan/workshop_notebook.ipynb
             subPath: workshop_notebook.ipynb
@@ -380,8 +380,8 @@ objects:
               memory: "4Gi"
               cpu: "1"
         volumes:
-        - name: notebooks
-          emptyDir: {}
+        - name: home
+          emptyDir: {}  # Writable home directory
         - name: workshop-notebook
           configMap:
             name: workshop-notebook-${USER_ID}
