@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Terminal-Style vLLM Model Comparison
+vLLM Model Comparison - Everforest Theme
 Boston Tech Week 2026 - LLM Quantization Workshop
 """
 
@@ -11,189 +11,308 @@ import json
 import threading
 from typing import Dict, Tuple
 
-# Terminal-style custom CSS with retro CRT phosphor aesthetic
-TERMINAL_CSS = """
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+# Everforest-inspired CSS matching nvim config
+EVERFOREST_CSS = """
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
 :root {
-    --phosphor-green: #00ff41;
-    --phosphor-dim: #00cc33;
-    --screen-bg: #0a0e0a;
-    --terminal-bg: #0d1117;
-    --cursor-color: #00ff41;
+    /* Everforest Medium Dark palette */
+    --bg0: #2f383e;
+    --bg1: #374247;
+    --bg2: #404c51;
+    --bg3: #4a555b;
+    --bg4: #525c62;
+    --bg-red: #4c3743;
+    --bg-visual: #503946;
+    --bg-yellow: #4d4c43;
+    --bg-green: #3c4841;
+    --bg-blue: #384b55;
+
+    --fg: #d3c6aa;
+    --red: #e67e80;
+    --orange: #e69875;
+    --yellow: #dbbc7f;
+    --green: #a7c080;
+    --aqua: #83c092;
+    --blue: #7fbbb3;
+    --purple: #d699b6;
+    --grey0: #7a8478;
+    --grey1: #859289;
+    --grey2: #9da9a0;
+
+    --statusline1: #a7c080;
+    --statusline2: #d3c6aa;
+    --statusline3: #e67e80;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body, .gradio-container {
-    background: var(--screen-bg) !important;
-    font-family: 'JetBrains Mono', 'Courier New', monospace !important;
-    color: var(--phosphor-green) !important;
+    background: var(--bg0) !important;
+    font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif !important;
+    color: var(--fg) !important;
+    line-height: 1.6;
 }
 
-/* CRT screen effect */
-.gradio-container::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.15),
-        rgba(0, 0, 0, 0.15) 1px,
-        transparent 1px,
-        transparent 2px
-    );
-    pointer-events: none;
-    z-index: 1000;
-}
-
-/* Phosphor glow effect */
-.gradio-container::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 255, 65, 0.03) 100%);
-    pointer-events: none;
-    z-index: 999;
-}
-
-/* Main container styling */
+/* Main container */
 #component-0, .contain, .wrap {
-    background: var(--terminal-bg) !important;
-    border: 2px solid var(--phosphor-dim) !important;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.3), inset 0 0 30px rgba(0, 255, 65, 0.05) !important;
-    border-radius: 8px !important;
+    background: var(--bg0) !important;
+    border: 1px solid var(--bg3) !important;
+    border-radius: 6px !important;
+    padding: 24px !important;
 }
 
-/* Text elements */
-.prose, .markdown, p, h1, h2, h3, h4, label, span {
-    color: var(--phosphor-green) !important;
-    font-family: 'JetBrains Mono', monospace !important;
-    text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--green) !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    font-weight: 600 !important;
+    margin-bottom: 12px !important;
+    letter-spacing: -0.02em;
 }
 
 h1 {
-    font-size: 1.8rem !important;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    border-bottom: 2px solid var(--phosphor-dim);
-    padding-bottom: 10px;
-    margin-bottom: 20px !important;
+    font-size: 1.75rem !important;
+    color: var(--statusline1) !important;
+    border-bottom: 1px solid var(--bg3);
+    padding-bottom: 12px;
+    margin-bottom: 24px !important;
 }
 
-h2, h3 {
-    color: var(--phosphor-green) !important;
-    font-weight: 700 !important;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+h2 {
+    font-size: 1.25rem !important;
+    color: var(--aqua) !important;
+}
+
+h3 {
+    font-size: 1.1rem !important;
+    color: var(--blue) !important;
+}
+
+/* Text and paragraphs */
+p, span, label, .prose {
+    color: var(--fg) !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+}
+
+/* Code and monospace */
+code, pre, .input-text {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace !important;
+    background: var(--bg1) !important;
+    color: var(--fg) !important;
+}
+
+pre {
+    border: 1px solid var(--bg3) !important;
+    border-radius: 4px !important;
+    padding: 12px !important;
+}
+
+code {
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
 }
 
 /* Input fields */
-input, textarea, .input-text {
-    background: #000 !important;
-    border: 1px solid var(--phosphor-dim) !important;
-    color: var(--phosphor-green) !important;
-    font-family: 'JetBrains Mono', monospace !important;
-    box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.1) !important;
-    caret-color: var(--cursor-color);
+input[type="text"], textarea, .input-text {
+    background: var(--bg1) !important;
+    border: 1px solid var(--bg3) !important;
+    border-radius: 4px !important;
+    color: var(--fg) !important;
+    padding: 8px 12px !important;
+    transition: all 0.2s ease;
 }
 
 input:focus, textarea:focus {
-    border-color: var(--phosphor-green) !important;
-    box-shadow: 0 0 10px rgba(0, 255, 65, 0.4) !important;
+    border-color: var(--green) !important;
     outline: none !important;
+    box-shadow: 0 0 0 2px rgba(167, 192, 128, 0.15) !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--grey1) !important;
 }
 
 /* Buttons */
 button {
-    background: var(--terminal-bg) !important;
-    border: 2px solid var(--phosphor-green) !important;
-    color: var(--phosphor-green) !important;
-    font-family: 'JetBrains Mono', monospace !important;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 700;
-    transition: all 0.2s;
-    box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+    background: var(--bg-green) !important;
+    border: 1px solid var(--green) !important;
+    color: var(--green) !important;
+    font-family: 'IBM Plex Sans', sans-serif !important;
+    font-weight: 500 !important;
+    padding: 10px 20px !important;
+    border-radius: 4px !important;
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
 button:hover {
-    background: var(--phosphor-green) !important;
-    color: #000 !important;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
-    transform: translateY(-2px);
+    background: var(--green) !important;
+    color: var(--bg0) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(167, 192, 128, 0.2);
 }
 
-/* Output boxes */
-.markdown-output, .output-markdown {
-    background: #000 !important;
-    border: 1px solid var(--phosphor-dim) !important;
-    padding: 15px !important;
-    font-family: 'JetBrains Mono', monospace !important;
-    color: var(--phosphor-green) !important;
+button:active {
+    transform: translateY(0);
+}
+
+/* Primary button variant */
+.primary {
+    background: var(--green) !important;
+    color: var(--bg0) !important;
+    border-color: var(--green) !important;
+}
+
+.primary:hover {
+    background: var(--aqua) !important;
+    border-color: var(--aqua) !important;
+}
+
+/* Output areas */
+.markdown-output, .output-markdown, .prose {
+    background: var(--bg1) !important;
+    border: 1px solid var(--bg3) !important;
+    border-radius: 4px !important;
+    padding: 16px !important;
+    color: var(--fg) !important;
     min-height: 200px;
-    box-shadow: inset 0 0 15px rgba(0, 255, 65, 0.1);
 }
 
 /* Slider */
 input[type="range"] {
-    accent-color: var(--phosphor-green);
+    accent-color: var(--green);
 }
 
-/* Code blocks */
-code, pre {
-    background: #000 !important;
-    color: var(--phosphor-green) !important;
-    border: 1px solid var(--phosphor-dim) !important;
-    font-family: 'JetBrains Mono', monospace !important;
+.slider-container {
+    background: var(--bg1) !important;
+    border-radius: 4px !important;
+    padding: 12px !important;
 }
 
 /* Tables */
 table {
     border-collapse: collapse;
-    color: var(--phosphor-green) !important;
+    width: 100%;
+    margin: 12px 0;
 }
 
 th, td {
-    border: 1px solid var(--phosphor-dim) !important;
-    padding: 8px !important;
-    color: var(--phosphor-green) !important;
+    border: 1px solid var(--bg3) !important;
+    padding: 10px !important;
+    text-align: left;
+    color: var(--fg) !important;
 }
 
 th {
-    background: rgba(0, 255, 65, 0.1) !important;
-    font-weight: 700;
+    background: var(--bg2) !important;
+    color: var(--green) !important;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background: var(--bg1) !important;
+}
+
+/* Status indicators */
+strong {
+    color: var(--yellow) !important;
+    font-weight: 600;
+}
+
+/* Links */
+a {
+    color: var(--blue) !important;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+a:hover {
+    border-bottom-color: var(--blue);
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 12px;
+    height: 12px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #000;
+    background: var(--bg1);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--phosphor-dim);
-    border: 1px solid var(--phosphor-green);
+    background: var(--bg3);
+    border-radius: 6px;
+    border: 2px solid var(--bg1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--phosphor-green);
+    background: var(--bg4);
 }
 
-/* Remove emojis effect for cleaner terminal look */
-.prose strong::before {
-    content: "[" !important;
+/* Column spacing */
+.gr-column {
+    padding: 12px !important;
 }
 
-.prose strong::after {
-    content: "]" !important;
+/* Remove default Gradio styling */
+.gr-box {
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Info boxes */
+.info-box {
+    background: var(--bg-blue) !important;
+    border-left: 3px solid var(--blue) !important;
+    padding: 12px 16px !important;
+    border-radius: 4px !important;
+    margin: 12px 0 !important;
+}
+
+/* Warning boxes */
+.warning-box {
+    background: var(--bg-yellow) !important;
+    border-left: 3px solid var(--yellow) !important;
+}
+
+/* Success boxes */
+.success-box {
+    background: var(--bg-green) !important;
+    border-left: 3px solid var(--green) !important;
+}
+
+/* Error boxes */
+.error-box {
+    background: var(--bg-red) !important;
+    border-left: 3px solid var(--red) !important;
+}
+
+/* Horizontal rule */
+hr {
+    border: none;
+    border-top: 1px solid var(--bg3) !important;
+    margin: 24px 0 !important;
+}
+
+/* Labels */
+label {
+    color: var(--grey2) !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    margin-bottom: 6px !important;
+    display: block;
+}
+
+/* Examples */
+.examples {
+    background: var(--bg1) !important;
+    border: 1px solid var(--bg3) !important;
+    border-radius: 4px !important;
 }
 """
 
@@ -229,7 +348,7 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
         response = requests.post(url, json=payload, stream=True, timeout=60)
 
         if response.status_code != 200:
-            yield f"[ERROR {response.status_code}] {response.text}", {}
+            yield f"Error {response.status_code}: {response.text}", {}
             return
 
         full_text = ""
@@ -265,27 +384,27 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
 
     except requests.exceptions.ConnectionError:
         endpoint = port if ':' in port else f"localhost:{port}"
-        yield f"[CONNECTION ERROR] Cannot reach {endpoint}", {}
+        yield f"Connection error: Cannot reach {endpoint}", {}
     except Exception as e:
-        yield f"[ERROR] {str(e)}", {}
+        yield f"Error: {str(e)}", {}
 
-def format_terminal_output(text: str, metrics: dict = None, status: str = "RUNNING"):
-    """Format output in terminal style with ASCII box drawing"""
+def format_output(text: str, metrics: dict = None, status: str = "running"):
+    """Format output with metrics"""
     if not text:
-        return f"[{status}] Awaiting response..."
+        return f"*Status: {status}... waiting for response*"
 
-    output = f"```\n{text}\n```\n"
+    output = f"{text}\n\n"
 
     if metrics:
-        output += f"\n╔═══════════════════════════════════════╗\n"
-        output += f"║ PERFORMANCE METRICS                   ║\n"
-        output += f"╠═══════════════════════════════════════╣\n"
-        output += f"║ LATENCY     : {metrics['latency_ms']:>8} ms          ║\n"
-        output += f"║ THROUGHPUT  : {metrics['tokens_per_sec']:>8} tok/s       ║\n"
-        output += f"║ TOKENS      : {metrics['tokens']:>8}              ║\n"
-        output += f"╚═══════════════════════════════════════╝\n"
+        output += f"---\n\n"
+        output += f"**Performance Metrics**\n\n"
+        output += f"| Metric | Value |\n"
+        output += f"|--------|-------|\n"
+        output += f"| Latency | {metrics['latency_ms']} ms |\n"
+        output += f"| Throughput | {metrics['tokens_per_sec']} tokens/sec |\n"
+        output += f"| Tokens | {metrics['tokens']} |\n"
     else:
-        output += f"\n[{status}] Generating...\n"
+        output += f"\n*{status}...*\n"
 
     return output
 
@@ -293,7 +412,7 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
     """Compare responses from both models with concurrent streaming"""
 
     if not prompt.strip():
-        yield "[ERROR] Prompt required", "", ""
+        yield "Please enter a prompt", "", ""
         return
 
     state = {
@@ -326,15 +445,15 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
     quant_thread.start()
 
     while not (state['orig_done'] and state['quant_done']):
-        orig_result = format_terminal_output(
+        orig_result = format_output(
             state['orig_text'],
             state['orig_metrics'],
-            "COMPLETE" if state['orig_done'] else "RUNNING"
+            "complete" if state['orig_done'] else "generating"
         )
-        quant_result = format_terminal_output(
+        quant_result = format_output(
             state['quant_text'],
             state['quant_metrics'],
-            "COMPLETE" if state['quant_done'] else "RUNNING"
+            "complete" if state['quant_done'] else "generating"
         )
 
         yield orig_result, quant_result, ""
@@ -343,61 +462,51 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
     orig_thread.join()
     quant_thread.join()
 
-    orig_result = format_terminal_output(state['orig_text'], state['orig_metrics'], "COMPLETE")
-    quant_result = format_terminal_output(state['quant_text'], state['quant_metrics'], "COMPLETE")
+    orig_result = format_output(state['orig_text'], state['orig_metrics'], "complete")
+    quant_result = format_output(state['quant_text'], state['quant_metrics'], "complete")
 
     if state['orig_metrics'] and state['quant_metrics']:
         speedup = state['quant_metrics']['tokens_per_sec'] / state['orig_metrics']['tokens_per_sec']
         latency_reduction = ((state['orig_metrics']['latency_ms'] - state['quant_metrics']['latency_ms']) / state['orig_metrics']['latency_ms']) * 100
 
         summary = f"""
-```
-╔═══════════════════════════════════════════════════════════════════╗
-║                    BENCHMARK COMPARISON RESULTS                   ║
-╠═══════════════════════════════════════════════════════════════════╣
-║                                                                   ║
-║  SPEEDUP FACTOR      : {speedup:.2f}x                                        ║
-║  LATENCY IMPROVEMENT : {abs(latency_reduction):.1f}% {'faster' if latency_reduction > 0 else 'slower'}                                  ║
-║                                                                   ║
-╠═══════════════════════════════════════════════════════════════════╣
-║  METRIC       │ ORIGINAL (FP16) │ QUANTIZED (INT4) │ DIFFERENCE  ║
-╠═══════════════════════════════════════════════════════════════════╣
-║  Latency      │ {state['orig_metrics']['latency_ms']:>8} ms     │ {state['quant_metrics']['latency_ms']:>9} ms    │ {abs(latency_reduction):>6.1f}%     ║
-║  Throughput   │ {state['orig_metrics']['tokens_per_sec']:>8} tok/s  │ {state['quant_metrics']['tokens_per_sec']:>9} tok/s │ {speedup:>6.2f}x     ║
-║  Tokens       │ {state['orig_metrics']['tokens']:>8}        │ {state['quant_metrics']['tokens']:>9}       │   SAME      ║
-╚═══════════════════════════════════════════════════════════════════╝
-```
+## Benchmark Results
 
-**ANALYSIS:** Quantization achieved **{speedup:.2f}x** throughput improvement with **{abs(latency_reduction):.1f}%** latency reduction.
-Compare output quality above to assess any degradation from compression.
+**Performance Improvement:** {speedup:.2f}x speedup · {abs(latency_reduction):.1f}% {'faster' if latency_reduction > 0 else 'slower'} latency
+
+| Metric | Original (FP16) | Quantized (INT4) | Improvement |
+|--------|----------------|------------------|-------------|
+| Latency | {state['orig_metrics']['latency_ms']} ms | {state['quant_metrics']['latency_ms']} ms | {abs(latency_reduction):.1f}% |
+| Throughput | {state['orig_metrics']['tokens_per_sec']} tok/s | {state['quant_metrics']['tokens_per_sec']} tok/s | {speedup:.2f}x |
+| Tokens Generated | {state['orig_metrics']['tokens']} | {state['quant_metrics']['tokens']} | same |
+
+Compare the response quality above to evaluate any degradation from quantization.
 """
     else:
-        summary = "[ERROR] Comparison failed - one or both models did not respond"
+        summary = "⚠️ Comparison failed - one or both models did not respond"
 
     yield orig_result, quant_result, summary
 
-# Terminal-themed Gradio UI
-with gr.Blocks(css=TERMINAL_CSS, title="LLM QUANTIZATION TERMINAL") as demo:
+# Gradio UI with Everforest theme
+with gr.Blocks(css=EVERFOREST_CSS, title="LLM Quantization Comparison") as demo:
     gr.Markdown("""
-    # ┌─ BOSTON TECH WEEK 2026 ─────────────────────────────────┐
-    # │ LLM QUANTIZATION BENCHMARK TERMINAL                     │
-    # └─────────────────────────────────────────────────────────┘
+    # LLM Quantization Comparison
 
-    **SYSTEM:** Side-by-side model comparison interface
-    **MODE:** Concurrent execution with real-time metrics
-    **MODELS:** FP16 baseline vs INT4 quantized
+    Compare original vs quantized model performance side-by-side with concurrent execution.
+
+    **Boston Tech Week 2026** · Model Compression Workshop
     """)
 
     with gr.Row():
         with gr.Column():
-            gr.Markdown("### ┌─ SERVER CONFIGURATION ─┐")
+            gr.Markdown("### Configuration")
             original_port = gr.Textbox(
-                label="[ORIGINAL] Model Endpoint",
+                label="Original Model Endpoint",
                 value="vllm-original:8080",
                 placeholder="hostname:port"
             )
             quantized_port = gr.Textbox(
-                label="[QUANTIZED] Model Endpoint",
+                label="Quantized Model Endpoint",
                 value="vllm-quantized:8081",
                 placeholder="hostname:port"
             )
@@ -409,27 +518,27 @@ with gr.Blocks(css=TERMINAL_CSS, title="LLM QUANTIZATION TERMINAL") as demo:
                 label="Max Tokens",
             )
 
-    gr.Markdown("### ┌─ PROMPT INPUT ─┐")
+    gr.Markdown("### Prompt")
     prompt = gr.Textbox(
-        label="[PROMPT]",
-        placeholder="> Enter your prompt here...",
+        label="Enter your prompt",
+        placeholder="Type your prompt here or select an example below...",
         lines=3
     )
 
-    compare_btn = gr.Button("[ EXECUTE BENCHMARK ]", variant="primary", size="lg")
+    compare_btn = gr.Button("Compare Models", variant="primary", size="lg")
 
-    gr.Markdown("```\n────────────────────────────────────────────────────────────────\n```")
+    gr.Markdown("---")
 
     with gr.Row():
         with gr.Column():
-            gr.Markdown("### ┌─ ORIGINAL MODEL (FP16) ─┐")
+            gr.Markdown("### Original Model (FP16)")
             original_output = gr.Markdown()
 
         with gr.Column():
-            gr.Markdown("### ┌─ QUANTIZED MODEL (INT4) ─┐")
+            gr.Markdown("### Quantized Model (INT4)")
             quantized_output = gr.Markdown()
 
-    gr.Markdown("```\n────────────────────────────────────────────────────────────────\n```")
+    gr.Markdown("---")
 
     comparison_summary = gr.Markdown()
 
@@ -451,18 +560,21 @@ with gr.Blocks(css=TERMINAL_CSS, title="LLM QUANTIZATION TERMINAL") as demo:
     )
 
     gr.Markdown("""
-```
-────────────────────────────────────────────────────────────────
- USAGE INSTRUCTIONS
-────────────────────────────────────────────────────────────────
- 1. Configure vLLM server endpoints above
- 2. Enter prompt or select example
- 3. Execute benchmark for concurrent comparison
- 4. Analyze throughput delta and quality metrics
-────────────────────────────────────────────────────────────────
- SYSTEM STATUS: READY
-────────────────────────────────────────────────────────────────
-```
+---
+
+### Usage
+
+1. Configure vLLM endpoints above (defaults are pre-set)
+2. Enter a prompt or select an example
+3. Click "Compare Models" to run both concurrently
+4. Observe real-time generation and metrics
+
+### What to Look For
+
+- **Throughput gains** – Quantized models typically achieve 1.5-2x speedup
+- **Latency reduction** – 30-50% faster response times
+- **Output quality** – Compare responses to assess any degradation
+- **Memory efficiency** – INT4 uses ~75% less VRAM than FP16
     """)
 
 if __name__ == "__main__":
