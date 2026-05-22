@@ -8,6 +8,8 @@ from flask import Flask, render_template_string, redirect, session, jsonify
 import json
 import os
 import subprocess
+import random
+import string
 from pathlib import Path
 from threading import Lock
 
@@ -32,6 +34,7 @@ def load_assignments():
     return {
         'next_available': 1,
         'assignments': {},  # session_id -> user_number
+        'suffixes': {},  # user_number -> random suffix
         'used': []  # list of used user numbers
     }
 
@@ -40,7 +43,7 @@ def save_assignments(state):
     with open(ASSIGNMENTS_FILE, 'w') as f:
         json.dump(state, f, indent=2)
 
-def provision_user(user_number):
+def provision_user(user_number, suffix):
     """Provision a new JupyterLab instance for user"""
     user_id = f'user{user_number}'
 
@@ -49,6 +52,7 @@ def provision_user(user_number):
         cmd = f"""
         oc process -f /app/jupyter-user-template.yaml \
           -p USER_ID={user_id} \
+          -p SUFFIX={suffix} \
           --namespace={NAMESPACE} \
           | oc apply -n {NAMESPACE} -f -
         """
@@ -65,7 +69,7 @@ def provision_user(user_number):
             print(f"Failed to provision {user_id}: {result.stderr}")
             return False
 
-        print(f"Auto-provisioned {user_id}")
+        print(f"Auto-provisioned {user_id}-{suffix}")
         return True
 
     except Exception as e:
@@ -73,32 +77,38 @@ def provision_user(user_number):
         return False
 
 def get_assignment(session_id):
-    """Get or create assignment for this session"""
+    """Get or create assignment for this session, returns (user_number, suffix) or (None, None)"""
     with assignments_lock:
         state = load_assignments()
 
         # Check if this session already has an assignment
         if session_id in state['assignments']:
-            return state['assignments'][session_id]
+            user_number = state['assignments'][session_id]
+            suffix = state['suffixes'].get(str(user_number))
+            return user_number, suffix
 
         # Find next available user
         next_user = state['next_available']
 
+        # Generate random 10-character suffix (lowercase + digits)
+        suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
+
         # Auto-provision if we've exceeded pre-provisioned capacity
         if next_user > TOTAL_USERS and AUTO_PROVISION:
             print(f"Capacity exceeded ({TOTAL_USERS}), auto-provisioning user{next_user}...")
-            if not provision_user(next_user):
-                return None  # Failed to provision
+            if not provision_user(next_user, suffix):
+                return None, None  # Failed to provision
         elif next_user > TOTAL_USERS:
-            return None  # No auto-provisioning, workshop full
+            return None, None  # No auto-provisioning, workshop full
 
         # Assign user
         state['assignments'][session_id] = next_user
+        state['suffixes'][str(next_user)] = suffix
         state['used'].append(next_user)
         state['next_available'] = next_user + 1
 
         save_assignments(state)
-        return next_user
+        return next_user, suffix
 
 LANDING_PAGE = """
 <!DOCTYPE html>
@@ -458,7 +468,7 @@ def assign():
     session_id = session['session_id']
 
     # Get assignment
-    user_number = get_assignment(session_id)
+    user_number, suffix = get_assignment(session_id)
 
     if user_number is None:
         # Workshop is full
@@ -467,8 +477,8 @@ def assign():
     # Store in session for easy retrieval
     session['user_number'] = user_number
 
-    # Build workspace URL
-    workspace_url = BASE_URL.format(user_id=f'user{user_number}')
+    # Build workspace URL with suffix
+    workspace_url = BASE_URL.format(user_id=f'user{user_number}-{suffix}')
 
     return render_template_string(
         ASSIGNED_PAGE,

@@ -12,7 +12,7 @@ objects:
 - apiVersion: v1
   kind: ConfigMap
   metadata:
-    name: workshop-notebook-${USER_ID}
+    name: workshop-notebook-${USER_ID}-${SUFFIX}
   data:
     workshop_notebook.ipynb: |
       {
@@ -333,7 +333,7 @@ objects:
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: jupyter-${USER_ID}
+    name: jupyter-${USER_ID}-${SUFFIX}
     labels:
       app: jupyter
       user: ${USER_ID}
@@ -390,13 +390,13 @@ objects:
           emptyDir: {}  # Writable home directory
         - name: workshop-notebook
           configMap:
-            name: workshop-notebook-${USER_ID}
+            name: workshop-notebook-${USER_ID}-${SUFFIX}
 
 # Service for this user's JupyterLab
 - apiVersion: v1
   kind: Service
   metadata:
-    name: jupyter-${USER_ID}
+    name: jupyter-${USER_ID}-${SUFFIX}
     labels:
       app: jupyter
       user: ${USER_ID}
@@ -413,15 +413,15 @@ objects:
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
-    name: jupyter-${USER_ID}
+    name: jupyter-${USER_ID}-${SUFFIX}
     labels:
       app: jupyter
       user: ${USER_ID}
   spec:
-    host: jupyter-${USER_ID}.apps.ocp.ntdrq.sandbox503.opentlc.com
+    host: jupyter-${USER_ID}-${SUFFIX}.apps.ocp.ntdrq.sandbox503.opentlc.com
     to:
       kind: Service
-      name: jupyter-${USER_ID}
+      name: jupyter-${USER_ID}-${SUFFIX}
     port:
       targetPort: http
     tls:
@@ -431,4 +431,7 @@ objects:
 parameters:
 - name: USER_ID
   description: "User identifier (e.g., user1, user2, ...)"
+  required: true
+- name: SUFFIX
+  description: "Random suffix for URL obfuscation (e.g., k3x9m2p7q1)"
   required: true

@@ -34,14 +34,18 @@ oc get namespace $NAMESPACE &>/dev/null || oc create namespace $NAMESPACE
 for i in $(seq 1 $NUM_USERS); do
     USER_ID="user${i}"
 
-    echo "Provisioning $USER_ID..."
+    # Generate random 10-character suffix (lowercase + digits)
+    SUFFIX=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | head -c 10)
+
+    echo "Provisioning $USER_ID-$SUFFIX..."
 
     oc process -f $TEMPLATE \
         -p USER_ID=$USER_ID \
+        -p SUFFIX=$SUFFIX \
         --namespace=$NAMESPACE \
         | oc apply -n $NAMESPACE -f -
 
-    echo "  $USER_ID deployed"
+    echo "  $USER_ID-$SUFFIX deployed"
 done
 
 echo ""
