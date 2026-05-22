@@ -2,16 +2,15 @@
 
 **Duration:** 60 minutes  
 **Audience:** 50 participants  
-**Stack:** vLLM + guidellm + OpenShift
+**Stack:** vLLM + guidellm + JupyterLab + OpenShift
 
 ---
 
 ## Quick Links
 
-- **Workshop Documentation:** [WORKSHOP_GUIDE.md](WORKSHOP_GUIDE.md)
-- **Live Comparison UI:** https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
-- **Original API:** `https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1`
-- **Quantized API:** `https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1`
+- **Workshop Landing Page:** https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com
+- **Documentation:** https://soyr-redhat.github.io/boston-tech-week-26-llm-compressor/
+- **Comparison UI (Instructor Demo):** https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 
 ---
 
@@ -25,123 +24,113 @@ This hands-on workshop teaches LLM quantization through live demonstration and p
 - Real-time metrics displayed in Gradio UI
 
 ### Part 2: Hands-On Benchmarking (30 min)
-- Participants install `guidellm` on their laptops
-- Benchmark both models from their machines
-- Compare throughput, latency, and quality
+- Participants use pre-provisioned JupyterLab instances in their browser
+- Benchmark both models using guidellm
+- Compare throughput, latency, and resource usage
 
-**No cluster access needed for participants!**
+**No installation required for participants!**
 
 ---
 
 ## For Participants
 
-### Jupyter Notebook (Recommended - Works in Your Browser)
+### Getting Your Workspace
 
-**Access your personal workshop notebook:**
+1. Visit the workshop landing page: **https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com**
+2. Click "Get My Workspace" to receive your unique JupyterLab URL
+3. Bookmark your workspace URL (you'll be auto-redirected)
+4. Open `workshop_notebook.ipynb` and follow along
 
-1. You'll receive your user ID (e.g., `user1`, `user2`, etc.)
-2. Navigate to: **https://jupyter-{your-user-id}.apps.ocp.ntdrq.sandbox503.opentlc.com**
-   - Example: `https://jupyter-user1.apps.ocp.ntdrq.sandbox503.opentlc.com`
-3. Open `workshop_notebook.ipynb` 
-4. Run cells to benchmark models
+Your workspace includes:
+- Pre-configured JupyterLab environment
+- Workshop notebook with all instructions
+- guidellm pre-installed for benchmarking
+- Isolated from other participants (NetworkPolicy enforced)
+- Works on any device with a web browser
 
-The notebook includes:
-- Interactive benchmarking cells
-- Automatic comparison charts
-- Works on any platform (Windows, Mac, Linux)
-- No installation required
-- Isolated workspace (your work won't interfere with others)
-
-### Command Line Alternative (Advanced Users)
-
-```bash
-# 1. Run the installer (Mac/Linux)
-curl -sSL https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.sh | bash
-
-# Windows: irm https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.ps1 | iex
-
-# 2. Set endpoints
-export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
-export QUANTIZED_API="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
-
-# 3. Benchmark original model
-guidellm benchmark \
-  --target "$ORIGINAL_API" \
-  --profile sweep \
-  --data "prompt_tokens=100,output_tokens=100" \
-  --max-requests 10
-
-# 4. Benchmark quantized model
-guidellm benchmark \
-  --target "$QUANTIZED_API" \
-  --profile sweep \
-  --data "prompt_tokens=100,output_tokens=100" \
-  --max-requests 10
-```
-
-**Full Guide:** [WORKSHOP_GUIDE.md](WORKSHOP_GUIDE.md) | [Quick Start](QUICK_START.md)
+**Full Documentation:** https://soyr-redhat.github.io/boston-tech-week-26-llm-compressor/
 
 ---
 
 ## For Instructors
 
-### Pre-Workshop Checklist
+### Pre-Workshop Setup
 
-```bash
-# 1. Verify pods are running
-oc get pods -n workshop
+1. **Provision User Workspaces:**
+   ```bash
+   SECRET_KEY="boston-tech-week-2026-secret" ./scripts/provision-users.sh 50
+   ```
 
-# 2. Test comparison UI
-open https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+2. **Verify Infrastructure:**
+   ```bash
+   # Check all pods are running
+   oc get pods -n workshop
+   
+   # Test comparison UI
+   open https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+   
+   # Test assignment app
+   open https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com
+   ```
 
-# 3. Warm up models with test prompts
-# (Run 2-3 prompts in the UI)
-```
+3. **Reset Assignment Counter (if needed):**
+   ```bash
+   curl https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com/reset
+   ```
 
 ### During Workshop
 
-1. **Demo Phase:** Share screen with [Comparison UI](https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com)
-2. **Hands-On:** Guide participants through guidellm installation and benchmarking
-3. **Discussion:** Review metrics and discuss production considerations
+1. **Opening (5 min):** Share workshop landing page URL with participants
+2. **Demo Phase (25 min):** Live comparison using Gradio UI
+3. **Hands-On (30 min):** Guide participants through Jupyter notebook
+4. **Discussion:** Review metrics and production considerations
 
-**Full Walkthrough:** [INSTRUCTOR_GUIDE.md](INSTRUCTOR_GUIDE.md)
+**Full Setup Guide:** [INSTRUCTOR_SETUP.md](INSTRUCTOR_SETUP.md)
 
 ---
 
-## Infrastructure
+## Architecture
 
-### Architecture
+### Infrastructure Layout
 
 ```
-┌───────────────────────────────────────┐
-│  Participant Laptops (50 users)       │
-│  $ pip install guidellm               │
-│  $ guidellm --target <endpoint> ...   │
-└─────────┬──────────────┬──────────────┘
-          │              │
-          │ HTTPS        │ HTTPS
-          ▼              ▼
-    ┌──────────┐   ┌──────────┐
-    │ Original │   │Quantized │
-    │  FP16    │   │   INT4   │
-    │ 2× GPU   │   │ 2× GPU   │
-    └──────────┘   └──────────┘
-          │              │
-    ┌─────┴──────────────┴─────┐
-    │  workshop namespace       │
-    │  OpenShift Cluster        │
-    └───────────────────────────┘
+┌─────────────────────────────────────────────┐
+│  Participants (50 users)                    │
+│  Browser → JupyterLab (user-specific URL)   │
+│  Runs guidellm from notebook                │
+└────────────┬────────────────────────────────┘
+             │
+             │ HTTPS (Public Routes)
+             ▼
+   ┌──────────────────────────────┐
+   │  Shared vLLM Services        │
+   │  ┌──────────┐  ┌──────────┐ │
+   │  │ Original │  │Quantized │ │
+   │  │  FP16    │  │   INT4   │ │
+   │  │ 2x GPU   │  │ 2x GPU   │ │
+   │  └──────────┘  └──────────┘ │
+   └──────────────────────────────┘
+             │
+   ┌─────────┴─────────────────────┐
+   │  workshop namespace           │
+   │  - 50 JupyterLab instances    │
+   │  - Assignment app             │
+   │  - Comparison UI              │
+   │  - NetworkPolicy (isolation)  │
+   └───────────────────────────────┘
 ```
 
 ### Deployed Services
 
-| Service | Model | GPUs | Endpoint |
-|---------|-------|------|----------|
-| **Original** | Qwen/Qwen2.5-7B-Instruct (FP16) | 2× L4 | [vllm-original](https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com) |
-| **Quantized** | RedHatAI/Qwen3.5-9B-quantized.w4a16 (INT4) | 2× L4 | [vllm-quantized](https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com) |
-| **Comparison UI** | Gradio (Everforest theme) | — | [comparison-ui](https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com) |
+| Service | Model | GPUs | Purpose |
+|---------|-------|------|---------|
+| **vLLM Original** | Qwen/Qwen2.5-7B-Instruct (FP16) | 2x L4 | Baseline model |
+| **vLLM Quantized** | RedHatAI/Qwen3.5-9B-quantized.w4a16 (INT4) | 2x L4 | Quantized comparison |
+| **Assignment App** | Flask | - | Auto-assigns users to workspaces |
+| **Comparison UI** | Gradio | - | Instructor demo interface |
+| **JupyterLab (50x)** | scipy-notebook | - | Per-user workshop environments |
 
-**Status:** [CLUSTER_STATUS.md](CLUSTER_STATUS.md)
+**Security:** [SECURITY.md](SECURITY.md)
 
 ---
 
@@ -149,69 +138,83 @@ open https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 
 ```
 .
-├── comparison_ui.py           # Gradio UI for side-by-side comparison
+├── assignment_app.py              # Auto-assignment Flask app
+├── comparison_ui.py               # Gradio side-by-side demo UI
+├── workshop_notebook.ipynb        # Workshop Jupyter notebook
 ├── openshift/
-│   └── workshop-deployment.yaml  # Full deployment manifest
-├── docs/                      # GitHub Pages site
-│   ├── index.md              # Landing page
-│   ├── quick-start.md        # Participant quick ref
-│   ├── workshop-guide.md     # Full workshop guide
-│   ├── instructor-guide.md   # Instructor walkthrough
-│   └── cluster-status.md     # Infrastructure status
-├── WORKSHOP_GUIDE.md          # Complete workshop guide
-├── QUICK_START.md            # Quick reference card
-├── INSTRUCTOR_GUIDE.md       # Instructor walkthrough
-└── CLUSTER_STATUS.md         # Cluster ops guide
+│   ├── workshop-deployment.yaml   # vLLM + comparison UI
+│   ├── jupyter-user-template.yaml # Per-user JupyterLab template
+│   └── jupyter-network-policy.yaml # User isolation
+├── scripts/
+│   ├── provision-users.sh         # Provision N JupyterLab instances
+│   ├── deploy-assignment.sh       # Deploy assignment app
+│   └── cleanup-users.sh           # Clean up user workspaces
+├── docs/                          # GitHub Pages documentation
+│   ├── index.md
+│   ├── quick-start.md
+│   ├── workshop-guide.md
+│   ├── instructor-guide.md
+│   └── cluster-status.md
+├── README.md                      # This file
+├── INSTRUCTOR_SETUP.md            # Detailed setup guide
+└── SECURITY.md                    # Security architecture
 ```
 
 ---
 
-## Development
+## Key Features
 
-### Local Testing
+### Auto-Assignment System
+- Users visit landing page and get auto-assigned to a workspace
+- Deterministic URL suffixes prevent cross-user access
+- Session persistence (users can return to same workspace)
+- Auto-provisioning for overflow capacity
 
-```bash
-# Test comparison UI locally
-python comparison_ui.py
+### Security Through Obscurity
+- URLs include hash-based suffix (e.g., `jupyter-user1-a0c3761d23`)
+- NetworkPolicy blocks pod-to-pod access between users
+- No authentication required (minimal friction for 60-min workshop)
+- See [SECURITY.md](SECURITY.md) for details
 
-# Access at http://localhost:7860
-# Update endpoints to point to local vLLM instances if testing
-```
+### Zero Installation
+- Everything runs in browser via JupyterLab
+- guidellm, matplotlib, pandas pre-installed
+- No Python, pip, or local environment needed
+- Works on Windows, Mac, Linux, ChromeOS
 
-### Deploy to OpenShift
+---
 
-```bash
-# Create namespace
-oc create namespace workshop
+## Models
 
-# Create UI code ConfigMap
-oc create configmap comparison-ui-code \
-  --from-file=comparison_ui.py \
-  -n workshop
+### Original Model
+- **Name:** Qwen/Qwen2.5-7B-Instruct
+- **Precision:** FP16
+- **Size:** ~14GB
+- **GPUs:** 2x NVIDIA L4
+- **Endpoint:** https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
 
-# Deploy all resources
-oc apply -f openshift/workshop-deployment.yaml
+### Quantized Model
+- **Name:** RedHatAI/Qwen3.5-9B-quantized.w4a16
+- **Precision:** INT4 (weights), INT16 (activations)
+- **Size:** ~5GB
+- **GPUs:** 2x NVIDIA L4
+- **Endpoint:** https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
 
-# Create routes
-oc expose service vllm-original \
-  --name=vllm-original-api \
-  --hostname=vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com \
-  -n workshop
-
-oc expose service vllm-quantized \
-  --name=vllm-quantized-api \
-  --hostname=vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com \
-  -n workshop
-```
+**Performance Expectations:**
+- 1.5-2x throughput improvement
+- 30-40% latency reduction
+- 50-75% memory savings
+- <2% quality degradation
 
 ---
 
 ## Resources
 
 - **vLLM:** [docs.vllm.ai](https://docs.vllm.ai/)
-- **guidellm:** [github.com/neuralmagic/guidellm](https://github.com/neuralmagic/guidellm)
+- **guidellm:** [github.com/vllm-project/guidellm](https://github.com/vllm-project/guidellm)
 - **LLM Compressor:** [github.com/vllm-project/llm-compressor](https://github.com/vllm-project/llm-compressor)
 - **RedHat AI Models:** [huggingface.co/RedHatAI](https://huggingface.co/RedHatAI)
+- **OpenShift:** [docs.openshift.com](https://docs.openshift.com/)
 
 ---
 
@@ -223,5 +226,5 @@ MIT - Feel free to use this workshop content for your own events!
 
 ## Questions?
 
-- During workshop: Raise your hand
-- After workshop: Boston Tech Week Slack
+- During workshop: Ask the instructor
+- After workshop: Open an issue on GitHub
