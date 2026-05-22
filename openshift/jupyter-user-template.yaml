@@ -361,11 +361,16 @@ objects:
           - name: GRANT_SUDO
             value: "yes"
           - name: JUPYTER_TOKEN
-            value: ""  # Disable token for workshop simplicity
+            value: ""
           - name: CHOWN_HOME
-            value: "yes"  # Fix permissions on startup
+            value: "yes"
           - name: RESTARTABLE
             value: "yes"
+          command: ["start-notebook.sh"]
+          args:
+            - "--ServerApp.token=''"
+            - "--ServerApp.password=''"
+            - "--ServerApp.disable_check_xsrf=True"
           volumeMounts:
           - name: home
             mountPath: /home/jovyan
