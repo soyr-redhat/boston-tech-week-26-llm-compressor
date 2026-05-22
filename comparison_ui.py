@@ -11,23 +11,16 @@ import json
 import threading
 from typing import Dict, Tuple
 
-# Everforest-inspired CSS matching nvim config
+# Compact Everforest-inspired CSS
 EVERFOREST_CSS = """
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
 :root {
-    /* Everforest Medium Dark palette */
     --bg0: #2f383e;
     --bg1: #374247;
     --bg2: #404c51;
     --bg3: #4a555b;
     --bg4: #525c62;
-    --bg-red: #4c3743;
-    --bg-visual: #503946;
-    --bg-yellow: #4d4c43;
-    --bg-green: #3c4841;
-    --bg-blue: #384b55;
-
     --fg: #d3c6aa;
     --red: #e67e80;
     --orange: #e69875;
@@ -39,10 +32,6 @@ EVERFOREST_CSS = """
     --grey0: #7a8478;
     --grey1: #859289;
     --grey2: #9da9a0;
-
-    --statusline1: #a7c080;
-    --statusline2: #d3c6aa;
-    --statusline3: #e67e80;
 }
 
 * {
@@ -51,158 +40,157 @@ EVERFOREST_CSS = """
 
 body, .gradio-container {
     background: var(--bg0) !important;
-    font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif !important;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif !important;
     color: var(--fg) !important;
-    line-height: 1.6;
+    line-height: 1.5;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
-/* Main container */
+/* Compact main container */
 #component-0, .contain, .wrap {
     background: var(--bg0) !important;
-    border: 1px solid var(--bg3) !important;
-    border-radius: 6px !important;
-    padding: 24px !important;
+    border: none !important;
+    padding: 16px !important;
+    max-width: 100% !important;
 }
 
-/* Headers */
-h1, h2, h3, h4, h5, h6 {
-    color: var(--green) !important;
+.gradio-container {
+    max-width: 100% !important;
+    padding: 8px !important;
+}
+
+/* Compact headers */
+h1, h2, h3, h4 {
     font-family: 'IBM Plex Sans', sans-serif !important;
     font-weight: 600 !important;
-    margin-bottom: 12px !important;
-    letter-spacing: -0.02em;
+    margin: 0 0 8px 0 !important;
+    padding: 0 !important;
+    line-height: 1.3 !important;
 }
 
 h1 {
-    font-size: 1.75rem !important;
-    color: var(--statusline1) !important;
+    font-size: 1.4rem !important;
+    color: var(--green) !important;
     border-bottom: 1px solid var(--bg3);
-    padding-bottom: 12px;
-    margin-bottom: 24px !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 12px !important;
 }
 
 h2 {
-    font-size: 1.25rem !important;
+    font-size: 1.1rem !important;
     color: var(--aqua) !important;
 }
 
 h3 {
-    font-size: 1.1rem !important;
+    font-size: 0.95rem !important;
     color: var(--blue) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* Text and paragraphs */
 p, span, label, .prose {
     color: var(--fg) !important;
     font-family: 'IBM Plex Sans', sans-serif !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
-/* Code and monospace */
-code, pre, .input-text {
-    font-family: 'IBM Plex Mono', 'Courier New', monospace !important;
+.prose p {
+    margin: 4px 0 !important;
+}
+
+code, pre {
+    font-family: 'IBM Plex Mono', monospace !important;
     background: var(--bg1) !important;
     color: var(--fg) !important;
+    font-size: 0.9em !important;
 }
 
 pre {
     border: 1px solid var(--bg3) !important;
-    border-radius: 4px !important;
-    padding: 12px !important;
+    border-radius: 3px !important;
+    padding: 8px !important;
+    margin: 4px 0 !important;
 }
 
 code {
-    padding: 2px 6px !important;
-    border-radius: 3px !important;
+    padding: 2px 4px !important;
+    border-radius: 2px !important;
 }
 
-/* Input fields */
-input[type="text"], textarea, .input-text {
+/* Compact inputs */
+input[type="text"], textarea {
     background: var(--bg1) !important;
     border: 1px solid var(--bg3) !important;
-    border-radius: 4px !important;
+    border-radius: 3px !important;
     color: var(--fg) !important;
-    padding: 8px 12px !important;
-    transition: all 0.2s ease;
+    padding: 6px 10px !important;
+    margin: 0 !important;
+    font-size: 0.9rem !important;
 }
 
 input:focus, textarea:focus {
     border-color: var(--green) !important;
     outline: none !important;
-    box-shadow: 0 0 0 2px rgba(167, 192, 128, 0.15) !important;
 }
 
-input::placeholder, textarea::placeholder {
-    color: var(--grey1) !important;
+textarea {
+    min-height: 60px !important;
 }
 
-/* Buttons */
+/* Compact buttons */
 button {
-    background: var(--bg-green) !important;
+    background: var(--bg2) !important;
     border: 1px solid var(--green) !important;
     color: var(--green) !important;
     font-family: 'IBM Plex Sans', sans-serif !important;
     font-weight: 500 !important;
-    padding: 10px 20px !important;
-    border-radius: 4px !important;
-    transition: all 0.2s ease;
-    cursor: pointer;
+    padding: 8px 16px !important;
+    border-radius: 3px !important;
+    font-size: 0.9rem !important;
+    margin: 4px 0 !important;
 }
 
 button:hover {
     background: var(--green) !important;
     color: var(--bg0) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(167, 192, 128, 0.2);
 }
 
-button:active {
-    transform: translateY(0);
-}
-
-/* Primary button variant */
 .primary {
     background: var(--green) !important;
     color: var(--bg0) !important;
-    border-color: var(--green) !important;
 }
 
-.primary:hover {
-    background: var(--aqua) !important;
-    border-color: var(--aqua) !important;
-}
-
-/* Output areas */
-.markdown-output, .output-markdown, .prose {
+/* Compact output areas */
+.markdown-output, .output-markdown {
     background: var(--bg1) !important;
     border: 1px solid var(--bg3) !important;
-    border-radius: 4px !important;
-    padding: 16px !important;
+    border-radius: 3px !important;
+    padding: 10px !important;
     color: var(--fg) !important;
-    min-height: 200px;
+    min-height: 150px !important;
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    font-size: 0.9rem !important;
 }
 
-/* Slider */
-input[type="range"] {
-    accent-color: var(--green);
-}
-
+/* Compact slider */
 .slider-container {
-    background: var(--bg1) !important;
-    border-radius: 4px !important;
-    padding: 12px !important;
+    padding: 4px 0 !important;
 }
 
-/* Tables */
+/* Compact tables */
 table {
     border-collapse: collapse;
     width: 100%;
-    margin: 12px 0;
+    margin: 8px 0 !important;
+    font-size: 0.85rem !important;
 }
 
 th, td {
     border: 1px solid var(--bg3) !important;
-    padding: 10px !important;
-    text-align: left;
+    padding: 6px 8px !important;
     color: var(--fg) !important;
 }
 
@@ -212,32 +200,62 @@ th {
     font-weight: 600;
 }
 
-tr:nth-child(even) {
-    background: var(--bg1) !important;
-}
-
-/* Status indicators */
 strong {
     color: var(--yellow) !important;
-    font-weight: 600;
 }
 
-/* Links */
-a {
-    color: var(--blue) !important;
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.2s;
+/* Compact rows and columns */
+.gr-row {
+    gap: 12px !important;
+    margin: 0 !important;
 }
 
-a:hover {
-    border-bottom-color: var(--blue);
+.gr-column {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.gr-form {
+    gap: 8px !important;
+}
+
+.gr-box {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Compact labels */
+label {
+    color: var(--grey2) !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    margin-bottom: 4px !important;
+    display: block;
+}
+
+/* Remove excessive padding */
+.block {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.panel {
+    padding: 8px !important;
+}
+
+/* Compact horizontal rules */
+hr {
+    border: none;
+    border-top: 1px solid var(--bg3) !important;
+    margin: 12px 0 !important;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -246,73 +264,21 @@ a:hover {
 
 ::-webkit-scrollbar-thumb {
     background: var(--bg3);
-    border-radius: 6px;
-    border: 2px solid var(--bg1);
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--bg4);
 }
 
-/* Column spacing */
-.gr-column {
-    padding: 12px !important;
-}
-
-/* Remove default Gradio styling */
-.gr-box {
-    border: none !important;
-    background: transparent !important;
-}
-
-/* Info boxes */
-.info-box {
-    background: var(--bg-blue) !important;
-    border-left: 3px solid var(--blue) !important;
-    padding: 12px 16px !important;
-    border-radius: 4px !important;
-    margin: 12px 0 !important;
-}
-
-/* Warning boxes */
-.warning-box {
-    background: var(--bg-yellow) !important;
-    border-left: 3px solid var(--yellow) !important;
-}
-
-/* Success boxes */
-.success-box {
-    background: var(--bg-green) !important;
-    border-left: 3px solid var(--green) !important;
-}
-
-/* Error boxes */
-.error-box {
-    background: var(--bg-red) !important;
-    border-left: 3px solid var(--red) !important;
-}
-
-/* Horizontal rule */
-hr {
-    border: none;
-    border-top: 1px solid var(--bg3) !important;
-    margin: 24px 0 !important;
-}
-
-/* Labels */
-label {
-    color: var(--grey2) !important;
-    font-size: 0.9rem !important;
-    font-weight: 500 !important;
-    margin-bottom: 6px !important;
-    display: block;
-}
-
-/* Examples */
+/* Compact examples */
 .examples {
-    background: var(--bg1) !important;
-    border: 1px solid var(--bg3) !important;
-    border-radius: 4px !important;
+    margin: 8px 0 !important;
+}
+
+/* Remove default spacing */
+.gap {
+    gap: 8px !important;
 }
 """
 
@@ -388,23 +354,15 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
     except Exception as e:
         yield f"Error: {str(e)}", {}
 
-def format_output(text: str, metrics: dict = None, status: str = "running"):
-    """Format output with metrics"""
+def format_output(text: str, metrics: dict = None):
+    """Format output with inline metrics"""
     if not text:
-        return f"*Status: {status}... waiting for response*"
+        return "*waiting...*"
 
-    output = f"{text}\n\n"
+    output = f"{text}\n"
 
     if metrics:
-        output += f"---\n\n"
-        output += f"**Performance Metrics**\n\n"
-        output += f"| Metric | Value |\n"
-        output += f"|--------|-------|\n"
-        output += f"| Latency | {metrics['latency_ms']} ms |\n"
-        output += f"| Throughput | {metrics['tokens_per_sec']} tokens/sec |\n"
-        output += f"| Tokens | {metrics['tokens']} |\n"
-    else:
-        output += f"\n*{status}...*\n"
+        output += f"\n**Metrics:** {metrics['latency_ms']}ms · {metrics['tokens_per_sec']} tok/s · {metrics['tokens']} tokens"
 
     return output
 
@@ -412,7 +370,7 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
     """Compare responses from both models with concurrent streaming"""
 
     if not prompt.strip():
-        yield "Please enter a prompt", "", ""
+        yield "Enter a prompt", "", ""
         return
 
     state = {
@@ -445,16 +403,8 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
     quant_thread.start()
 
     while not (state['orig_done'] and state['quant_done']):
-        orig_result = format_output(
-            state['orig_text'],
-            state['orig_metrics'],
-            "complete" if state['orig_done'] else "generating"
-        )
-        quant_result = format_output(
-            state['quant_text'],
-            state['quant_metrics'],
-            "complete" if state['quant_done'] else "generating"
-        )
+        orig_result = format_output(state['orig_text'], state['orig_metrics'])
+        quant_result = format_output(state['quant_text'], state['quant_metrics'])
 
         yield orig_result, quant_result, ""
         time.sleep(0.1)
@@ -462,83 +412,57 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
     orig_thread.join()
     quant_thread.join()
 
-    orig_result = format_output(state['orig_text'], state['orig_metrics'], "complete")
-    quant_result = format_output(state['quant_text'], state['quant_metrics'], "complete")
+    orig_result = format_output(state['orig_text'], state['orig_metrics'])
+    quant_result = format_output(state['quant_text'], state['quant_metrics'])
 
     if state['orig_metrics'] and state['quant_metrics']:
         speedup = state['quant_metrics']['tokens_per_sec'] / state['orig_metrics']['tokens_per_sec']
-        latency_reduction = ((state['orig_metrics']['latency_ms'] - state['quant_metrics']['latency_ms']) / state['orig_metrics']['latency_ms']) * 100
+        latency_diff = state['orig_metrics']['latency_ms'] - state['quant_metrics']['latency_ms']
 
-        summary = f"""
-## Benchmark Results
+        summary = f"""**Result:** {speedup:.2f}x speedup · {latency_diff:.0f}ms faster
 
-**Performance Improvement:** {speedup:.2f}x speedup · {abs(latency_reduction):.1f}% {'faster' if latency_reduction > 0 else 'slower'} latency
-
-| Metric | Original (FP16) | Quantized (INT4) | Improvement |
-|--------|----------------|------------------|-------------|
-| Latency | {state['orig_metrics']['latency_ms']} ms | {state['quant_metrics']['latency_ms']} ms | {abs(latency_reduction):.1f}% |
+| Metric | Original | Quantized | Δ |
+|--------|----------|-----------|---|
+| Latency | {state['orig_metrics']['latency_ms']}ms | {state['quant_metrics']['latency_ms']}ms | {latency_diff:.0f}ms |
 | Throughput | {state['orig_metrics']['tokens_per_sec']} tok/s | {state['quant_metrics']['tokens_per_sec']} tok/s | {speedup:.2f}x |
-| Tokens Generated | {state['orig_metrics']['tokens']} | {state['quant_metrics']['tokens']} | same |
-
-Compare the response quality above to evaluate any degradation from quantization.
+| Tokens | {state['orig_metrics']['tokens']} | {state['quant_metrics']['tokens']} | — |
 """
     else:
-        summary = "⚠️ Comparison failed - one or both models did not respond"
+        summary = "Error: comparison failed"
 
     yield orig_result, quant_result, summary
 
-# Gradio UI with Everforest theme
-with gr.Blocks(css=EVERFOREST_CSS, title="LLM Quantization Comparison") as demo:
-    gr.Markdown("""
-    # LLM Quantization Comparison
-
-    Compare original vs quantized model performance side-by-side with concurrent execution.
-
-    **Boston Tech Week 2026** · Model Compression Workshop
-    """)
+# Compact Gradio UI
+with gr.Blocks(css=EVERFOREST_CSS, title="LLM Quantization") as demo:
+    gr.Markdown("# LLM Quantization Comparison")
 
     with gr.Row():
-        with gr.Column():
-            gr.Markdown("### Configuration")
+        prompt = gr.Textbox(
+            label="Prompt",
+            placeholder="Enter prompt...",
+            lines=2,
+            scale=3
+        )
+        with gr.Column(scale=1):
+            max_tokens = gr.Slider(50, 500, 100, step=10, label="Tokens")
+            compare_btn = gr.Button("Compare", variant="primary")
+
+    with gr.Accordion("Configuration", open=False):
+        with gr.Row():
             original_port = gr.Textbox(
-                label="Original Model Endpoint",
+                label="Original",
                 value="vllm-original:8080",
-                placeholder="hostname:port"
+                scale=1
             )
             quantized_port = gr.Textbox(
-                label="Quantized Model Endpoint",
+                label="Quantized",
                 value="vllm-quantized:8081",
-                placeholder="hostname:port"
+                scale=1
             )
-            max_tokens = gr.Slider(
-                minimum=50,
-                maximum=500,
-                value=100,
-                step=10,
-                label="Max Tokens",
-            )
-
-    gr.Markdown("### Prompt")
-    prompt = gr.Textbox(
-        label="Enter your prompt",
-        placeholder="Type your prompt here or select an example below...",
-        lines=3
-    )
-
-    compare_btn = gr.Button("Compare Models", variant="primary", size="lg")
-
-    gr.Markdown("---")
 
     with gr.Row():
-        with gr.Column():
-            gr.Markdown("### Original Model (FP16)")
-            original_output = gr.Markdown()
-
-        with gr.Column():
-            gr.Markdown("### Quantized Model (INT4)")
-            quantized_output = gr.Markdown()
-
-    gr.Markdown("---")
+        original_output = gr.Markdown(label="Original (FP16)")
+        quantized_output = gr.Markdown(label="Quantized (INT4)")
 
     comparison_summary = gr.Markdown()
 
@@ -546,11 +470,10 @@ with gr.Blocks(css=EVERFOREST_CSS, title="LLM Quantization Comparison") as demo:
         examples=[
             ["The future of artificial intelligence is", "vllm-original:8080", "vllm-quantized:8081", 100],
             ["Write a Python function to sort a list", "vllm-original:8080", "vllm-quantized:8081", 150],
-            ["Explain quantum computing in simple terms:", "vllm-original:8080", "vllm-quantized:8081", 200],
-            ["What are the key benefits of model compression?", "vllm-original:8080", "vllm-quantized:8081", 100],
-            ["Tell me a short story about a robot", "vllm-original:8080", "vllm-quantized:8081", 200],
+            ["Explain quantum computing", "vllm-original:8080", "vllm-quantized:8081", 200],
         ],
         inputs=[prompt, original_port, quantized_port, max_tokens],
+        label="Examples"
     )
 
     compare_btn.click(
@@ -558,24 +481,6 @@ with gr.Blocks(css=EVERFOREST_CSS, title="LLM Quantization Comparison") as demo:
         inputs=[prompt, original_port, quantized_port, max_tokens],
         outputs=[original_output, quantized_output, comparison_summary]
     )
-
-    gr.Markdown("""
----
-
-### Usage
-
-1. Configure vLLM endpoints above (defaults are pre-set)
-2. Enter a prompt or select an example
-3. Click "Compare Models" to run both concurrently
-4. Observe real-time generation and metrics
-
-### What to Look For
-
-- **Throughput gains** – Quantized models typically achieve 1.5-2x speedup
-- **Latency reduction** – 30-50% faster response times
-- **Output quality** – Compare responses to assess any degradation
-- **Memory efficiency** – INT4 uses ~75% less VRAM than FP16
-    """)
 
 if __name__ == "__main__":
     demo.launch(
