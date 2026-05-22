@@ -1,137 +1,182 @@
+# Infrastructure Status
 
-# OpenShift Cluster Status - Boston Tech Week 2026
+**Cluster:** OpenShift 4.x  
+**Namespace:** `workshop`
 
-**Last Updated:** 2026-05-22  
-**Cluster:** https://console-openshift-console.apps.ocp.ntdrq.sandbox503.opentlc.com  
-**Namespace:** workshop-user1
+---
 
+## Deployed Services
+
+### vLLM Models
+
+| Service | Model | GPUs | Endpoints |
+|---------|-------|------|-----------|
+| vllm-original | Qwen/Qwen2.5-7B-Instruct (FP16) | 2x L4 | https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com |
+| vllm-quantized | RedHatAI/Qwen3.5-9B-quantized.w4a16 (INT4) | 2x L4 | https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com |
+
+### Workshop Infrastructure
+
+| Service | Purpose | URL |
+|---------|---------|-----|
+| Assignment App | Auto-assign users to workspaces | https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com |
+| Comparison UI | Instructor demo interface | https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com |
+| JupyterLab (50x) | Per-user notebook environments | https://jupyter-user{N}-{suffix}.apps... |
+
+---
 
 ## Resource Usage
 
 ### GPU Allocation
-- **Total GPUs:** 4× NVIDIA L4 (23GB VRAM each)
-- **Used:** 4 GPUs (100% utilized)
-  - 2× vllm-original (tensor parallel)
-  - 2× vllm-quantized (tensor parallel)
-- **Available:** 0 GPUs
-- **Benefits of 2 GPUs:** Higher throughput for 50 concurrent users
+- **Total:** 4x NVIDIA L4 (23GB VRAM each)
+- **vllm-original:** 2 GPUs (tensor parallel)
+- **vllm-quantized:** 2 GPUs (tensor parallel)
+- **JupyterLab instances:** No GPU (CPU-only benchmarking)
 
 ### Compute Resources
-- **vllm-original:**
-  - Requests: 4 CPU, 8GB RAM, 2 GPUs
-  - Limits: 8 CPU, 16GB RAM, 2 GPUs
-  - Tensor Parallel: 2
-- **vllm-quantized:**
-  - Requests: 4 CPU, 8GB RAM, 2 GPUs
-  - Limits: 8 CPU, 16GB RAM, 2 GPUs
-  - Tensor Parallel: 2
-- **comparison-ui:**
-  - Requests: 500m CPU, 1GB RAM
-  - Limits: 1 CPU, 2GB RAM
+```yaml
+vllm-original:
+  requests: 4 CPU, 8GB RAM, 2 GPUs
+  limits: 8 CPU, 16GB RAM, 2 GPUs
+  
+vllm-quantized:
+  requests: 4 CPU, 8GB RAM, 2 GPUs
+  limits: 8 CPU, 16GB RAM, 2 GPUs
+
+jupyter (per user):
+  requests: 500m CPU, 2GB RAM
+  limits: 1 CPU, 4GB RAM
+
+comparison-ui:
+  requests: 500m CPU, 1GB RAM
+  limits: 1 CPU, 2GB RAM
+
+assignment-app:
+  requests: 100m CPU, 256MB RAM
+  limits: 200m CPU, 512MB RAM
+```
 
 ### Storage
-- **Model Weights:** ~40GB total
-  - Qwen2.5-7B-Instruct: ~14GB (FP16)
-  - Qwen3.5-9B-quantized: ~5GB (INT4)
-  - HuggingFace cache: ~21GB
+- **Model Weights:** ~20GB cached in pods
+- **JupyterLab home dirs:** emptyDir (ephemeral)
+- **Assignment state:** /tmp in assignment app pod
 
+---
 
-## API Endpoints
+## Health Checks
 
-### Original Model (FP16)
+### Check Pod Status
 ```bash
-# List models
+oc get pods -n workshop
+```
+
+### Test vLLM Endpoints
+```bash
+# Original model
 curl https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1/models
 
-# Generate completion
-curl -X POST https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "Qwen/Qwen2.5-7B-Instruct",
-    "prompt": "Hello",
-    "max_tokens": 50
-  }'
-
-# Health check
-curl https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/health
-```
-
-### Quantized Model (INT4)
-```bash
-# List models
+# Quantized model
 curl https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1/models
-
-# Generate completion
-curl -X POST https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "RedHatAI/Qwen3.5-9B-quantized.w4a16",
-    "prompt": "Hello",
-    "max_tokens": 50
-  }'
-
-# Health check
-curl https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/health
 ```
 
-
-## Monitoring
-
-### CPU/Memory Usage
+### Check Assignment App
 ```bash
-oc adm top pods -n workshop-user1
+curl https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com/status
 ```
 
-### Events
+### View User Workspaces
 ```bash
-oc get events -n workshop-user1 --sort-by='.lastTimestamp'
+oc get pods -n workshop -l app=jupyter
+oc get routes -n workshop -l app=jupyter
 ```
 
-### Routes Status
+---
+
+## Common Operations
+
+### Reset Assignment Counter
 ```bash
-oc get routes -n workshop-user1
+curl https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com/reset
 ```
 
-
-## Backup & Recovery
-
-### If Pod Crashes
+### Restart a Service
 ```bash
-# Check logs for root cause
-oc logs deployment/vllm-original -n workshop-user1 --previous
+# Restart vLLM pod
+oc rollout restart deployment/vllm-original -n workshop
 
-# Restart deployment
-oc rollout restart deployment/vllm-original -n workshop-user1
-
-# If persistent issues, delete and recreate
-oc delete deployment vllm-original -n workshop-user1
-oc apply -f openshift/user-deployment.yaml
+# Restart assignment app
+oc delete pod -n workshop -l app=workshop-assignment
 ```
 
-### If Out of Memory
+### View Logs
 ```bash
-# Reduce context length in deployment
-# Edit command args to use --max-model-len 4096 instead of 8192
-oc edit deployment vllm-original -n workshop-user1
+# vLLM logs
+oc logs -f deployment/vllm-original -n workshop
+
+# Assignment app logs
+oc logs -f deployment/workshop-assignment -n workshop
+
+# User JupyterLab logs
+oc logs deployment/jupyter-user1-{suffix} -n workshop
 ```
 
-### If Route Unreachable
+### Clean Up All User Workspaces
 ```bash
-# Check route exists
-oc get route vllm-original-api -n workshop-user1
-
-# Recreate route if missing
-oc expose service vllm-original --name=vllm-original-api -n workshop-user1
+./scripts/cleanup-users.sh
 ```
 
+---
+
+## Troubleshooting
+
+### vLLM Pod Won't Start
+
+**Check events:**
+```bash
+oc describe pod -n workshop -l app=vllm-original
+```
+
+**Common issues:**
+- Out of GPU memory → Reduce `--max-model-len`
+- Image pull error → Check registry access
+- Model download timeout → Check internet connectivity
+
+### User Can't Access JupyterLab
+
+**Check pod status:**
+```bash
+oc get pods -n workshop -l user=user1
+```
+
+**Check route:**
+```bash
+oc get route -n workshop | grep user1
+```
+
+**Verify NetworkPolicy:**
+```bash
+oc get networkpolicy -n workshop
+```
+
+### Assignment App Not Responding
+
+**Check logs:**
+```bash
+oc logs deployment/workshop-assignment -n workshop
+```
+
+**Common issues:**
+- Flask crashed → Check for Python errors in logs
+- ConfigMap out of sync → Redeploy with `./scripts/deploy-assignment.sh`
+- /tmp/assignments.json corrupted → Delete pod to reset state
+
+---
 
 ## Security
 
--  TLS enabled on all routes (edge termination)
--  Namespace isolation (workshop-user1)
--  Resource limits prevent runaway consumption
--  No authentication required (public workshop)
--  Read-only access for participants (APIs only)
+- **TLS:** All routes use edge termination
+- **Authentication:** None (60-min workshop, acceptable trade-off)
+- **Isolation:** NetworkPolicy prevents pod-to-pod access between users
+- **RBAC:** JupyterLab pods use default ServiceAccount (no cluster permissions)
+- **URL Obfuscation:** Hash-based suffixes prevent user enumeration
 
-
-**Status:**  ALL SYSTEMS OPERATIONAL - READY FOR WORKSHOP
+See [SECURITY.md](SECURITY.md) for full architecture.

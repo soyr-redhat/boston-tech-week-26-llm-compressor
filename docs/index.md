@@ -1,198 +1,112 @@
-
 # Boston Tech Week 2026
 ## LLM Quantization Workshop
 
-Welcome to the hands-on workshop on LLM quantization and performance benchmarking!
-
-## Quick Links
-
-### For Participants
-- **Workshop Notebook** - Interactive benchmarking in your browser (URL provided at workshop)
-- **[Quick Start Guide](quick-start)** - Command-line alternative
-- **[Workshop Guide](workshop-guide)** - Full 60-minute workshop agenda
-- **[Demo UI](https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com)** - Live model comparison
-
-### For Instructors
-- **[Instructor Walkthrough](instructor-guide)** - Step-by-step teaching guide
-- **[Cluster Status](cluster-status)** - Infrastructure and management
-
-## Workshop Overview
-
 **Duration:** 60 minutes  
-**Format:** Instructor demo (30 min) + Hands-on benchmarking (30 min)
+**Hands-On:** Interactive notebook in your browser
 
-### Part 1: Understanding Quantization (30 min)
-- What is quantization and why does it matter?
-- Live side-by-side comparison of FP16 vs INT4 models
-- Performance metrics and quality trade-offs
+---
 
-### Part 2: Hands-On Benchmarking (30 min)
-- Open the workshop notebook in your browser
-- Run benchmarks against production endpoints
-- Compare throughput, latency, and quality with interactive charts
+## For Participants
+
+### Getting Started
+
+1. **Visit the workshop landing page:**  
+   https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com
+
+2. **Click "Get My Workspace"** to receive your personal JupyterLab URL
+
+3. **Open `workshop_notebook.ipynb`** and follow the instructions
+
+That's it! Everything runs in your browser - no installation required.
+
+### What You'll Do
+
+**Part 1: Understanding Quantization (30 min)**
+- Watch live demo comparing FP16 vs INT4 models
+- Learn about precision formats and performance trade-offs
+- See real-time metrics in the comparison UI
+
+**Part 2: Hands-On Benchmarking (30 min)**
+- Benchmark both models using guidellm
+- Compare throughput and latency
+- Visualize results with interactive charts
+
+### Demo UI
+
+Watch the instructor's live comparison:  
+https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+
+---
+
+## For Instructors
+
+### Pre-Event Setup
+
+**Review the checklist:** [Pre-Event Checklist](pre-event-checklist.md)
+
+**Key Steps:**
+1. Provision 50 JupyterLab instances
+2. Deploy vLLM models and comparison UI
+3. Test the assignment landing page
+4. Reset assignment counter if needed
+
+### During Workshop
+
+1. **Share workshop URL** with participants: `https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com`
+2. **Live demo** using comparison UI (30 min)
+3. **Facilitate hands-on** as participants work through notebook (30 min)
+
+---
+
+## Technical Details
+
+- **[Infrastructure Status](cluster-status.md)** - Resource usage and operations
+- **[Security Architecture](SECURITY.md)** - Isolation and access control
+- **[GitHub Repository](https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor)** - Source code
+
+---
 
 ## What You'll Learn
 
-1. **Model Quantization Fundamentals**
-   - FP16, INT8, INT4, FP8 precision formats
-   - Memory and compute trade-offs
-   - When to quantize (and when not to)
+### Model Quantization Fundamentals
+- FP16, INT8, INT4 precision formats
+- Memory and compute trade-offs
+- When to quantize (and when not to)
 
-2. **Performance Benchmarking**
-   - Using guidellm to load test LLM APIs
-   - Interpreting metrics: throughput, latency, P95/P99
-   - Real-world production considerations
+### Performance Benchmarking
+- Using guidellm to load test LLM APIs
+- Interpreting metrics: throughput, latency, P95/P99
+- Real-world production considerations
 
-3. **Hands-On Experience**
-   - Deploy quantized models with vLLM
-   - Measure actual speedup (1.5-2x typical)
-   - Understand quality vs performance balance
+### Deployment at Scale
+- vLLM for high-throughput inference
+- Tensor parallelism across GPUs
+- OpenShift/Kubernetes deployment patterns
 
-## Prerequisites
+---
 
-- **Laptop** with internet access
-- **Web browser** (Chrome, Firefox, Safari, Edge)
-- No GPU or Python installation required!
+## Models Used
 
-## Setup (During Workshop)
+| Model | Precision | Size | GPUs |
+|-------|-----------|------|------|
+| Qwen/Qwen2.5-7B-Instruct | FP16 | ~14GB | 2x L4 |
+| RedHatAI/Qwen3.5-9B-quantized.w4a16 | INT4 | ~5GB | 2x L4 |
 
-1. Receive your **user ID** from the instructor (e.g., `user1`, `user2`, ...)
-2. Navigate to: **https://jupyter-{your-user-id}.apps.ocp.ntdrq.sandbox503.opentlc.com**
-   - Example: If your user ID is `user5`, go to `https://jupyter-user5.apps.ocp.ntdrq.sandbox503.opentlc.com`
-3. Open `workshop_notebook.ipynb`
-4. Run cells in order
+**Expected Performance:**
+- 1.5-2x throughput improvement
+- 30-40% latency reduction
+- 50-75% memory savings
+- <2% quality degradation
 
-That's it! Your personal JupyterLab environment and the shared vLLM models are already deployed and ready to use.
-
-**Having issues?** See the [troubleshooting section](workshop-guide#troubleshooting) in the full workshop guide.
-
-## Live Infrastructure
-
-### Model Endpoints (Public)
-- **Original Model (FP16):** https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
-- **Quantized Model (INT4):** https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
-
-### Comparison UI (Demo)
-- **URL:** https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
-- Side-by-side streaming responses
-- Real-time metrics
-- Everforest theme
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                  Your Laptop (50 users)                 │
-│                                                          │
-│  $ pip install guidellm                                 │
-│  $ guidellm --target <endpoint> ...                     │
-│                                                          │
-└────────────┬────────────────────────────┬───────────────┘
-             │                            │
-             │ HTTPS                      │ HTTPS
-             │                            │
-       ┌─────▼──────┐             ┌──────▼─────┐
-       │  Original  │             │ Quantized  │
-       │ Qwen 7B    │             │ Qwen 9B    │
-       │ FP16       │             │ INT4       │
-       │ 2× L4 GPU  │             │ 2× L4 GPU  │
-       └────────────┘             └────────────┘
-              OpenShift Cluster
-```
-
-## Key Technologies
-
-### RedHat AI Quantized Models
-
-![RedHat AI Models](assets/redhat-ai-models.svg)
-
-RedHat AI provides production-ready quantized models on HuggingFace, optimized for enterprise deployment. These models are pre-quantized using state-of-the-art techniques and thoroughly tested for quality retention.
-
-**Why use RedHat AI models?**
-
-- Pre-quantized and ready to deploy
-- Enterprise support and validation
-- Optimized for vLLM and OpenShift
-- Multiple quantization levels (INT4, INT8, FP8)
-- Consistent quality across model families
-
-**Explore the collection:** [https://huggingface.co/RedHatAI](https://huggingface.co/RedHatAI)
-
-In this workshop, we use the `RedHatAI/Qwen3.5-9B-quantized.w4a16` model - a 9B parameter model quantized to 4-bit weights with 16-bit activations, delivering 2x speedup with minimal quality loss.
-
-### LLM Compressor
-
-![LLM Compressor](assets/llm-compressor.svg)
-
-LLM Compressor is an open-source toolkit for applying various compression techniques to large language models, including quantization, pruning, and distillation.
-
-**Key features:**
-
-- **Multiple quantization formats:** INT4, INT8, FP8
-- **Advanced techniques:** GPTQ, AWQ, SmoothQuant
-- **One-line API:** Simple Python interface for quantization
-- **vLLM integration:** Direct export to vLLM-compatible formats
-- **Quality metrics:** Built-in evaluation to measure accuracy impact
-
-**Example usage:**
-
-```python
-from llmcompressor import quantize
-
-# Quantize a model to INT4
-quantize(
-    model="meta-llama/Llama-2-7b-hf",
-    dataset="wikitext",
-    output_dir="./quantized_model",
-    recipe="int4"
-)
-```
-
-**Learn more:** [github.com/vllm-project/llm-compressor](https://github.com/vllm-project/llm-compressor)
-
-### vLLM
-
-![vLLM Architecture](assets/vllm-architecture.svg)
-
-vLLM is a high-throughput and memory-efficient inference engine for large language models, designed for production deployments.
-
-**Why vLLM?**
-
-- **PagedAttention:** Efficient KV cache management
-- **Continuous batching:** Maximizes GPU utilization
-- **Tensor parallelism:** Multi-GPU support
-- **Quantization support:** INT4, INT8, FP8, AWQ, GPTQ
-- **OpenAI-compatible API:** Easy integration
-- **Streaming responses:** Real-time token generation
-
-**Performance benefits:**
-
-- 2-4x higher throughput than HuggingFace Transformers
-- Up to 24x higher throughput than text-generation-inference
-- Efficient memory usage with PagedAttention
-- Optimized CUDA kernels for various quantization formats
-
-In this workshop, both model endpoints are served with vLLM in OpenShift, demonstrating enterprise-scale deployment patterns.
-
-**Documentation:** [docs.vllm.ai](https://docs.vllm.ai/)
+---
 
 ## Resources
 
-- **vLLM Documentation:** [docs.vllm.ai](https://docs.vllm.ai/)
-- **guidellm GitHub:** [neuralmagic/guidellm](https://github.com/neuralmagic/guidellm)
-- **LLM Compressor:** [vllm-project/llm-compressor](https://github.com/vllm-project/llm-compressor)
+- **vLLM:** [docs.vllm.ai](https://docs.vllm.ai/)
+- **guidellm:** [github.com/vllm-project/guidellm](https://github.com/vllm-project/guidellm)
+- **LLM Compressor:** [github.com/vllm-project/llm-compressor](https://github.com/vllm-project/llm-compressor)
 - **RedHat AI Models:** [huggingface.co/RedHatAI](https://huggingface.co/RedHatAI)
 
-## After the Workshop
+---
 
-- Quantize your own models with `llm-compressor`
-- Deploy in production with vLLM
-- Experiment with INT8, FP8, structured pruning
-- Join the discussion in Boston Tech Week Slack
-
-## Questions?
-
-- Raise your hand during the workshop
-- Ask in Boston Tech Week Slack
-- Email: workshop@example.com
-
+**Questions?** Ask during the workshop or open an issue on GitHub!

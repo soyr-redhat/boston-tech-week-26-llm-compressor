@@ -42,12 +42,11 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Workshop:
-      - Quick Start: quick-start.md
-      - Workshop Guide: workshop-guide.md
-      - Instructor Guide: instructor-guide.md
-  - Operations:
+  - Setup:
+      - Pre-Event Checklist: pre-event-checklist.md
       - Cluster Status: cluster-status.md
+  - Technical:
+      - Security Architecture: SECURITY.md
 
 extra:
   social:
