@@ -74,6 +74,8 @@ spec:
         - containerPort: 8080
           name: http
         env:
+        - name: HOME
+          value: "/tmp"
         - name: TOTAL_USERS
           value: "50"
         - name: BASE_URL
