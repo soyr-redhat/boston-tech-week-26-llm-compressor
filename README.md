@@ -1,127 +1,210 @@
-# Boston Tech Week 2026: LLM Quantization Workshop
+# Boston Tech Week 2026 - LLM Quantization Workshop
 
-Learn how model quantization makes LLMs faster and more efficient through hands-on comparison.
+**Duration:** 60 minutes  
+**Audience:** 50 participants  
+**Stack:** vLLM + guidellm + OpenShift
+
+---
+
+## 🚀 Quick Links
+
+- **📖 Workshop Documentation:** [WORKSHOP_GUIDE.md](WORKSHOP_GUIDE.md)
+- **🎯 Live Comparison UI:** https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+- **⚡ Original API:** `https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1`
+- **⚡ Quantized API:** `https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1`
+
+---
 
 ## Workshop Overview
 
-**Duration:** 60 minutes  
-**Audience:** ~50 participants  
-**Infrastructure:** OpenShift cluster with L4 GPUs
+This hands-on workshop teaches LLM quantization through live demonstration and practical benchmarking.
 
-## What You'll Learn
+### Part 1: Theory + Live Demo (30 min)
+- Instructor shows side-by-side comparison of FP16 vs INT4 models
+- Explains quantization fundamentals and performance benefits
+- Real-time metrics displayed in Gradio UI
 
-1. What is model quantization and why it matters
-2. How quantization reduces model size by 70-75%
-3. Real performance comparison: original vs quantized models
-4. Deploy models with vLLM for optimized inference
+### Part 2: Hands-On Benchmarking (30 min)
+- Participants install `guidellm` on their laptops
+- Benchmark both models from their machines
+- Compare throughput, latency, and quality
 
-## Workshop Format
+**No cluster access needed for participants!**
 
-### Part 1: Introduction (10 min)
-**Presentation:** What is quantization and why it matters
-- INT8, INT4, FP8 compression techniques
-- Memory, speed, and cost benefits
-- Real-world use cases
+---
 
-### Part 2: Understanding Compression (15 min)
-**Instructor Demo:** How quantization works
-- GPTQ quantization walkthrough
-- Trade-offs: size vs quality vs speed
-- Pre-quantized models from Red Hat AI / NeuralMagic
+## For Participants
 
-### Part 3: Hands-On Comparison (30 min)
-**Interactive Exercise:**
-- Deploy pre-quantized vLLM models
-- Use side-by-side comparison UI
-- Compare speed and quality in real-time
-- Measure GPU memory savings
+### Quick Start (2 minutes)
 
-### Part 4: Wrap-up (5 min)
-- Key takeaways and resources
-- Next steps for production deployment
-
-## Quick Start
-
-### For Workshop Participants
-
-**The instructor will provide:**
-- Pre-deployed vLLM endpoints (ports 8080 and 8081)
-- Access to the comparison UI
-
-**To run locally (optional):**
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor.git
-   cd boston-tech-week-26-llm-compressor
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Launch the comparison UI:**
-   ```bash
-   python comparison_ui.py
-   ```
-
-4. **Open in browser:**
-   ```
-   http://localhost:7860
-   ```
-
-## Using the Comparison UI
-
-### Features
-
-- **Side-by-side comparison** of original vs quantized models
-- **Real-time metrics:** latency, throughput, tokens/sec
-- **Quality assessment:** compare responses side-by-side
-- **Easy configuration:** just specify vLLM ports
-
-### Example Results (Qwen2.5-0.5B)
-
-| Metric | Original (FP16) | Quantized (INT4) | Improvement |
-|--------|----------------|------------------|-------------|
-| Model Size | ~1.0 GB | ~0.28 GB | 72% smaller |
-| VRAM Usage | ~2 GB | ~0.5 GB | 75% less |
-| Latency | 120ms | 80ms | 33% faster |
-| Throughput | 8.3 tok/s | 12.1 tok/s | 1.46x faster |
-| Quality | Baseline | ~99% retained | Minimal loss |
-
-### Deploying vLLM Models (Advanced)
-
-**Original model:**
 ```bash
-vllm serve Qwen/Qwen2.5-0.5B --port 8080
+# 1. Install guidellm
+pip install guidellm
+
+# 2. Set endpoints
+export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
+export QUANTIZED_API="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
+
+# 3. Benchmark original model
+guidellm \
+  --target "$ORIGINAL_API" \
+  --model "Qwen/Qwen2.5-7B-Instruct" \
+  --data-type emulated \
+  --emulated-tokens 100 \
+  --request-count 10
+
+# 4. Benchmark quantized model
+guidellm \
+  --target "$QUANTIZED_API" \
+  --model "RedHatAI/Qwen3.5-9B-quantized.w4a16" \
+  --data-type emulated \
+  --emulated-tokens 100 \
+  --request-count 10
 ```
 
-**Quantized model:**
+**📚 Full Guide:** [WORKSHOP_GUIDE.md](WORKSHOP_GUIDE.md) | [Quick Start](QUICK_START.md)
+
+---
+
+## For Instructors
+
+### Pre-Workshop Checklist
+
 ```bash
-vllm serve neuralmagic/Qwen2.5-0.5B-Instruct-FP8 \
-  --port 8081 \
-  --quantization fp8
+# 1. Verify pods are running
+oc get pods -n workshop
+
+# 2. Test comparison UI
+open https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+
+# 3. Warm up models with test prompts
+# (Run 2-3 prompts in the UI)
 ```
 
-**Check GPU usage:**
-```bash
-nvidia-smi
+### During Workshop
+
+1. **Demo Phase:** Share screen with [Comparison UI](https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com)
+2. **Hands-On:** Guide participants through guidellm installation and benchmarking
+3. **Discussion:** Review metrics and discuss production considerations
+
+**📖 Full Walkthrough:** [INSTRUCTOR_GUIDE.md](INSTRUCTOR_GUIDE.md)
+
+---
+
+## Infrastructure
+
+### Architecture
+
+```
+┌───────────────────────────────────────┐
+│  Participant Laptops (50 users)       │
+│  $ pip install guidellm               │
+│  $ guidellm --target <endpoint> ...   │
+└─────────┬──────────────┬──────────────┘
+          │              │
+          │ HTTPS        │ HTTPS
+          ▼              ▼
+    ┌──────────┐   ┌──────────┐
+    │ Original │   │Quantized │
+    │  FP16    │   │   INT4   │
+    │ 2× GPU   │   │ 2× GPU   │
+    └──────────┘   └──────────┘
+          │              │
+    ┌─────┴──────────────┴─────┐
+    │  workshop namespace       │
+    │  OpenShift Cluster        │
+    └───────────────────────────┘
 ```
 
-## Repository Contents
+### Deployed Services
 
-- `comparison_ui.py` - Gradio-based comparison interface
-- `WORKSHOP.md` - Detailed workshop instructions
-- `requirements.txt` - Python dependencies
-- `setup.sh` - Environment setup script
+| Service | Model | GPUs | Endpoint |
+|---------|-------|------|----------|
+| **Original** | Qwen/Qwen2.5-7B-Instruct (FP16) | 2× L4 | [vllm-original](https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com) |
+| **Quantized** | RedHatAI/Qwen3.5-9B-quantized.w4a16 (INT4) | 2× L4 | [vllm-quantized](https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com) |
+| **Comparison UI** | Gradio (Everforest theme) | — | [comparison-ui](https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com) |
+
+**Status:** [CLUSTER_STATUS.md](CLUSTER_STATUS.md)
+
+---
+
+## Repository Structure
+
+```
+.
+├── comparison_ui.py           # Gradio UI for side-by-side comparison
+├── openshift/
+│   └── workshop-deployment.yaml  # Full deployment manifest
+├── docs/                      # GitHub Pages site
+│   ├── index.md              # Landing page
+│   ├── quick-start.md        # Participant quick ref
+│   ├── workshop-guide.md     # Full workshop guide
+│   ├── instructor-guide.md   # Instructor walkthrough
+│   └── cluster-status.md     # Infrastructure status
+├── WORKSHOP_GUIDE.md          # Complete workshop guide
+├── QUICK_START.md            # Quick reference card
+├── INSTRUCTOR_GUIDE.md       # Instructor walkthrough
+└── CLUSTER_STATUS.md         # Cluster ops guide
+```
+
+---
+
+## Development
+
+### Local Testing
+
+```bash
+# Test comparison UI locally
+python comparison_ui.py
+
+# Access at http://localhost:7860
+# Update endpoints to point to local vLLM instances if testing
+```
+
+### Deploy to OpenShift
+
+```bash
+# Create namespace
+oc create namespace workshop
+
+# Create UI code ConfigMap
+oc create configmap comparison-ui-code \
+  --from-file=comparison_ui.py \
+  -n workshop
+
+# Deploy all resources
+oc apply -f openshift/workshop-deployment.yaml
+
+# Create routes
+oc expose service vllm-original \
+  --name=vllm-original-api \
+  --hostname=vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com \
+  -n workshop
+
+oc expose service vllm-quantized \
+  --name=vllm-quantized-api \
+  --hostname=vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com \
+  -n workshop
+```
+
+---
 
 ## Resources
 
-- [llm-compressor documentation](https://github.com/vllm-project/llm-compressor)
-- [vllm documentation](https://github.com/vllm-project/vllm)
-- [Qwen2.5-0.5B model card](https://huggingface.co/Qwen/Qwen2.5-0.5B)
+- **vLLM:** [docs.vllm.ai](https://docs.vllm.ai/)
+- **guidellm:** [github.com/neuralmagic/guidellm](https://github.com/neuralmagic/guidellm)
+- **LLM Compressor:** [github.com/vllm-project/llm-compressor](https://github.com/vllm-project/llm-compressor)
+- **RedHat AI Models:** [huggingface.co/RedHatAI](https://huggingface.co/RedHatAI)
 
-## Support
+---
 
-During the workshop, use the designated chat channel for troubleshooting.
+## License
+
+MIT - Feel free to use this workshop content for your own events!
+
+---
+
+## Questions?
+
+- During workshop: Raise your hand
+- After workshop: Boston Tech Week Slack
