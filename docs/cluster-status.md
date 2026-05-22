@@ -127,11 +127,11 @@ oc expose service vllm-original --name=vllm-original-api -n workshop-user1
 
 ## Security
 
-- ✅ TLS enabled on all routes (edge termination)
-- ✅ Namespace isolation (workshop-user1)
-- ✅ Resource limits prevent runaway consumption
-- ✅ No authentication required (public workshop)
-- ✅ Read-only access for participants (APIs only)
+-  TLS enabled on all routes (edge termination)
+-  Namespace isolation (workshop-user1)
+-  Resource limits prevent runaway consumption
+-  No authentication required (public workshop)
+-  Read-only access for participants (APIs only)
 
 
-**Status:** ✅ ALL SYSTEMS OPERATIONAL - READY FOR WORKSHOP
+**Status:**  ALL SYSTEMS OPERATIONAL - READY FOR WORKSHOP

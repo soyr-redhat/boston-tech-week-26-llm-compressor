@@ -10,7 +10,7 @@
 
 ### vLLM Original Model (FP16)
 - **Pod:** `vllm-original-6784c755c5-dxhhc`
-- **Status:** ✅ Running with tensor parallelism
+- **Status:**  Running with tensor parallelism
 - **Model:** Qwen/Qwen2.5-7B-Instruct
 - **Precision:** FP16
 - **Context Length:** 8192 tokens
@@ -18,11 +18,11 @@
 - **Tensor Parallel Size:** 2
 - **Internal Service:** vllm-original:8080
 - **Public Endpoint:** https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com
-- **Health Check:** ✅ Responding
+- **Health Check:**  Responding
 
 ### vLLM Quantized Model (INT4)
 - **Pod:** `vllm-quantized-bf87465f9-6krlj`
-- **Status:** ✅ Running with tensor parallelism
+- **Status:**  Running with tensor parallelism
 - **Model:** RedHatAI/Qwen3.5-9B-quantized.w4a16
 - **Precision:** INT4 (w4a16 = 4-bit weights, 16-bit activations)
 - **Context Length:** 8192 tokens
@@ -30,27 +30,27 @@
 - **Tensor Parallel Size:** 2
 - **Internal Service:** vllm-quantized:8081
 - **Public Endpoint:** https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com
-- **Health Check:** ✅ Responding
+- **Health Check:**  Responding
 
 ### Comparison UI (Gradio)
 - **Pod:** `comparison-ui-5977cc6cf9-rdfdk`
-- **Status:** ✅ Running (59 minutes uptime)
+- **Status:**  Running (59 minutes uptime)
 - **Framework:** Gradio 5.x + Python 3.12
 - **Theme:** Everforest (custom CSS)
 - **Features:** Concurrent streaming, live metrics, side-by-side comparison
 - **Internal Service:** comparison-ui:7860
 - **Public URL:** https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
-- **Health Check:** ✅ Accessible
+- **Health Check:**  Accessible
 
 ### JupyterLab (Workshop Notebooks)
 - **Pod:** `jupyter-*`
-- **Status:** ✅ Running
+- **Status:**  Running
 - **Image:** quay.io/jupyter/scipy-notebook:latest
 - **Notebook:** workshop_notebook.ipynb (pre-loaded)
 - **Features:** Interactive benchmarking, matplotlib charts, guidellm integration
 - **Internal Service:** jupyter:8888
 - **Public URL:** https://jupyter.apps.ocp.ntdrq.sandbox503.opentlc.com
-- **Health Check:** ✅ Accessible
+- **Health Check:**  Accessible
 
 ---
 
@@ -212,11 +212,11 @@ oc get routes -n workshop
 All services running stable with no errors.
 
 ### Previous Issues (Resolved)
-- ✅ Permission denied on `/.local` - Fixed with `HOME=/tmp`
-- ✅ Model name detection - Fixed with `/v1/models` endpoint query
-- ✅ OOM on context length - Fixed with `--max-model-len 8192`
-- ✅ FP8 model crashes - Switched to standard FP16 original model
-- ✅ UI layout issues - Redesigned with Everforest theme
+-  Permission denied on `/.local` - Fixed with `HOME=/tmp`
+-  Model name detection - Fixed with `/v1/models` endpoint query
+-  OOM on context length - Fixed with `--max-model-len 8192`
+-  FP8 model crashes - Switched to standard FP16 original model
+-  UI layout issues - Redesigned with Everforest theme
 
 ---
 
@@ -271,11 +271,11 @@ oc expose service vllm-original --name=vllm-original-api -n workshop
 
 ## Security
 
-- ✅ TLS enabled on all routes (edge termination)
-- ✅ Namespace isolation (workshop)
-- ✅ Resource limits prevent runaway consumption
-- ✅ No authentication required (public workshop)
-- ✅ Read-only access for participants (APIs only)
+-  TLS enabled on all routes (edge termination)
+-  Namespace isolation (workshop)
+-  Resource limits prevent runaway consumption
+-  No authentication required (public workshop)
+-  Read-only access for participants (APIs only)
 
 ---
 
@@ -293,4 +293,4 @@ oc expose service vllm-original --name=vllm-original-api -n workshop
 
 ---
 
-**Status:** ✅ ALL SYSTEMS OPERATIONAL - READY FOR WORKSHOP
+**Status:**  ALL SYSTEMS OPERATIONAL - READY FOR WORKSHOP

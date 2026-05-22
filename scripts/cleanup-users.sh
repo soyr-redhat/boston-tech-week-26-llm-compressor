@@ -11,7 +11,7 @@ echo "========================================="
 echo "Boston Tech Week 2026 - User Cleanup"
 echo "========================================="
 echo ""
-echo "⚠️  WARNING: This will delete all JupyterLab instances!"
+echo "  WARNING: This will delete all JupyterLab instances!"
 echo "   Namespace: $NAMESPACE"
 echo "   Users: user1 - user$NUM_USERS"
 echo ""
@@ -38,7 +38,7 @@ for i in $(seq 1 $NUM_USERS); do
     oc delete route jupyter-${USER_ID} -n $NAMESPACE --ignore-not-found=true
     oc delete configmap workshop-notebook-${USER_ID} -n $NAMESPACE --ignore-not-found=true
 
-    echo "  ✓ $USER_ID deleted"
+    echo "   $USER_ID deleted"
 done
 
 echo ""

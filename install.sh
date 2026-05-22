@@ -65,7 +65,7 @@ echo "Testing installation..."
 
 # Test if guidellm is available
 if command -v guidellm &> /dev/null; then
-    echo "✓ guidellm installed successfully!"
+    echo " guidellm installed successfully!"
     echo ""
     echo "Installation method: $INSTALL_METHOD"
     guidellm --version 2>/dev/null || echo "(version check skipped)"

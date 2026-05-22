@@ -113,14 +113,14 @@ Typical quality loss: <2% degradation in benchmarks"
 #### Trade-offs
 
 "When to quantize:
-- ✅ Production inference at scale
-- ✅ Running bigger models on limited hardware
-- ✅ Lowering latency and cost
+-  Production inference at scale
+-  Running bigger models on limited hardware
+-  Lowering latency and cost
 
 When NOT to:
-- ❌ Critical applications where 1% accuracy matters
-- ❌ Fine-tuning (training needs precision)
-- ❌ Models that already degrade significantly"
+-  Critical applications where 1% accuracy matters
+-  Fine-tuning (training needs precision)
+-  Models that already degrade significantly"
 
 ### Wrap Part 1 (5 min)
 
@@ -333,4 +333,4 @@ Start with small models (1-3B) to learn, then scale to production."
 - Relate to real-world use cases
 - Have fun!
 
-🚀 **You're ready. Go show them how quantization works!**
+ **You're ready. Go show them how quantization works!**
