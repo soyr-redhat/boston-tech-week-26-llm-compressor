@@ -11,7 +11,11 @@ from typing import Dict, Tuple
 
 def query_vllm(port: str, prompt: str, max_tokens: int = 100) -> Tuple[str, Dict]:
     """Query a vLLM endpoint and return response with metrics"""
-    url = f"http://localhost:{port}/v1/completions"
+    # Support both localhost:port and service:port formats
+    if ':' in port:
+        url = f"http://{port}/v1/completions"
+    else:
+        url = f"http://localhost:{port}/v1/completions"
 
     payload = {
         "model": "deployed-model",
@@ -42,7 +46,8 @@ def query_vllm(port: str, prompt: str, max_tokens: int = 100) -> Tuple[str, Dict
             return f"Error {response.status_code}: {response.text}", {}
 
     except requests.exceptions.ConnectionError:
-        return f"❌ Cannot connect to localhost:{port}. Is vLLM running?", {}
+        endpoint = port if ':' in port else f"localhost:{port}"
+        return f"❌ Cannot connect to {endpoint}. Is vLLM running?", {}
     except Exception as e:
         return f"❌ Error: {str(e)}", {}
 
@@ -112,14 +117,14 @@ with gr.Blocks(title="vLLM Model Comparison", theme=gr.themes.Soft()) as demo:
         with gr.Column():
             gr.Markdown("### ⚙️ vLLM Server Configuration")
             original_port = gr.Textbox(
-                label="Original Model Port",
+                label="Original Model Endpoint",
                 value="8080",
-                placeholder="8080"
+                placeholder="8080 or vllm-original:8080"
             )
             quantized_port = gr.Textbox(
-                label="Quantized Model Port",
+                label="Quantized Model Endpoint",
                 value="8081",
-                placeholder="8081"
+                placeholder="8081 or vllm-quantized:8081"
             )
             max_tokens = gr.Slider(
                 minimum=50,
