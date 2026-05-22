@@ -1,26 +1,40 @@
 # JupyterLab Deployment Guide
 
-## Deploy to OpenShift Cluster
+## Deploy Per-User JupyterLab Instances
 
 ### Prerequisites
 
 - Logged into OpenShift cluster as admin
 - Workshop namespace exists
 
-### Deploy JupyterLab
+### Quick Deploy (50 users)
 
 ```bash
-# Apply the JupyterLab deployment
-oc apply -f openshift/jupyter-deployment.yaml
+# Provision JupyterLab for all 50 users
+./scripts/provision-users.sh 50
+
+# This creates:
+# - jupyter-user1 through jupyter-user50
+# - Routes: https://jupyter-user1.apps.ocp.ntdrq.sandbox503.opentlc.com, etc.
+```
+
+### Deploy Single User (for testing)
+
+```bash
+# Deploy for a specific user
+oc process -f openshift/jupyter-user-template.yaml \
+  -p USER_ID=user1 \
+  -n workshop \
+  | oc apply -f -
 
 # Wait for deployment
-oc wait --for=condition=available --timeout=300s deployment/jupyter -n workshop
+oc wait --for=condition=available --timeout=300s deployment/jupyter-user1 -n workshop
 
 # Check pod status
-oc get pods -n workshop -l app=jupyter
+oc get pods -n workshop -l user=user1
 
 # Get the route URL
-oc get route jupyter -n workshop -o jsonpath='{.spec.host}'
+oc get route jupyter-user1 -n workshop -o jsonpath='{.spec.host}'
 ```
 
 ### Access JupyterLab

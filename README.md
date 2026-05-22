@@ -37,11 +37,12 @@ This hands-on workshop teaches LLM quantization through live demonstration and p
 
 ### Jupyter Notebook (Recommended - Works in Your Browser)
 
-**Access the workshop notebook:**
+**Access your personal workshop notebook:**
 
-1. Log into the workshop cluster
-2. Navigate to: **https://jupyter.apps.ocp.ntdrq.sandbox503.opentlc.com**
-3. Open `workshop_notebook.ipynb`
+1. You'll receive your user ID (e.g., `user1`, `user2`, etc.)
+2. Navigate to: **https://jupyter-{your-user-id}.apps.ocp.ntdrq.sandbox503.opentlc.com**
+   - Example: `https://jupyter-user1.apps.ocp.ntdrq.sandbox503.opentlc.com`
+3. Open `workshop_notebook.ipynb` 
 4. Run cells to benchmark models
 
 The notebook includes:
@@ -49,6 +50,7 @@ The notebook includes:
 - Automatic comparison charts
 - Works on any platform (Windows, Mac, Linux)
 - No installation required
+- Isolated workspace (your work won't interfere with others)
 
 ### Command Line Alternative (Advanced Users)
 

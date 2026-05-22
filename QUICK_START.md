@@ -4,11 +4,12 @@
 
 **Best for all skill levels and works on all platforms (Windows, Mac, Linux)**
 
-1. Open in your browser: **https://jupyter.apps.ocp.ntdrq.sandbox503.opentlc.com**
-2. Open `workshop_notebook.ipynb`
-3. Run cells in order by clicking the play button or pressing `Shift+Enter`
+1. Get your user ID from the instructor (e.g., `user1`)
+2. Open in your browser: **https://jupyter-{your-user-id}.apps.ocp.ntdrq.sandbox503.opentlc.com**
+3. Open `workshop_notebook.ipynb`
+4. Run cells in order by clicking the play button or pressing `Shift+Enter`
 
-That's it! No installation needed.
+That's it! No installation needed. Each participant gets their own isolated JupyterLab instance.
 
 ---
 

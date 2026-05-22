@@ -7,7 +7,7 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 ## Quick Links
 
 ### For Participants
-- **[Workshop Notebook](https://jupyter.apps.ocp.ntdrq.sandbox503.opentlc.com)** - Interactive benchmarking in your browser
+- **Workshop Notebook** - Interactive benchmarking in your browser (URL provided at workshop)
 - **[Quick Start Guide](quick-start)** - Command-line alternative
 - **[Workshop Guide](workshop-guide)** - Full 60-minute workshop agenda
 - **[Demo UI](https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com)** - Live model comparison
@@ -52,17 +52,17 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 
 - **Laptop** with internet access
 - **Web browser** (Chrome, Firefox, Safari, Edge)
-- **Cluster credentials** (provided at the workshop)
 - No GPU or Python installation required!
 
 ## Setup (During Workshop)
 
-1. Receive your cluster credentials from the instructor
-2. Navigate to: **https://jupyter.apps.ocp.ntdrq.sandbox503.opentlc.com**
-3. Log in with your credentials
-4. Open `workshop_notebook.ipynb`
+1. Receive your **user ID** from the instructor (e.g., `user1`, `user2`, ...)
+2. Navigate to: **https://jupyter-{your-user-id}.apps.ocp.ntdrq.sandbox503.opentlc.com**
+   - Example: If your user ID is `user5`, go to `https://jupyter-user5.apps.ocp.ntdrq.sandbox503.opentlc.com`
+3. Open `workshop_notebook.ipynb`
+4. Run cells in order
 
-That's it! The notebook and vLLM models are already deployed and ready to use.
+That's it! Your personal JupyterLab environment and the shared vLLM models are already deployed and ready to use.
 
 **Having issues?** See the [troubleshooting section](workshop-guide#troubleshooting) in the full workshop guide.
 
