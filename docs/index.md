@@ -66,17 +66,18 @@ Just click the link during the workshop - no installation needed!
 
 If you prefer to run locally:
 
-**Mac/Linux:**
 ```bash
-curl -sSL https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.sh | bash
+# Install Jupyter
+pip install notebook
+
+# Download the workshop notebook
+curl -O https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/workshop_notebook.ipynb
+
+# Start Jupyter
+jupyter notebook workshop_notebook.ipynb
 ```
 
-**Windows (PowerShell):**
-```powershell
-irm https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.ps1 | iex
-```
-
-That's it! The installer handles everything and the vLLM models are already running in the cloud for you.
+That's it! The notebook will install dependencies automatically, and the vLLM models are already running in the cloud.
 
 **Having issues?** See the [troubleshooting section](workshop-guide#troubleshooting) in the full workshop guide.
 
