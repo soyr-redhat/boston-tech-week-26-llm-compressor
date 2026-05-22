@@ -28,6 +28,11 @@ spec:
         - "0.0.0.0"
         - --quantization
         - fp8
+        env:
+        - name: HOME
+          value: "/tmp"
+        - name: HF_HOME
+          value: "/tmp/huggingface"
         ports:
         - containerPort: 8081
           name: http
