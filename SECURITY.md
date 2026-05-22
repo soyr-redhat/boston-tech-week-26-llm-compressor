@@ -18,9 +18,21 @@ This policy ensures users cannot interfere with each other's work:
   - vLLM models accessed via public HTTPS routes work normally
   - pip install and other internet access works normally
 
+### Authentication
+
+**JupyterLab instances have authentication disabled** for this workshop to minimize friction.
+
+- Users do NOT need tokens or passwords to access JupyterLab
+- Anyone with the URL can access any workspace
+- This is acceptable for a 60-minute workshop with a known audience in a controlled environment
+
+**Security trade-off:**
+- Users could theoretically access other users' workspaces if they know the URL pattern
+- For a production environment, enable per-user tokens or integrate with OpenShift OAuth
+
 ### What Users Can Access
 
-- Their own JupyterLab instance (via browser/route)
+- Any JupyterLab instance (no authentication)
 - Shared vLLM models via public routes:
   - https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
   - https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
@@ -28,7 +40,7 @@ This policy ensures users cannot interfere with each other's work:
 
 ### What Users Cannot Access
 
-- Other users' JupyterLab pods (internal service-to-service blocked)
+- Other users' JupyterLab pods (internal service-to-service blocked by NetworkPolicy)
 - Kubernetes API (no kubectl/oc installed, no RBAC permissions)
 - Secrets or other cluster resources (default ServiceAccount has no permissions)
 
