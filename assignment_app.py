@@ -8,8 +8,7 @@ from flask import Flask, render_template_string, redirect, session, jsonify
 import json
 import os
 import subprocess
-import random
-import string
+import hashlib
 from pathlib import Path
 from threading import Lock
 
@@ -26,6 +25,15 @@ NAMESPACE = os.environ.get('NAMESPACE', 'workshop')
 # Thread-safe lock for assignments
 assignments_lock = Lock()
 
+def generate_suffix(user_number):
+    """Generate deterministic suffix from user number"""
+    # Hash user number with a secret salt for consistency
+    secret_salt = os.environ.get('SECRET_KEY', 'workshop-secret-key-change-in-prod')
+    hash_input = f"{secret_salt}-user{user_number}".encode()
+    hash_output = hashlib.sha256(hash_input).hexdigest()
+    # Take first 10 chars (lowercase hex)
+    return hash_output[:10]
+
 def load_assignments():
     """Load assignment state from disk"""
     if ASSIGNMENTS_FILE.exists():
@@ -34,7 +42,6 @@ def load_assignments():
     return {
         'next_available': 1,
         'assignments': {},  # session_id -> user_number
-        'suffixes': {},  # user_number -> random suffix
         'used': []  # list of used user numbers
     }
 
@@ -84,14 +91,14 @@ def get_assignment(session_id):
         # Check if this session already has an assignment
         if session_id in state['assignments']:
             user_number = state['assignments'][session_id]
-            suffix = state['suffixes'].get(str(user_number))
+            suffix = generate_suffix(user_number)
             return user_number, suffix
 
         # Find next available user
         next_user = state['next_available']
 
-        # Generate random 10-character suffix (lowercase + digits)
-        suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
+        # Generate deterministic suffix
+        suffix = generate_suffix(next_user)
 
         # Auto-provision if we've exceeded pre-provisioned capacity
         if next_user > TOTAL_USERS and AUTO_PROVISION:
@@ -103,7 +110,6 @@ def get_assignment(session_id):
 
         # Assign user
         state['assignments'][session_id] = next_user
-        state['suffixes'][str(next_user)] = suffix
         state['used'].append(next_user)
         state['next_available'] = next_user + 1
 

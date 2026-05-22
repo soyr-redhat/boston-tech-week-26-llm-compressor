@@ -7,6 +7,13 @@ set -e
 NAMESPACE="workshop"
 NUM_USERS=${1:-50}
 TEMPLATE="openshift/jupyter-user-template.yaml"
+SECRET_KEY=${SECRET_KEY:-"boston-tech-week-2026-secret"}
+
+# Function to generate deterministic suffix from user number
+generate_suffix() {
+    local user_num=$1
+    echo -n "${SECRET_KEY}-user${user_num}" | sha256sum | cut -c1-10
+}
 
 echo "========================================="
 echo "Boston Tech Week 2026 - User Provisioning"
@@ -34,8 +41,8 @@ oc get namespace $NAMESPACE &>/dev/null || oc create namespace $NAMESPACE
 for i in $(seq 1 $NUM_USERS); do
     USER_ID="user${i}"
 
-    # Generate random 10-character suffix (lowercase + digits)
-    SUFFIX=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | head -c 10)
+    # Generate deterministic suffix (consistent with assignment app)
+    SUFFIX=$(generate_suffix $i)
 
     echo "Provisioning $USER_ID-$SUFFIX..."
 
