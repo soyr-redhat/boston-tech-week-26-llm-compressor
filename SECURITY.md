@@ -28,7 +28,9 @@ This policy ensures users cannot interfere with each other's work:
 - Users cannot guess other workspaces by changing the number (each has a unique random suffix)
 
 **Security through obscurity:**
-- Each user gets a unique URL with a random suffix (10 chars, lowercase + digits = 36^10 = 3.6 quadrillion combinations)
+- Each user gets a unique URL with a deterministic suffix (SHA256 hash of user number + secret key, truncated to 10 hex chars)
+- Example: `user1` → `a0c3761d23` (consistent between provision script and assignment app)
+- Suffixes are not guessable without knowing the secret key
 - URLs are only shared via the assignment app, never displayed publicly
 - For a 60-minute workshop, this provides sufficient isolation
 - For a production environment, enable per-user tokens or integrate with OpenShift OAuth
