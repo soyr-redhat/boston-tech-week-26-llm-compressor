@@ -118,12 +118,12 @@ with gr.Blocks(title="vLLM Model Comparison", theme=gr.themes.Soft()) as demo:
             gr.Markdown("### ⚙️ vLLM Server Configuration")
             original_port = gr.Textbox(
                 label="Original Model Endpoint",
-                value="8080",
+                value="vllm-original:8080",
                 placeholder="8080 or vllm-original:8080"
             )
             quantized_port = gr.Textbox(
                 label="Quantized Model Endpoint",
-                value="8081",
+                value="vllm-quantized:8081",
                 placeholder="8081 or vllm-quantized:8081"
             )
             max_tokens = gr.Slider(
