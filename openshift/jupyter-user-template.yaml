@@ -366,11 +366,12 @@ objects:
             value: "yes"
           - name: RESTARTABLE
             value: "yes"
-          command: ["start-notebook.sh"]
           args:
+            - "start-notebook.py"
             - "--ServerApp.token=''"
             - "--ServerApp.password=''"
             - "--ServerApp.disable_check_xsrf=True"
+            - "--NotebookApp.allow_origin='*'"
           volumeMounts:
           - name: home
             mountPath: /home/jovyan
