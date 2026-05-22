@@ -21,13 +21,11 @@ spec:
         command:
         - vllm
         - serve
-        - neuralmagic/Qwen2.5-0.5B-Instruct-FP8
+        - Qwen/Qwen2.5-0.5B-Instruct
         - --port
         - "8081"
         - --host
         - "0.0.0.0"
-        - --quantization
-        - fp8
         env:
         - name: HOME
           value: "/tmp"
