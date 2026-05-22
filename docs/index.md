@@ -57,12 +57,11 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 ## Setup (Before Workshop)
 
 ```bash
-# Create virtual environment (recommended)
-python3 -m venv guidellm-env
-source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
+# Install uv package manager (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Install guidellm
-pip install 'numpy<2' guidellm
+uv tool install guidellm
 
 # Verify installation
 guidellm --help

@@ -3,12 +3,11 @@
 ## Setup (2 minutes)
 
 ```bash
-# Create and activate virtual environment (recommended)
-python3 -m venv guidellm-env
-source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
+# Install uv if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Install guidellm with numpy constraint
-pip install 'numpy<2' guidellm
+# Install guidellm (isolated, no venv needed)
+uv tool install guidellm
 
 # Set endpoints
 export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
@@ -59,8 +58,9 @@ guidellm \
 
 **Installation error?**
 ```bash
-python3 -m venv venv && source venv/bin/activate
-pip install guidellm
+# Reinstall guidellm
+uv tool uninstall guidellm
+uv tool install guidellm
 ```
 
 **Connection error?**

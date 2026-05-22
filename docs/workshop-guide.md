@@ -46,32 +46,34 @@ Now **you** will benchmark these models using `guidellm` - a tool for load testi
 
 ### Setup (5 min)
 
+#### Install uv (if not already installed)
+
+```bash
+# Install uv package manager
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows (PowerShell):
+# powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
 #### Install guidellm
 
-**Option 1: Using a virtual environment (recommended)**
+**Option 1: Using uv tool (recommended)**
 
 ```bash
-# Create virtual environment
-python3 -m venv guidellm-env
-
-# Activate it
-source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
-
-# Install guidellm with numpy constraint
-pip install 'numpy<2' guidellm
+# Install guidellm as an isolated tool
+uv tool install guidellm
 ```
 
-**Option 2: Using system Python**
+**Option 2: Using uv with a virtual environment**
 
 ```bash
-# Install with numpy constraint to avoid compatibility issues
-pip install 'numpy<2' guidellm
-```
+# Create and use a virtual environment
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-**Option 3: Using the requirements file**
-
-```bash
-pip install -r participant-requirements.txt
+# Install guidellm
+uv pip install guidellm
 ```
 
 #### Model Endpoints
@@ -210,20 +212,15 @@ guidellm \
 
 **Error: "A module that was compiled using NumPy 1.x cannot be run in NumPy 2.x"**
 
-This is a common numpy compatibility issue. Fix with:
+If you see numpy compatibility errors, use uv for better dependency isolation:
 
 ```bash
-# Option 1: Use a virtual environment (RECOMMENDED)
-python3 -m venv guidellm-env
-source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
-pip install 'numpy<2' guidellm
+# Uninstall any existing guidellm
+pip uninstall guidellm  # if installed via pip
+uv tool uninstall guidellm  # if installed via uv tool
 
-# Option 2: Downgrade numpy in your current environment
-pip install 'numpy<2' --force-reinstall
-pip install guidellm
-
-# Option 3: Use pipx (isolated install)
-pipx install guidellm --pip-args="numpy<2"
+# Install with uv (handles dependencies automatically)
+uv tool install guidellm
 ```
 
 **After fixing, verify installation:**
@@ -286,6 +283,10 @@ time curl -X POST https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
 After the workshop, you can uninstall guidellm:
 
 ```bash
+# If installed via uv tool
+uv tool uninstall guidellm
+
+# If installed via pip
 pip uninstall guidellm
 ```
 

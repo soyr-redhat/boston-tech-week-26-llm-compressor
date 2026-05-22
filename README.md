@@ -38,12 +38,11 @@ This hands-on workshop teaches LLM quantization through live demonstration and p
 ### Quick Start (2 minutes)
 
 ```bash
-# 1. Create virtual environment (recommended)
-python3 -m venv guidellm-env
-source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
+# 1. Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # 2. Install guidellm
-pip install 'numpy<2' guidellm
+uv tool install guidellm
 
 # 3. Set endpoints
 export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
