@@ -1,7 +1,3 @@
----
-layout: default
-title: Quick Start
----
 
 # Quick Start - LLM Benchmarking
 
@@ -78,6 +74,3 @@ curl $ORIGINAL_API/models
 
 Watch the live comparison: https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 
----
-
-**Questions?** Raise your hand or find the instructor

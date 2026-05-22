@@ -1,0 +1,83 @@
+/* Red Hat branding colors and custom styling */
+
+:root {
+  --md-primary-fg-color: #EE0000;
+  --md-primary-fg-color--light: #FF4D4D;
+  --md-primary-fg-color--dark: #CC0000;
+  --md-accent-fg-color: #0066CC;
+}
+
+/* Code blocks with Everforest-inspired theme */
+.highlight pre {
+  background-color: #2f383e !important;
+  color: #d3c6aa !important;
+}
+
+.highlight .k, .highlight .kd, .highlight .kn {
+  color: #a7c080 !important; /* keywords - green */
+}
+
+.highlight .s, .highlight .s1, .highlight .s2 {
+  color: #dbbc7f !important; /* strings - yellow */
+}
+
+.highlight .nb {
+  color: #7fbbb3 !important; /* builtins - blue */
+}
+
+.highlight .c, .highlight .c1, .highlight .cm {
+  color: #859289 !important; /* comments - grey */
+}
+
+/* Copy button styling */
+.md-clipboard {
+  color: var(--md-primary-fg-color) !important;
+}
+
+/* Table styling */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+th {
+  background-color: var(--md-primary-fg-color);
+  color: white;
+  font-weight: 600;
+  padding: 0.6em 1em;
+  text-align: left;
+}
+
+td {
+  padding: 0.6em 1em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Admonition customization */
+.md-typeset .admonition {
+  border-left: 4px solid var(--md-primary-fg-color);
+}
+
+/* Link styling */
+a {
+  color: var(--md-accent-fg-color);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Header adjustments */
+h1 {
+  border-bottom: 2px solid var(--md-primary-fg-color);
+  padding-bottom: 0.5em;
+}
+
+/* Code inline */
+code {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: 'Red Hat Mono', 'Courier New', monospace;
+}

@@ -1,7 +1,3 @@
----
-layout: default
-title: Instructor Guide
----
 
 # Instructor Walkthrough - LLM Quantization Workshop
 
@@ -9,40 +5,6 @@ title: Instructor Guide
 **Audience:** 50 participants  
 **Your Role:** Live demo + hands-on facilitation
 
----
-
-## Pre-Workshop (15 min before)
-
-### 1. Verify Infrastructure
-
-```bash
-# Check pods are running
-oc get pods -n workshop-user1
-
-# Should see:
-# vllm-original-xxx         1/1     Running
-# vllm-quantized-xxx        1/1     Running
-# comparison-ui-xxx         1/1     Running
-
-# Check logs for errors
-oc logs deployment/vllm-original -n workshop-user1 --tail=20
-oc logs deployment/vllm-quantized -n workshop-user1 --tail=20
-```
-
-### 2. Test Comparison UI
-
-Open: https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
-
-- Try example prompt
-- Verify both models respond
-- Check metrics display
-- Confirm speedup visible
-
-### 3. Warm Up Models
-
-Run 2-3 test prompts to load models into memory.
-
----
 
 ## Part 1: Theory + Live Demo (30 min)
 
@@ -135,114 +97,6 @@ When NOT to:
 
 Now YOU'RE going to benchmark these models yourselves using guidellm - a tool for load testing LLM APIs."
 
----
-
-## Part 2: Hands-On Benchmarking (30 min)
-
-### Setup (5 min)
-
-**Share screen with terminal**
-
-```bash
-# Install guidellm
-pip install guidellm
-
-# Set endpoints
-export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
-export QUANTIZED_API="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
-```
-
-"These are the same models you just saw. Now you'll programmatically benchmark them from your laptops."
-
-### Task 1: Quick Test (5 min)
-
-**Run this together:**
-
-```bash
-guidellm \
-  --target "$ORIGINAL_API" \
-  --model "Qwen/Qwen2.5-7B-Instruct" \
-  --data-type emulated \
-  --emulated-tokens 100 \
-  --request-count 5
-```
-
-**While running, explain:**
-
-"guidellm is sending 5 test requests, each asking for 100 tokens. Watch the metrics:
-
-- **Throughput:** requests or tokens per second
-- **Latency:** P50 (median), P95 (95th percentile)
-- **Time to First Token:** How fast generation starts"
-
-**After results:**
-
-"Now try the quantized model - change the target and model name. You should see ~1.5-2x improvement."
-
-### Task 2: Load Test (10 min)
-
-**Increase the difficulty:**
-
-```bash
-guidellm \
-  --target "$ORIGINAL_API" \
-  --model "Qwen/Qwen2.5-7B-Instruct" \
-  --data-type emulated \
-  --emulated-tokens 100 \
-  --request-count 50 \
-  --max-concurrency 5
-```
-
-"Now we're simulating 50 requests with 5 concurrent users. This is closer to production load.
-
-**What to observe:**
-- Queue times increase
-- P95 latency gets worse (tail latency)
-- Throughput hits a ceiling
-
-The quantized model should handle load better due to faster processing."
-
-**Walk around and help participants with errors.**
-
-### Task 3: Real Prompts (10 min)
-
-"Let's test with actual prompts instead of emulated tokens."
-
-**Create prompts.txt:**
-
-```text
-Explain quantum computing in simple terms
-Write a Python function to reverse a string
-What are the benefits of LLM quantization?
-Describe how neural networks work
-Generate a creative story about robots
-```
-
-```bash
-guidellm \
-  --target "$QUANTIZED_API" \
-  --model "RedHatAI/Qwen3.5-9B-quantized.w4a16" \
-  --data-type file \
-  --data "prompts.txt" \
-  --max-concurrency 3
-```
-
-"Notice the variability - some prompts generate more, some less. This is real-world behavior."
-
-### Wrap Part 2 (5 min)
-
-**Recap key learnings:**
-
-"What did you discover?
-
-- Quantized models are consistently faster (1.5-2x throughput)
-- Latency is lower (30-40% reduction)
-- Quality is nearly identical
-- Under load, the advantage grows
-
-This is why companies like Meta, OpenAI, and Anthropic use quantization in production."
-
----
 
 ## Discussion & Q&A (5 min)
 
@@ -263,26 +117,6 @@ This is why companies like Meta, OpenAI, and Anthropic use quantization in produ
    - Quantized models degrade more gracefully
    - Memory efficiency = more batch throughput
 
----
-
-## Common Questions
-
-**Q: Can I quantize any model?**  
-A: Most yes, but check HuggingFace for pre-quantized versions first. Quantizing yourself requires the full model in memory.
-
-**Q: What about FP8?**  
-A: Newer format, good for H100/H200 GPUs. INT4 is more mature and widely supported.
-
-**Q: Does quantization affect fine-tuning?**  
-A: Generally train in FP16/BF16, then quantize for inference. QLoRA allows quantized fine-tuning but it's slower.
-
-**Q: How do I quantize my own model?**  
-A: Use `llm-compressor` (from vLLM team) or similar tools. Check the resources section for links.
-
-**Q: What about smaller models like 1B params?**  
-A: Quantization helps less at smaller sizes. Focus on 7B+ models.
-
----
 
 ## Post-Workshop
 
@@ -304,32 +138,6 @@ A: Quantization helps less at smaller sizes. Focus on 7B+ models.
 
 Start with small models (1-3B) to learn, then scale to production."
 
----
-
-## Troubleshooting Tips
-
-### If UI is slow
-- Too many people using it simultaneously
-- Switch to terminal demos only
-- Use curl for raw API calls
-
-### If guidellm fails for participants
-- Check Python version (3.9+)
-- Suggest virtual environment
-- Fallback to curl with timing
-- Share your benchmark results
-
-### If models crash
-- Check pod logs: `oc logs deployment/vllm-original -n workshop-user1`
-- Out of memory? Restart: `oc rollout restart deployment/vllm-original -n workshop-user1`
-- Show pre-recorded results as backup
-
-### If endpoints are unreachable
-- Verify routes: `oc get routes -n workshop-user1`
-- Check network policies
-- Use instructor laptop as proxy
-
----
 
 **Remember:**
 

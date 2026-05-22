@@ -1,7 +1,3 @@
----
-layout: default
-title: Home
----
 
 # Boston Tech Week 2026
 ## LLM Quantization Workshop
@@ -104,6 +100,82 @@ That's it! The vLLM models are already running in the cloud for you.
               OpenShift Cluster
 ```
 
+## Key Technologies
+
+### RedHat AI Quantized Models
+
+![RedHat AI Models](assets/redhat-ai-models.svg)
+
+RedHat AI provides production-ready quantized models on HuggingFace, optimized for enterprise deployment. These models are pre-quantized using state-of-the-art techniques and thoroughly tested for quality retention.
+
+**Why use RedHat AI models?**
+
+- Pre-quantized and ready to deploy
+- Enterprise support and validation
+- Optimized for vLLM and OpenShift
+- Multiple quantization levels (INT4, INT8, FP8)
+- Consistent quality across model families
+
+**Explore the collection:** [https://huggingface.co/RedHatAI](https://huggingface.co/RedHatAI)
+
+In this workshop, we use the `RedHatAI/Qwen3.5-9B-quantized.w4a16` model - a 9B parameter model quantized to 4-bit weights with 16-bit activations, delivering 2x speedup with minimal quality loss.
+
+### LLM Compressor
+
+![LLM Compressor](assets/llm-compressor.svg)
+
+LLM Compressor is an open-source toolkit for applying various compression techniques to large language models, including quantization, pruning, and distillation.
+
+**Key features:**
+
+- **Multiple quantization formats:** INT4, INT8, FP8
+- **Advanced techniques:** GPTQ, AWQ, SmoothQuant
+- **One-line API:** Simple Python interface for quantization
+- **vLLM integration:** Direct export to vLLM-compatible formats
+- **Quality metrics:** Built-in evaluation to measure accuracy impact
+
+**Example usage:**
+
+```python
+from llmcompressor import quantize
+
+# Quantize a model to INT4
+quantize(
+    model="meta-llama/Llama-2-7b-hf",
+    dataset="wikitext",
+    output_dir="./quantized_model",
+    recipe="int4"
+)
+```
+
+**Learn more:** [github.com/vllm-project/llm-compressor](https://github.com/vllm-project/llm-compressor)
+
+### vLLM
+
+![vLLM Architecture](assets/vllm-architecture.svg)
+
+vLLM is a high-throughput and memory-efficient inference engine for large language models, designed for production deployments.
+
+**Why vLLM?**
+
+- **PagedAttention:** Efficient KV cache management
+- **Continuous batching:** Maximizes GPU utilization
+- **Tensor parallelism:** Multi-GPU support
+- **Quantization support:** INT4, INT8, FP8, AWQ, GPTQ
+- **OpenAI-compatible API:** Easy integration
+- **Streaming responses:** Real-time token generation
+
+**Performance benefits:**
+
+- 2-4x higher throughput than HuggingFace Transformers
+- Up to 24x higher throughput than text-generation-inference
+- Efficient memory usage with PagedAttention
+- Optimized CUDA kernels for various quantization formats
+
+In this workshop, both model endpoints are served with vLLM in OpenShift, demonstrating enterprise-scale deployment patterns.
+
+**Documentation:** [docs.vllm.ai](https://docs.vllm.ai/)
+
 ## Resources
 
 - **vLLM Documentation:** [docs.vllm.ai](https://docs.vllm.ai/)
@@ -124,6 +196,3 @@ That's it! The vLLM models are already running in the cloud for you.
 - Ask in Boston Tech Week Slack
 - Email: workshop@example.com
 
----
-
-**Ready to get started?** Head to the [Quick Start Guide](quick-start) →
