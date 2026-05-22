@@ -4,12 +4,12 @@
 
 **Mac/Linux:**
 ```bash
-curl -sSL https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/scripts/install.sh | bash
 ```
 
 **Windows (PowerShell):**
 ```powershell
-irm https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/scripts/install.ps1 | iex
 ```
 
 The script will install guidellm and show you the next steps.

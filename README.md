@@ -85,7 +85,7 @@ Your workspace includes:
 3. **Hands-On (30 min):** Guide participants through Jupyter notebook
 4. **Discussion:** Review metrics and production considerations
 
-**Full Setup Guide:** [INSTRUCTOR_SETUP.md](INSTRUCTOR_SETUP.md)
+**Full Setup Guide:** [INSTRUCTOR_SETUP.md](docs/INSTRUCTOR_SETUP.md)
 
 ---
 
@@ -130,7 +130,7 @@ Your workspace includes:
 | **Comparison UI** | Gradio | - | Instructor demo interface |
 | **JupyterLab (50x)** | scipy-notebook | - | Per-user workshop environments |
 
-**Security:** [SECURITY.md](SECURITY.md)
+**Security:** [docs/SECURITY.md](docs/SECURITY.md)
 
 ---
 
@@ -138,9 +138,11 @@ Your workspace includes:
 
 ```
 .
-├── assignment_app.py              # Auto-assignment Flask app
-├── comparison_ui.py               # Gradio side-by-side demo UI
-├── workshop_notebook.ipynb        # Workshop Jupyter notebook
+├── apps/
+│   ├── assignment_app.py          # Auto-assignment Flask app
+│   └── comparison_ui.py           # Gradio side-by-side demo UI
+├── notebooks/
+│   └── workshop_notebook.ipynb    # Workshop Jupyter notebook
 ├── openshift/
 │   ├── workshop-deployment.yaml   # vLLM + comparison UI
 │   ├── jupyter-user-template.yaml # Per-user JupyterLab template
@@ -148,16 +150,20 @@ Your workspace includes:
 ├── scripts/
 │   ├── provision-users.sh         # Provision N JupyterLab instances
 │   ├── deploy-assignment.sh       # Deploy assignment app
-│   └── cleanup-users.sh           # Clean up user workspaces
+│   ├── cleanup-users.sh           # Clean up user workspaces
+│   ├── install.sh                 # Install script (Mac/Linux)
+│   └── install.ps1                # Install script (Windows)
 ├── docs/                          # GitHub Pages documentation
 │   ├── index.md
 │   ├── quick-start.md
 │   ├── workshop-guide.md
 │   ├── instructor-guide.md
-│   └── cluster-status.md
+│   ├── cluster-status.md
+│   ├── INSTRUCTOR_SETUP.md        # Detailed setup guide
+│   └── SECURITY.md                # Security architecture
 ├── README.md                      # This file
-├── INSTRUCTOR_SETUP.md            # Detailed setup guide
-└── SECURITY.md                    # Security architecture
+├── pyproject.toml                 # Project metadata
+└── mkdocs.yml                     # Documentation config
 ```
 
 ---
@@ -174,7 +180,7 @@ Your workspace includes:
 - URLs include hash-based suffix (e.g., `jupyter-user1-a0c3761d23`)
 - NetworkPolicy blocks pod-to-pod access between users
 - No authentication required (minimal friction for 60-min workshop)
-- See [SECURITY.md](SECURITY.md) for details
+- See [docs/SECURITY.md](docs/SECURITY.md) for details
 
 ### Zero Installation
 - Everything runs in browser via JupyterLab

@@ -10,7 +10,7 @@ oc create namespace boston-tech-week-2026
 
 # Create ConfigMap from comparison_ui.py
 oc create configmap comparison-ui-code \
-  --from-file=comparison_ui.py=../comparison_ui.py \
+  --from-file=comparison_ui.py=../apps/comparison_ui.py \
   -n boston-tech-week-2026
 
 # Deploy vLLM models

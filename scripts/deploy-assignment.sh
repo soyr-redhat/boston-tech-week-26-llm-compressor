@@ -13,7 +13,7 @@ echo ""
 # Create ConfigMap with app code and template
 echo "Creating ConfigMap with app code..."
 oc create configmap assignment-app-code \
-  --from-file=assignment_app.py \
+  --from-file=assignment_app.py=apps/assignment_app.py \
   --from-file=jupyter-user-template.yaml=openshift/jupyter-user-template.yaml \
   -n $NAMESPACE \
   --dry-run=client -o yaml | oc apply -f -
