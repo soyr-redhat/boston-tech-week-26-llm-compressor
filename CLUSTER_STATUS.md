@@ -9,23 +9,25 @@
 ## Running Services
 
 ### vLLM Original Model (FP16)
-- **Pod:** `vllm-original-55ffd6c7d5-lxknk`
-- **Status:** ✅ Running (103 minutes uptime)
+- **Pod:** `vllm-original-6784c755c5-dxhhc`
+- **Status:** ✅ Running with tensor parallelism
 - **Model:** Qwen/Qwen2.5-7B-Instruct
 - **Precision:** FP16
 - **Context Length:** 8192 tokens
-- **GPU:** 1× NVIDIA L4 (23GB VRAM)
+- **GPUs:** 2× NVIDIA L4 (46GB total VRAM)
+- **Tensor Parallel Size:** 2
 - **Internal Service:** vllm-original:8080
 - **Public Endpoint:** https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com
 - **Health Check:** ✅ Responding
 
 ### vLLM Quantized Model (INT4)
-- **Pod:** `vllm-quantized-775f66bbdc-q2tpm`
-- **Status:** ✅ Running (113 minutes uptime)
+- **Pod:** `vllm-quantized-bf87465f9-6krlj`
+- **Status:** ✅ Running with tensor parallelism
 - **Model:** RedHatAI/Qwen3.5-9B-quantized.w4a16
 - **Precision:** INT4 (w4a16 = 4-bit weights, 16-bit activations)
 - **Context Length:** 8192 tokens
-- **GPU:** 1× NVIDIA L4 (23GB VRAM)
+- **GPUs:** 2× NVIDIA L4 (46GB total VRAM)
+- **Tensor Parallel Size:** 2
 - **Internal Service:** vllm-quantized:8081
 - **Public Endpoint:** https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com
 - **Health Check:** ✅ Responding
@@ -46,18 +48,21 @@
 
 ### GPU Allocation
 - **Total GPUs:** 4× NVIDIA L4 (23GB VRAM each)
-- **Used:** 2 GPUs
-  - 1× vllm-original
-  - 1× vllm-quantized
-- **Available:** 2 GPUs (50% headroom)
+- **Used:** 4 GPUs (100% utilized)
+  - 2× vllm-original (tensor parallel)
+  - 2× vllm-quantized (tensor parallel)
+- **Available:** 0 GPUs
+- **Benefits of 2 GPUs:** Higher throughput for 50 concurrent users
 
 ### Compute Resources
 - **vllm-original:**
-  - Requests: 2 CPU, 4GB RAM, 1 GPU
-  - Limits: 4 CPU, 8GB RAM, 1 GPU
+  - Requests: 4 CPU, 8GB RAM, 2 GPUs
+  - Limits: 8 CPU, 16GB RAM, 2 GPUs
+  - Tensor Parallel: 2
 - **vllm-quantized:**
-  - Requests: 2 CPU, 4GB RAM, 1 GPU
-  - Limits: 4 CPU, 8GB RAM, 1 GPU
+  - Requests: 4 CPU, 8GB RAM, 2 GPUs
+  - Limits: 8 CPU, 16GB RAM, 2 GPUs
+  - Tensor Parallel: 2
 - **comparison-ui:**
   - Requests: 500m CPU, 1GB RAM
   - Limits: 1 CPU, 2GB RAM
