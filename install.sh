@@ -87,7 +87,7 @@ echo "   export ORIGINAL_API=\"https://vllm-original.apps.ocp.ntdrq.sandbox503.o
 echo "   export QUANTIZED_API=\"https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1\""
 echo ""
 echo "2. Run your first benchmark:"
-echo "   guidellm --target \"\$ORIGINAL_API\" --model \"Qwen/Qwen2.5-7B-Instruct\" --data-type emulated --emulated-tokens 100 --request-count 5"
+echo "   guidellm benchmark --target \"\$ORIGINAL_API\" --profile sweep --data \"prompt_tokens=100,output_tokens=100\" --max-requests 5"
 echo ""
 echo "For full workshop guide, visit:"
 echo "https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor"

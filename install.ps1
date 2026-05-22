@@ -56,7 +56,7 @@ Write-Host '   $env:ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox50
 Write-Host '   $env:QUANTIZED_API="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"'
 Write-Host ""
 Write-Host "2. Run your first benchmark:"
-Write-Host '   guidellm --target "$env:ORIGINAL_API" --model "Qwen/Qwen2.5-7B-Instruct" --data-type emulated --emulated-tokens 100 --request-count 5'
+Write-Host '   guidellm benchmark --target "$env:ORIGINAL_API" --profile sweep --data "prompt_tokens=100,output_tokens=100" --max-requests 5'
 Write-Host ""
 Write-Host "For full workshop guide, visit:"
 Write-Host "https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor"

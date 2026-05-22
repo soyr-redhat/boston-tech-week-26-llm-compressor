@@ -48,20 +48,18 @@ export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com
 export QUANTIZED_API="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
 
 # 3. Benchmark original model
-guidellm \
+guidellm benchmark \
   --target "$ORIGINAL_API" \
-  --model "Qwen/Qwen2.5-7B-Instruct" \
-  --data-type emulated \
-  --emulated-tokens 100 \
-  --request-count 10
+  --profile sweep \
+  --data "prompt_tokens=100,output_tokens=100" \
+  --max-requests 10
 
 # 4. Benchmark quantized model
-guidellm \
+guidellm benchmark \
   --target "$QUANTIZED_API" \
-  --model "RedHatAI/Qwen3.5-9B-quantized.w4a16" \
-  --data-type emulated \
-  --emulated-tokens 100 \
-  --request-count 10
+  --profile sweep \
+  --data "prompt_tokens=100,output_tokens=100" \
+  --max-requests 10
 ```
 
 **Full Guide:** [WORKSHOP_GUIDE.md](WORKSHOP_GUIDE.md) | [Quick Start](QUICK_START.md)

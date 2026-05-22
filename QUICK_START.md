@@ -22,32 +22,29 @@ export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com
 export QUANTIZED_API="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
 
 # Test original model
-guidellm \
+guidellm benchmark \
   --target "$ORIGINAL_API" \
-  --model "Qwen/Qwen2.5-7B-Instruct" \
-  --data-type emulated \
-  --emulated-tokens 100 \
-  --request-count 5
+  --profile sweep \
+  --data "prompt_tokens=100,output_tokens=100" \
+  --max-requests 5
 ```
 
 ## Compare Both Models (3 minutes)
 
 ```bash
 # Benchmark original
-guidellm \
+guidellm benchmark \
   --target "$ORIGINAL_API" \
-  --model "Qwen/Qwen2.5-7B-Instruct" \
-  --data-type emulated \
-  --emulated-tokens 100 \
-  --request-count 20
+  --profile sweep \
+  --data "prompt_tokens=100,output_tokens=100" \
+  --max-requests 20
 
 # Benchmark quantized
-guidellm \
+guidellm benchmark \
   --target "$QUANTIZED_API" \
-  --model "RedHatAI/Qwen3.5-9B-quantized.w4a16" \
-  --data-type emulated \
-  --emulated-tokens 100 \
-  --request-count 20
+  --profile sweep \
+  --data "prompt_tokens=100,output_tokens=100" \
+  --max-requests 20
 ```
 
 ## What to Look For

@@ -90,20 +90,18 @@ Test how fast each model responds to a single user:
 
 ```bash
 # Benchmark original model
-guidellm \
+guidellm benchmark \
   --target "$ORIGINAL_API" \
-  --model "Qwen/Qwen2.5-7B-Instruct" \
-  --data-type emulated \
-  --emulated-tokens 100 \
-  --request-count 10
+  --profile sweep \
+  --data "prompt_tokens=100,output_tokens=100" \
+  --max-requests 10
 
 # Benchmark quantized model
-guidellm \
+guidellm benchmark \
   --target "$QUANTIZED_API" \
-  --model "RedHatAI/Qwen3.5-9B-quantized.w4a16" \
-  --data-type emulated \
-  --emulated-tokens 100 \
-  --request-count 10
+  --profile sweep \
+  --data "prompt_tokens=100,output_tokens=100" \
+  --max-requests 10
 ```
 
 **Expected Results:**
@@ -116,22 +114,20 @@ See how the models perform under concurrent load:
 
 ```bash
 # Original model under load
-guidellm \
+guidellm benchmark \
   --target "$ORIGINAL_API" \
-  --model "Qwen/Qwen2.5-7B-Instruct" \
-  --data-type emulated \
-  --emulated-tokens 100 \
-  --request-count 50 \
-  --max-concurrency 5
+  --profile concurrent \
+  --rate 5 \
+  --data "prompt_tokens=100,output_tokens=100" \
+  --max-requests 50
 
 # Quantized model under load
-guidellm \
+guidellm benchmark \
   --target "$QUANTIZED_API" \
-  --model "RedHatAI/Qwen3.5-9B-quantized.w4a16" \
-  --data-type emulated \
-  --emulated-tokens 100 \
-  --request-count 50 \
-  --max-concurrency 5
+  --profile concurrent \
+  --rate 5 \
+  --data "prompt_tokens=100,output_tokens=100" \
+  --max-requests 50
 ```
 
 **What to observe:**
@@ -153,20 +149,18 @@ Benchmark with real prompts:
 
 ```bash
 # Original model
-guidellm \
+guidellm benchmark \
   --target "$ORIGINAL_API" \
-  --model "Qwen/Qwen2.5-7B-Instruct" \
-  --data-type file \
-  --data "prompts.txt" \
-  --max-concurrency 3
+  --profile concurrent \
+  --rate 3 \
+  --data "prompts.txt"
 
 # Quantized model
-guidellm \
+guidellm benchmark \
   --target "$QUANTIZED_API" \
-  --model "RedHatAI/Qwen3.5-9B-quantized.w4a16" \
-  --data-type file \
-  --data "prompts.txt" \
-  --max-concurrency 3
+  --profile concurrent \
+  --rate 3 \
+  --data "prompts.txt"
 ```
 
 ---
