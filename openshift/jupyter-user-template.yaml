@@ -361,17 +361,11 @@ objects:
           - name: GRANT_SUDO
             value: "yes"
           - name: JUPYTER_TOKEN
-            value: ""
+            value: "${TOKEN}"
           - name: CHOWN_HOME
             value: "yes"
           - name: RESTARTABLE
             value: "yes"
-          args:
-            - "start-notebook.py"
-            - "--ServerApp.token=''"
-            - "--ServerApp.password=''"
-            - "--ServerApp.disable_check_xsrf=True"
-            - "--NotebookApp.allow_origin='*'"
           volumeMounts:
           - name: home
             mountPath: /home/jovyan
@@ -431,4 +425,7 @@ objects:
 parameters:
 - name: USER_ID
   description: "User identifier (e.g., user1, user2, ...)"
+  required: true
+- name: TOKEN
+  description: "Random authentication token for JupyterLab access"
   required: true

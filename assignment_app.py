@@ -8,6 +8,7 @@ from flask import Flask, render_template_string, redirect, session, jsonify
 import json
 import os
 import subprocess
+import secrets
 from pathlib import Path
 from threading import Lock
 
@@ -32,6 +33,7 @@ def load_assignments():
     return {
         'next_available': 1,
         'assignments': {},  # session_id -> user_number
+        'tokens': {},  # user_number -> token
         'used': []  # list of used user numbers
     }
 
@@ -40,7 +42,7 @@ def save_assignments(state):
     with open(ASSIGNMENTS_FILE, 'w') as f:
         json.dump(state, f, indent=2)
 
-def provision_user(user_number):
+def provision_user(user_number, token):
     """Provision a new JupyterLab instance for user"""
     user_id = f'user{user_number}'
 
@@ -49,6 +51,7 @@ def provision_user(user_number):
         cmd = f"""
         oc process -f /app/jupyter-user-template.yaml \
           -p USER_ID={user_id} \
+          -p TOKEN={token} \
           --namespace={NAMESPACE} \
           | oc apply -n {NAMESPACE} -f -
         """
@@ -62,43 +65,49 @@ def provision_user(user_number):
         )
 
         if result.returncode != 0:
-            print(f"❌ Failed to provision {user_id}: {result.stderr}")
+            print(f"Failed to provision {user_id}: {result.stderr}")
             return False
 
-        print(f"✓ Auto-provisioned {user_id}")
+        print(f"Auto-provisioned {user_id}")
         return True
 
     except Exception as e:
-        print(f"❌ Error provisioning {user_id}: {e}")
+        print(f"Error provisioning {user_id}: {e}")
         return False
 
 def get_assignment(session_id):
-    """Get or create assignment for this session"""
+    """Get or create assignment for this session, returns (user_number, token) or (None, None)"""
     with assignments_lock:
         state = load_assignments()
 
         # Check if this session already has an assignment
         if session_id in state['assignments']:
-            return state['assignments'][session_id]
+            user_number = state['assignments'][session_id]
+            token = state['tokens'].get(str(user_number))
+            return user_number, token
 
         # Find next available user
         next_user = state['next_available']
 
+        # Generate token for this user
+        token = secrets.token_urlsafe(32)
+
         # Auto-provision if we've exceeded pre-provisioned capacity
         if next_user > TOTAL_USERS and AUTO_PROVISION:
             print(f"Capacity exceeded ({TOTAL_USERS}), auto-provisioning user{next_user}...")
-            if not provision_user(next_user):
-                return None  # Failed to provision
+            if not provision_user(next_user, token):
+                return None, None  # Failed to provision
         elif next_user > TOTAL_USERS:
-            return None  # No auto-provisioning, workshop full
+            return None, None  # No auto-provisioning, workshop full
 
         # Assign user
         state['assignments'][session_id] = next_user
+        state['tokens'][str(next_user)] = token
         state['used'].append(next_user)
         state['next_available'] = next_user + 1
 
         save_assignments(state)
-        return next_user
+        return next_user, token
 
 LANDING_PAGE = """
 <!DOCTYPE html>
@@ -458,7 +467,7 @@ def assign():
     session_id = session['session_id']
 
     # Get assignment
-    user_number = get_assignment(session_id)
+    user_number, token = get_assignment(session_id)
 
     if user_number is None:
         # Workshop is full
@@ -467,8 +476,9 @@ def assign():
     # Store in session for easy retrieval
     session['user_number'] = user_number
 
-    # Build workspace URL
-    workspace_url = BASE_URL.format(user_id=f'user{user_number}')
+    # Build workspace URL with token
+    base_url = BASE_URL.format(user_id=f'user{user_number}')
+    workspace_url = f"{base_url}?token={token}"
 
     return render_template_string(
         ASSIGNED_PAGE,
