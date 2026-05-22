@@ -1,0 +1,95 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workshop-assignment
+  namespace: workshop
+  labels:
+    app: workshop-assignment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workshop-assignment
+  template:
+    metadata:
+      labels:
+        app: workshop-assignment
+    spec:
+      containers:
+      - name: assignment-app
+        image: python:3.11-slim
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            pip install -q Flask
+            python /app/assignment_app.py
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        - name: TOTAL_USERS
+          value: "50"
+        - name: BASE_URL
+          value: "https://jupyter-{user_id}.apps.ocp.ntdrq.sandbox503.opentlc.com"
+        - name: SECRET_KEY
+          value: "boston-tech-week-2026-secret"
+        volumeMounts:
+        - name: app-code
+          mountPath: /app
+        - name: assignments
+          mountPath: /tmp
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+      volumes:
+      - name: app-code
+        configMap:
+          name: assignment-app-code
+      - name: assignments
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: assignment-app-code
+  namespace: workshop
+data:
+  assignment_app.py: |
+    {{ ASSIGNMENT_APP_CODE }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: workshop-assignment
+  namespace: workshop
+spec:
+  selector:
+    app: workshop-assignment
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: http
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: workshop-assignment
+  namespace: workshop
+spec:
+  host: workshop.apps.ocp.ntdrq.sandbox503.opentlc.com
+  to:
+    kind: Service
+    name: workshop-assignment
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
