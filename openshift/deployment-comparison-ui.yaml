@@ -23,8 +23,13 @@ spec:
         - /bin/sh
         - -c
         - |
-          pip install gradio requests && \
+          pip install --no-cache-dir gradio requests && \
           python comparison_ui.py
+        env:
+        - name: GRADIO_SERVER_NAME
+          value: "0.0.0.0"
+        - name: GRADIO_SERVER_PORT
+          value: "7860"
         ports:
         - containerPort: 7860
           name: http
