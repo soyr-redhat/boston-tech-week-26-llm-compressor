@@ -1,0 +1,421 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: workshop-notebook
+  namespace: workshop
+data:
+  workshop_notebook.ipynb: |
+    {
+     "cells": [
+      {
+       "cell_type": "markdown",
+       "metadata": {},
+       "source": [
+        "# Boston Tech Week 2026: LLM Quantization Workshop\n",
+        "\n",
+        "**Duration:** 60 minutes  \n",
+        "**Objective:** Learn about LLM quantization and measure performance improvements\n",
+        "\n",
+        "In this notebook, you'll:\n",
+        "1. Understand what quantization is and why it matters\n",
+        "2. Benchmark an original FP16 model\n",
+        "3. Benchmark a quantized INT4 model\n",
+        "4. Compare the results and analyze the trade-offs"
+       ]
+      },
+      {
+       "cell_type": "markdown",
+       "metadata": {},
+       "source": [
+        "## Part 1: What is Quantization?\n",
+        "\n",
+        "Model quantization reduces the precision of model weights to make inference faster and more memory-efficient:\n",
+        "\n",
+        "- **FP16/BF16** (16-bit floating point) - Standard precision\n",
+        "- **FP8** (8-bit floating point) - 2x memory reduction\n",
+        "- **INT8** (8-bit integer) - 2x memory reduction, faster compute\n",
+        "- **INT4** (4-bit integer) - 4x memory reduction, much faster\n",
+        "\n",
+        "### Why Quantize?\n",
+        "\n",
+        "1. **Faster inference** - 1.5-2.5x throughput improvement\n",
+        "2. **Lower memory** - 2-4x VRAM reduction (fit bigger models)\n",
+        "3. **Lower latency** - 30-50% faster response times\n",
+        "4. **Minimal quality loss** - Typically <2% degradation\n",
+        "\n",
+        "### Today's Models\n",
+        "\n",
+        "| Model | Precision | Size | GPUs |\n",
+        "|-------|-----------|------|------|\n",
+        "| Qwen2.5-7B-Instruct | FP16 | ~14GB | 2× L4 |\n",
+        "| Qwen3.5-9B-quantized | INT4 | ~5GB | 2× L4 |\n",
+        "\n",
+        "Both are served via vLLM on OpenShift."
+       ]
+      },
+      {
+       "cell_type": "markdown",
+       "metadata": {},
+       "source": [
+        "## Part 2: Setup\n",
+        "\n",
+        "Install guidellm for benchmarking."
+       ]
+      },
+      {
+       "cell_type": "code",
+       "execution_count": null,
+       "metadata": {},
+       "outputs": [],
+       "source": [
+        "# Install dependencies\n",
+        "!pip install -q guidellm matplotlib pandas"
+       ]
+      },
+      {
+       "cell_type": "code",
+       "execution_count": null,
+       "metadata": {},
+       "outputs": [],
+       "source": [
+        "# Import libraries\n",
+        "import subprocess\n",
+        "import json\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "from pathlib import Path\n",
+        "import os\n",
+        "\n",
+        "# Model endpoints (internal cluster URLs)\n",
+        "ORIGINAL_API = \"http://vllm-original:8000/v1\"\n",
+        "QUANTIZED_API = \"http://vllm-quantized:8000/v1\"\n",
+        "\n",
+        "print(\"✓ Setup complete!\")\n",
+        "print(f\"Original API: {ORIGINAL_API}\")\n",
+        "print(f\"Quantized API: {QUANTIZED_API}\")"
+       ]
+      },
+      {
+       "cell_type": "markdown",
+       "metadata": {},
+       "source": [
+        "## Part 3: Benchmark Original Model (FP16)\n",
+        "\n",
+        "We'll benchmark the original Qwen2.5-7B-Instruct model running at FP16 precision."
+       ]
+      },
+      {
+       "cell_type": "code",
+       "execution_count": null,
+       "metadata": {},
+       "outputs": [],
+       "source": [
+        "# Create output directory\n",
+        "!mkdir -p original\n",
+        "\n",
+        "# Run benchmark\n",
+        "print(\"🔄 Benchmarking original model (FP16)...\")\n",
+        "!cd original && guidellm benchmark \\\n",
+        "    --target \"http://vllm-original:8000/v1\" \\\n",
+        "    --profile sweep \\\n",
+        "    --data \"prompt_tokens=100,output_tokens=100\" \\\n",
+        "    --max-requests 10\n",
+        "\n",
+        "print(\"\\n✓ Original model benchmark complete!\")\n",
+        "print(\"Results saved to: original/benchmarks.csv, original/benchmarks.html\")"
+       ]
+      },
+      {
+       "cell_type": "markdown",
+       "metadata": {},
+       "source": [
+        "## Part 4: Benchmark Quantized Model (INT4)\n",
+        "\n",
+        "Now let's benchmark the quantized Qwen3.5-9B model running at INT4 precision."
+       ]
+      },
+      {
+       "cell_type": "code",
+       "execution_count": null,
+       "metadata": {},
+       "outputs": [],
+       "source": [
+        "# Create output directory\n",
+        "!mkdir -p quantized\n",
+        "\n",
+        "# Run benchmark\n",
+        "print(\"🔄 Benchmarking quantized model (INT4)...\")\n",
+        "!cd quantized && guidellm benchmark \\\n",
+        "    --target \"http://vllm-quantized:8000/v1\" \\\n",
+        "    --profile sweep \\\n",
+        "    --data \"prompt_tokens=100,output_tokens=100\" \\\n",
+        "    --max-requests 10\n",
+        "\n",
+        "print(\"\\n✓ Quantized model benchmark complete!\")\n",
+        "print(\"Results saved to: quantized/benchmarks.csv, quantized/benchmarks.html\")"
+       ]
+      },
+      {
+       "cell_type": "markdown",
+       "metadata": {},
+       "source": [
+        "## Part 5: Compare Results\n",
+        "\n",
+        "Let's load and visualize the benchmark results."
+       ]
+      },
+      {
+       "cell_type": "code",
+       "execution_count": null,
+       "metadata": {},
+       "outputs": [],
+       "source": [
+        "# Load CSV results\n",
+        "try:\n",
+        "    original_df = pd.read_csv('original/benchmarks.csv')\n",
+        "    quantized_df = pd.read_csv('quantized/benchmarks.csv')\n",
+        "    \n",
+        "    # Get the latest benchmark run (last row)\n",
+        "    orig = original_df.iloc[-1]\n",
+        "    quant = quantized_df.iloc[-1]\n",
+        "    \n",
+        "    print(\"📊 BENCHMARK COMPARISON\")\n",
+        "    print(\"=\" * 80)\n",
+        "    print(f\"\\n{'Metric':<30} {'Original (FP16)':<20} {'Quantized (INT4)':<20} {'Speedup':<10}\")\n",
+        "    print(\"-\" * 80)\n",
+        "    \n",
+        "    # Extract key metrics (adjust column names based on actual CSV output)\n",
+        "    metrics = [\n",
+        "        'throughput',\n",
+        "        'mean_latency', \n",
+        "        'p50_latency',\n",
+        "        'p95_latency',\n",
+        "        'p99_latency'\n",
+        "    ]\n",
+        "    \n",
+        "    for metric in metrics:\n",
+        "        if metric in orig.index and metric in quant.index:\n",
+        "            orig_val = orig[metric]\n",
+        "            quant_val = quant[metric]\n",
+        "            \n",
+        "            # For throughput, higher is better\n",
+        "            if 'throughput' in metric:\n",
+        "                speedup = quant_val / orig_val\n",
+        "                print(f\"{metric:<30} {orig_val:<20.2f} {quant_val:<20.2f} {speedup:.2f}x\")\n",
+        "            # For latency, lower is better\n",
+        "            else:\n",
+        "                speedup = orig_val / quant_val\n",
+        "                print(f\"{metric:<30} {orig_val:<20.2f} {quant_val:<20.2f} {speedup:.2f}x\")\n",
+        "    \n",
+        "    print(\"\\n\" + \"=\" * 80)\n",
+        "    print(\"\\n💡 Key Takeaways:\")\n",
+        "    print(\"  - Quantized model should be 1.5-2x faster\")\n",
+        "    print(\"  - Latency should be 30-40% lower\")\n",
+        "    print(\"  - Memory usage is 50-75% less (not shown in metrics)\")\n",
+        "    \n",
+        "except FileNotFoundError as e:\n",
+        "    print(f\"❌ Could not find benchmark results. Make sure to run the benchmark cells above first.\")\n",
+        "    print(f\"   Error: {e}\")\n",
+        "except Exception as e:\n",
+        "    print(f\"❌ Error loading results: {e}\")\n",
+        "    print(\"\\nShowing raw CSV preview instead:\")\n",
+        "    print(\"\\nOriginal:\")\n",
+        "    !tail -3 original/benchmarks.csv\n",
+        "    print(\"\\nQuantized:\")\n",
+        "    !tail -3 quantized/benchmarks.csv"
+       ]
+      },
+      {
+       "cell_type": "markdown",
+       "metadata": {},
+       "source": [
+        "## Part 6: Visualize Performance\n",
+        "\n",
+        "Let's create comparison charts."
+       ]
+      },
+      {
+       "cell_type": "code",
+       "execution_count": null,
+       "metadata": {},
+       "outputs": [],
+       "source": [
+        "# Create comparison visualizations\n",
+        "try:\n",
+        "    fig, axes = plt.subplots(1, 2, figsize=(14, 5))\n",
+        "    \n",
+        "    # Chart 1: Throughput comparison\n",
+        "    models = ['Original\\n(FP16)', 'Quantized\\n(INT4)']\n",
+        "    throughput = [orig.get('throughput', 0), quant.get('throughput', 0)]\n",
+        "    \n",
+        "    axes[0].bar(models, throughput, color=['#ee0000', '#00a8e1'])\n",
+        "    axes[0].set_title('Throughput Comparison', fontsize=14, fontweight='bold')\n",
+        "    axes[0].set_ylabel('Requests/sec (higher is better)')\n",
+        "    axes[0].grid(axis='y', alpha=0.3)\n",
+        "    \n",
+        "    # Chart 2: Latency comparison\n",
+        "    latency_metrics = ['p50_latency', 'p95_latency', 'p99_latency']\n",
+        "    x = range(len(latency_metrics))\n",
+        "    width = 0.35\n",
+        "    \n",
+        "    orig_latencies = [orig.get(m, 0) for m in latency_metrics]\n",
+        "    quant_latencies = [quant.get(m, 0) for m in latency_metrics]\n",
+        "    \n",
+        "    axes[1].bar([i - width/2 for i in x], orig_latencies, width, label='Original (FP16)', color='#ee0000')\n",
+        "    axes[1].bar([i + width/2 for i in x], quant_latencies, width, label='Quantized (INT4)', color='#00a8e1')\n",
+        "    \n",
+        "    axes[1].set_title('Latency Comparison', fontsize=14, fontweight='bold')\n",
+        "    axes[1].set_ylabel('Latency (ms, lower is better)')\n",
+        "    axes[1].set_xticks(x)\n",
+        "    axes[1].set_xticklabels(['P50', 'P95', 'P99'])\n",
+        "    axes[1].legend()\n",
+        "    axes[1].grid(axis='y', alpha=0.3)\n",
+        "    \n",
+        "    plt.tight_layout()\n",
+        "    plt.savefig('benchmark_comparison.png', dpi=150, bbox_inches='tight')\n",
+        "    plt.show()\n",
+        "    \n",
+        "    print(\"\\n✓ Charts saved to: benchmark_comparison.png\")\n",
+        "    \n",
+        "except Exception as e:\n",
+        "    print(f\"❌ Could not create charts: {e}\")\n",
+        "    print(\"Make sure you've run the benchmark cells above first.\")"
+       ]
+      },
+      {
+       "cell_type": "markdown",
+       "metadata": {},
+       "source": [
+        "## Summary and Next Steps\n",
+        "\n",
+        "### What You Learned\n",
+        "\n",
+        "1. **Quantization fundamentals** - FP16, INT8, INT4 precision formats\n",
+        "2. **Performance benchmarking** - Using guidellm to measure throughput and latency\n",
+        "3. **Real-world trade-offs** - 1.5-2x speedup with minimal quality loss\n",
+        "\n",
+        "### Key Takeaways\n",
+        "\n",
+        "- Quantized models are **significantly faster** (1.5-2x throughput)\n",
+        "- Latency is **30-40% lower** across P50/P95/P99\n",
+        "- Memory usage is **50-75% less** (allows bigger models on same hardware)\n",
+        "- Quality degradation is typically **<2%** for INT4 quantization\n",
+        "\n",
+        "### Next Steps\n",
+        "\n",
+        "1. **Try quantizing your own models** with [LLM Compressor](https://github.com/vllm-project/llm-compressor)\n",
+        "2. **Deploy in production** with [vLLM](https://docs.vllm.ai/)\n",
+        "3. **Explore RedHat AI models** at [huggingface.co/RedHatAI](https://huggingface.co/RedHatAI)\n",
+        "4. **Experiment with different quantization levels** (INT8, FP8, structured pruning)\n",
+        "\n",
+        "### Resources\n",
+        "\n",
+        "- **Workshop Repo:** [github.com/soyr-redhat/boston-tech-week-26-llm-compressor](https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor)\n",
+        "- **vLLM Documentation:** [docs.vllm.ai](https://docs.vllm.ai/)\n",
+        "- **guidellm GitHub:** [github.com/vllm-project/guidellm](https://github.com/vllm-project/guidellm)\n",
+        "- **LLM Compressor:** [github.com/vllm-project/llm-compressor](https://github.com/vllm-project/llm-compressor)"
+       ]
+      }
+     ],
+     "metadata": {
+      "kernelspec": {
+       "display_name": "Python 3",
+       "language": "python",
+       "name": "python3"
+      },
+      "language_info": {
+       "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+       },
+       "file_extension": ".py",
+       "mimetype": "text/x-python",
+       "name": "python",
+       "nbconvert_exporter": "python",
+       "pygments_lexer": "ipython3",
+       "version": "3.10.0"
+      }
+     },
+     "nbformat": 4,
+     "nbformat_minor": 4
+    }
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyter
+  namespace: workshop
+  labels:
+    app: jupyter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jupyter
+  template:
+    metadata:
+      labels:
+        app: jupyter
+    spec:
+      containers:
+      - name: jupyter
+        image: quay.io/jupyter/scipy-notebook:latest
+        ports:
+        - containerPort: 8888
+          name: http
+        env:
+        - name: JUPYTER_ENABLE_LAB
+          value: "yes"
+        - name: GRANT_SUDO
+          value: "yes"
+        volumeMounts:
+        - name: notebooks
+          mountPath: /home/jovyan/work
+        - name: workshop-notebook
+          mountPath: /home/jovyan/workshop_notebook.ipynb
+          subPath: workshop_notebook.ipynb
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
+      volumes:
+      - name: notebooks
+        emptyDir: {}
+      - name: workshop-notebook
+        configMap:
+          name: workshop-notebook
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupyter
+  namespace: workshop
+spec:
+  selector:
+    app: jupyter
+  ports:
+  - port: 8888
+    targetPort: 8888
+    name: http
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: jupyter
+  namespace: workshop
+spec:
+  to:
+    kind: Service
+    name: jupyter
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
