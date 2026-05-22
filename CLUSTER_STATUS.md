@@ -42,6 +42,16 @@
 - **Public URL:** https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 - **Health Check:** ✅ Accessible
 
+### JupyterLab (Workshop Notebooks)
+- **Pod:** `jupyter-*`
+- **Status:** ✅ Running
+- **Image:** quay.io/jupyter/scipy-notebook:latest
+- **Notebook:** workshop_notebook.ipynb (pre-loaded)
+- **Features:** Interactive benchmarking, matplotlib charts, guidellm integration
+- **Internal Service:** jupyter:8888
+- **Public URL:** https://jupyter.apps.ocp.ntdrq.sandbox503.opentlc.com
+- **Health Check:** ✅ Accessible
+
 ---
 
 ## Resource Usage
