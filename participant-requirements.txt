@@ -1,5 +1,9 @@
 # Participant requirements for workshop benchmarking
-# Use with: pip install -r participant-requirements.txt
+# RECOMMENDED: Install with uv instead of pip for better dependency isolation
+#   uv tool install guidellm
+#
+# If you prefer to use pip with a requirements file:
+#   pip install -r participant-requirements.txt
 
 guidellm>=0.1.0
 numpy<2.0
