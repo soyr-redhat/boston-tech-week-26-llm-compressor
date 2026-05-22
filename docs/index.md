@@ -7,7 +7,8 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 ## Quick Links
 
 ### For Participants
-- **[Quick Start Guide](quick-start)** - Get benchmarking in 2 minutes
+- **[Workshop Notebook](https://colab.research.google.com/github/soyr-redhat/boston-tech-week-26-llm-compressor/blob/main/workshop_notebook.ipynb)** - Interactive benchmarking (works on all platforms)
+- **[Quick Start Guide](quick-start)** - Command-line alternative
 - **[Workshop Guide](workshop-guide)** - Full 60-minute workshop agenda
 - **[Demo UI](https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com)** - Live model comparison
 
@@ -26,9 +27,9 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 - Performance metrics and quality trade-offs
 
 ### Part 2: Hands-On Benchmarking (30 min)
-- Install `guidellm` on your laptop
-- Benchmark real production endpoints
-- Compare throughput, latency, and quality
+- Open the workshop notebook in your browser (Google Colab or local Jupyter)
+- Run benchmarks against production endpoints
+- Compare throughput, latency, and quality with interactive charts
 
 ## What You'll Learn
 
@@ -50,11 +51,20 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 ## Prerequisites
 
 - **Laptop** with internet access
-- **Python 3.9+** installed
-- **Terminal/Command Prompt** access
-- No GPU or cluster access required!
+- **Web browser** (Chrome, Firefox, Safari, Edge)
+- No GPU, Python, or cluster access required!
 
 ## Setup (Before Workshop)
+
+### Option 1: Google Colab (Zero Setup - Recommended)
+
+Just click the link during the workshop - no installation needed!
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/soyr-redhat/boston-tech-week-26-llm-compressor/blob/main/workshop_notebook.ipynb)
+
+### Option 2: Local Jupyter
+
+If you prefer to run locally:
 
 **Mac/Linux:**
 ```bash

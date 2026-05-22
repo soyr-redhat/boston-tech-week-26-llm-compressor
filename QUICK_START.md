@@ -1,6 +1,30 @@
 # Quick Start - LLM Benchmarking
 
-## Setup (1 minute)
+## Option 1: Jupyter Notebook (Recommended)
+
+**Best for all skill levels and works on all platforms (Windows, Mac, Linux)**
+
+### Google Colab (Zero Setup)
+
+Click this button to open in Google Colab:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/soyr-redhat/boston-tech-week-26-llm-compressor/blob/main/workshop_notebook.ipynb)
+
+Then just run the cells in order!
+
+### Local Jupyter
+
+```bash
+pip install notebook
+curl -O https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/workshop_notebook.ipynb
+jupyter notebook workshop_notebook.ipynb
+```
+
+---
+
+## Option 2: Command Line (Advanced)
+
+### Setup (1 minute)
 
 **Mac/Linux:**
 ```bash
