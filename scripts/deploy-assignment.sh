@@ -10,16 +10,39 @@ echo "Deploying Workshop Assignment App"
 echo "========================================="
 echo ""
 
-# Create ConfigMap with app code
+# Create ConfigMap with app code and template
 echo "Creating ConfigMap with app code..."
 oc create configmap assignment-app-code \
   --from-file=assignment_app.py \
+  --from-file=jupyter-user-template.yaml=openshift/jupyter-user-template.yaml \
   -n $NAMESPACE \
   --dry-run=client -o yaml | oc apply -f -
 
 # Deploy the app
 echo "Deploying assignment app..."
 cat > /tmp/assignment-deployment.yaml <<'EOF'
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: workshop-assignment
+  namespace: workshop
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: workshop-assignment-admin
+  namespace: workshop
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: admin
+subjects:
+- kind: ServiceAccount
+  name: workshop-assignment
+  namespace: workshop
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -38,6 +61,7 @@ spec:
       labels:
         app: workshop-assignment
     spec:
+      serviceAccountName: workshop-assignment
       containers:
       - name: assignment-app
         image: python:3.11-slim
@@ -56,6 +80,10 @@ spec:
           value: "https://jupyter-{user_id}.apps.ocp.ntdrq.sandbox503.opentlc.com"
         - name: SECRET_KEY
           value: "boston-tech-week-2026-secret"
+        - name: AUTO_PROVISION
+          value: "true"
+        - name: NAMESPACE
+          value: "workshop"
         volumeMounts:
         - name: app-code
           mountPath: /app
