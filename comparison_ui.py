@@ -108,7 +108,7 @@ code, pre {
 }
 
 pre {
-    border: 1px solid var(--bg3) !important;
+    border: 1px solid var(--bg4) !important;
     border-radius: 3px !important;
     padding: 8px !important;
     margin: 4px 0 !important;
@@ -119,10 +119,10 @@ code {
     border-radius: 2px !important;
 }
 
-/* Compact inputs */
+/* Compact inputs with darker borders */
 input[type="text"], textarea {
     background: var(--bg1) !important;
-    border: 1px solid var(--bg3) !important;
+    border: 2px solid var(--bg4) !important;
     border-radius: 3px !important;
     color: var(--fg) !important;
     padding: 6px 10px !important;
@@ -162,15 +162,15 @@ button:hover {
     color: var(--bg0) !important;
 }
 
-/* Compact output areas */
+/* Output areas with scrolling and darker borders */
 .markdown-output, .output-markdown {
     background: var(--bg1) !important;
-    border: 1px solid var(--bg3) !important;
+    border: 2px solid var(--bg4) !important;
     border-radius: 3px !important;
     padding: 10px !important;
     color: var(--fg) !important;
-    min-height: 150px !important;
-    max-height: 400px !important;
+    min-height: 300px !important;
+    max-height: 500px !important;
     overflow-y: auto !important;
     font-size: 0.9rem !important;
 }
@@ -432,10 +432,18 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
 
     yield orig_result, quant_result, summary
 
-# Compact Gradio UI
+# Compact Gradio UI - outputs first, then input
 with gr.Blocks(css=EVERFOREST_CSS, title="LLM Quantization") as demo:
     gr.Markdown("# LLM Quantization Comparison")
 
+    # Output windows FIRST
+    with gr.Row():
+        original_output = gr.Markdown(label="Original (FP16)")
+        quantized_output = gr.Markdown(label="Quantized (INT4)")
+
+    comparison_summary = gr.Markdown()
+
+    # Input section BELOW outputs
     with gr.Row():
         prompt = gr.Textbox(
             label="Prompt",
@@ -459,12 +467,6 @@ with gr.Blocks(css=EVERFOREST_CSS, title="LLM Quantization") as demo:
                 value="vllm-quantized:8081",
                 scale=1
             )
-
-    with gr.Row():
-        original_output = gr.Markdown(label="Original (FP16)")
-        quantized_output = gr.Markdown(label="Quantized (INT4)")
-
-    comparison_summary = gr.Markdown()
 
     gr.Examples(
         examples=[
