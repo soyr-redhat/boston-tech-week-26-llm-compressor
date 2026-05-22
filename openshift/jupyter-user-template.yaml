@@ -13,7 +13,6 @@ objects:
   kind: ConfigMap
   metadata:
     name: workshop-notebook-${USER_ID}
-    namespace: workshop
   data:
     workshop_notebook.ipynb: |
       {
@@ -335,7 +334,6 @@ objects:
   kind: Deployment
   metadata:
     name: jupyter-${USER_ID}
-    namespace: workshop
     labels:
       app: jupyter
       user: ${USER_ID}
@@ -389,7 +387,6 @@ objects:
   kind: Service
   metadata:
     name: jupyter-${USER_ID}
-    namespace: workshop
     labels:
       app: jupyter
       user: ${USER_ID}
@@ -407,7 +404,6 @@ objects:
   kind: Route
   metadata:
     name: jupyter-${USER_ID}
-    namespace: workshop
     labels:
       app: jupyter
       user: ${USER_ID}
