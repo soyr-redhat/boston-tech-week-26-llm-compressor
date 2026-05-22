@@ -32,20 +32,34 @@ guidellm benchmark \
 ## Compare Both Models (3 minutes)
 
 ```bash
-# Benchmark original
+# Benchmark original (save to original/ directory)
+mkdir -p original quantized
+cd original
 guidellm benchmark \
   --target "$ORIGINAL_API" \
   --profile sweep \
   --data "prompt_tokens=100,output_tokens=100" \
   --max-requests 20
+cd ..
 
-# Benchmark quantized
+# Benchmark quantized (save to quantized/ directory)
+cd quantized
 guidellm benchmark \
   --target "$QUANTIZED_API" \
   --profile sweep \
   --data "prompt_tokens=100,output_tokens=100" \
   --max-requests 20
+cd ..
+
+# Compare results
+echo "Original results:"
+tail -1 original/benchmarks.csv
+echo ""
+echo "Quantized results:"
+tail -1 quantized/benchmarks.csv
 ```
+
+**Tip:** Open `original/benchmarks.html` and `quantized/benchmarks.html` in your browser for visual comparison charts.
 
 ## What to Look For
 

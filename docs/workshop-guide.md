@@ -89,19 +89,39 @@ export QUANTIZED_API="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.c
 Test how fast each model responds to a single user:
 
 ```bash
+# Create directories for results
+mkdir -p original quantized
+
 # Benchmark original model
+cd original
 guidellm benchmark \
   --target "$ORIGINAL_API" \
   --profile sweep \
   --data "prompt_tokens=100,output_tokens=100" \
   --max-requests 10
+cd ..
 
 # Benchmark quantized model
+cd quantized
 guidellm benchmark \
   --target "$QUANTIZED_API" \
   --profile sweep \
   --data "prompt_tokens=100,output_tokens=100" \
   --max-requests 10
+cd ..
+```
+
+**Compare the Results:**
+
+Look at the terminal output summary, or open the HTML reports:
+```bash
+# View visual reports
+open original/benchmarks.html
+open quantized/benchmarks.html
+
+# Or compare CSV data
+echo "Original:" && tail -1 original/benchmarks.csv
+echo "Quantized:" && tail -1 quantized/benchmarks.csv
 ```
 
 **Expected Results:**
@@ -114,26 +134,38 @@ See how the models perform under concurrent load:
 
 ```bash
 # Original model under load
+cd original
 guidellm benchmark \
   --target "$ORIGINAL_API" \
   --profile concurrent \
   --rate 5 \
   --data "prompt_tokens=100,output_tokens=100" \
   --max-requests 50
+cd ..
 
 # Quantized model under load
+cd quantized
 guidellm benchmark \
   --target "$QUANTIZED_API" \
   --profile concurrent \
   --rate 5 \
   --data "prompt_tokens=100,output_tokens=100" \
   --max-requests 50
+cd ..
+```
+
+**Compare the Results:**
+
+```bash
+# View the latest HTML reports
+open original/benchmarks.html
+open quantized/benchmarks.html
 ```
 
 **What to observe:**
-- Throughput (requests/sec)
+- Throughput (requests/sec or tokens/sec)
 - P50/P95/P99 latency
-- Queue times
+- How performance degrades under load
 
 #### Task 3: Real Prompts (10 min)
 
@@ -149,19 +181,33 @@ Benchmark with real prompts:
 
 ```bash
 # Original model
+cd original
 guidellm benchmark \
   --target "$ORIGINAL_API" \
   --profile concurrent \
   --rate 3 \
-  --data "prompts.txt"
+  --data "../prompts.txt"
+cd ..
 
 # Quantized model
+cd quantized
 guidellm benchmark \
   --target "$QUANTIZED_API" \
   --profile concurrent \
   --rate 3 \
-  --data "prompts.txt"
+  --data "../prompts.txt"
+cd ..
 ```
+
+**Compare Quality + Performance:**
+
+```bash
+# View detailed reports
+open original/benchmarks.html
+open quantized/benchmarks.html
+```
+
+Notice: the quantized model is faster AND produces similar quality responses!
 
 ---
 
