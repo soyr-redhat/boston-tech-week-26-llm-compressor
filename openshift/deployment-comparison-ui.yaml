@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comparison-ui
+  labels:
+    app: comparison-ui
+    workshop: boston-tech-week-2026
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comparison-ui
+  template:
+    metadata:
+      labels:
+        app: comparison-ui
+    spec:
+      containers:
+      - name: gradio
+        image: python:3.12-slim
+        workingDir: /app
+        command:
+        - /bin/sh
+        - -c
+        - |
+          pip install gradio requests && \
+          python comparison_ui.py
+        ports:
+        - containerPort: 7860
+          name: http
+        volumeMounts:
+        - name: app-code
+          mountPath: /app
+        resources:
+          requests:
+            cpu: "1"
+            memory: "2Gi"
+          limits:
+            cpu: "2"
+            memory: "4Gi"
+      volumes:
+      - name: app-code
+        configMap:
+          name: comparison-ui-code
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comparison-ui
+spec:
+  selector:
+    app: comparison-ui
+  ports:
+  - name: http
+    port: 7860
+    targetPort: 7860
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: comparison-ui
+spec:
+  to:
+    kind: Service
+    name: comparison-ui
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
