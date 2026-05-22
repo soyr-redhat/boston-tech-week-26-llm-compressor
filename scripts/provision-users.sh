@@ -38,8 +38,8 @@ for i in $(seq 1 $NUM_USERS); do
 
     oc process -f $TEMPLATE \
         -p USER_ID=$USER_ID \
-        -n $NAMESPACE \
-        | oc apply -f -
+        --namespace=$NAMESPACE \
+        | oc apply -n $NAMESPACE -f -
 
     echo "  ✓ $USER_ID deployed"
 done
