@@ -161,11 +161,11 @@ with gr.Blocks(title="vLLM Model Comparison", theme=gr.themes.Soft()) as demo:
     # Example prompts
     gr.Examples(
         examples=[
-            ["The future of artificial intelligence is", "8080", "8081", 100],
-            ["Write a Python function to sort a list", "8080", "8081", 150],
-            ["Explain quantum computing in simple terms:", "8080", "8081", 200],
-            ["What are the key benefits of model compression?", "8080", "8081", 100],
-            ["Tell me a short story about a robot", "8080", "8081", 200],
+            ["The future of artificial intelligence is", "vllm-original:8080", "vllm-quantized:8081", 100],
+            ["Write a Python function to sort a list", "vllm-original:8080", "vllm-quantized:8081", 150],
+            ["Explain quantum computing in simple terms:", "vllm-original:8080", "vllm-quantized:8081", 200],
+            ["What are the key benefits of model compression?", "vllm-original:8080", "vllm-quantized:8081", 100],
+            ["Tell me a short story about a robot", "vllm-original:8080", "vllm-quantized:8081", 200],
         ],
         inputs=[prompt, original_port, quantized_port, max_tokens],
     )
