@@ -349,6 +349,10 @@ objects:
           app: jupyter
           user: ${USER_ID}
       spec:
+        securityContext:
+          fsGroup: 100  # jovyan group
+          runAsUser: 1000  # jovyan user
+          runAsNonRoot: true
         containers:
         - name: jupyter
           image: quay.io/jupyter/scipy-notebook:latest
@@ -362,6 +366,10 @@ objects:
             value: "yes"
           - name: JUPYTER_TOKEN
             value: ""  # Disable token for workshop simplicity
+          - name: NB_UID
+            value: "1000"
+          - name: NB_GID
+            value: "100"
           volumeMounts:
           - name: notebooks
             mountPath: /home/jovyan/work
