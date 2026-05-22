@@ -13,17 +13,29 @@ def query_vllm(port: str, prompt: str, max_tokens: int = 100) -> Tuple[str, Dict
     """Query a vLLM endpoint and return response with metrics"""
     # Support both localhost:port and service:port formats
     if ':' in port:
-        url = f"http://{port}/v1/completions"
+        base_url = f"http://{port}"
     else:
-        url = f"http://localhost:{port}/v1/completions"
+        base_url = f"http://localhost:{port}"
+
+    # Get the actual model name from /v1/models endpoint
+    try:
+        models_response = requests.get(f"{base_url}/v1/models", timeout=5)
+        if models_response.status_code == 200:
+            model_name = models_response.json()['data'][0]['id']
+        else:
+            model_name = "deployed-model"  # fallback
+    except:
+        model_name = "deployed-model"  # fallback
 
     payload = {
-        "model": "deployed-model",
+        "model": model_name,
         "prompt": prompt,
         "max_tokens": max_tokens,
         "temperature": 0.7,
         "top_p": 0.9,
     }
+
+    url = f"{base_url}/v1/completions"
 
     try:
         start_time = time.time()
