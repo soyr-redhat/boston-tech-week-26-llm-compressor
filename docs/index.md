@@ -7,7 +7,7 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 ## Quick Links
 
 ### For Participants
-- **[Workshop Notebook](https://colab.research.google.com/github/soyr-redhat/boston-tech-week-26-llm-compressor/blob/main/workshop_notebook.ipynb)** - Interactive benchmarking (works on all platforms)
+- **[Workshop Notebook](https://jupyter.apps.ocp.ntdrq.sandbox503.opentlc.com)** - Interactive benchmarking in your browser
 - **[Quick Start Guide](quick-start)** - Command-line alternative
 - **[Workshop Guide](workshop-guide)** - Full 60-minute workshop agenda
 - **[Demo UI](https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com)** - Live model comparison
@@ -27,7 +27,7 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 - Performance metrics and quality trade-offs
 
 ### Part 2: Hands-On Benchmarking (30 min)
-- Open the workshop notebook in your browser (Google Colab or local Jupyter)
+- Open the workshop notebook in your browser
 - Run benchmarks against production endpoints
 - Compare throughput, latency, and quality with interactive charts
 
@@ -52,32 +52,17 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 
 - **Laptop** with internet access
 - **Web browser** (Chrome, Firefox, Safari, Edge)
-- No GPU, Python, or cluster access required!
+- **Cluster credentials** (provided at the workshop)
+- No GPU or Python installation required!
 
-## Setup (Before Workshop)
+## Setup (During Workshop)
 
-### Option 1: Google Colab (Zero Setup - Recommended)
+1. Receive your cluster credentials from the instructor
+2. Navigate to: **https://jupyter.apps.ocp.ntdrq.sandbox503.opentlc.com**
+3. Log in with your credentials
+4. Open `workshop_notebook.ipynb`
 
-Just click the link during the workshop - no installation needed!
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/soyr-redhat/boston-tech-week-26-llm-compressor/blob/main/workshop_notebook.ipynb)
-
-### Option 2: Local Jupyter
-
-If you prefer to run locally:
-
-```bash
-# Install Jupyter
-pip install notebook
-
-# Download the workshop notebook
-curl -O https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/workshop_notebook.ipynb
-
-# Start Jupyter
-jupyter notebook workshop_notebook.ipynb
-```
-
-That's it! The notebook will install dependencies automatically, and the vLLM models are already running in the cloud.
+That's it! The notebook and vLLM models are already deployed and ready to use.
 
 **Having issues?** See the [troubleshooting section](workshop-guide#troubleshooting) in the full workshop guide.
 

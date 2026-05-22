@@ -35,31 +35,22 @@ This hands-on workshop teaches LLM quantization through live demonstration and p
 
 ## For Participants
 
-### Option 1: Jupyter Notebook (Recommended - Works on All Platforms)
+### Jupyter Notebook (Recommended - Works in Your Browser)
 
-**Open in Google Colab (easiest):**
+**Access the workshop notebook:**
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/soyr-redhat/boston-tech-week-26-llm-compressor/blob/main/workshop_notebook.ipynb)
-
-**Or run locally:**
-
-```bash
-# Install Jupyter
-pip install notebook
-
-# Download the notebook
-curl -O https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/workshop_notebook.ipynb
-
-# Start Jupyter
-jupyter notebook workshop_notebook.ipynb
-```
+1. Log into the workshop cluster
+2. Navigate to: **https://jupyter.apps.ocp.ntdrq.sandbox503.opentlc.com**
+3. Open `workshop_notebook.ipynb`
+4. Run cells to benchmark models
 
 The notebook includes:
 - Interactive benchmarking cells
 - Automatic comparison charts
-- Works on Windows, Mac, and Linux
+- Works on any platform (Windows, Mac, Linux)
+- No installation required
 
-### Option 2: Command Line (Advanced Users)
+### Command Line Alternative (Advanced Users)
 
 ```bash
 # 1. Run the installer (Mac/Linux)
