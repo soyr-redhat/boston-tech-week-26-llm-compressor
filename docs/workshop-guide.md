@@ -1,4 +1,3 @@
-
 # Boston Tech Week 2026 - LLM Quantization Workshop
 
 ## Workshop Overview
@@ -8,6 +7,38 @@ In this hands-on workshop, you'll learn about LLM quantization and benchmark rea
 **Duration:** 60 minutes  
 **Format:** Instructor-led demo + hands-on benchmarking
 
+---
+
+## Part 1: Understanding Quantization (30 min)
+
+### What is Quantization?
+
+Model quantization reduces the precision of model weights to make inference faster and more memory-efficient:
+
+- **FP16/BF16** (16-bit floating point) - Standard precision
+- **FP8** (8-bit floating point) - 2x memory reduction
+- **INT8** (8-bit integer) - 2x memory reduction, faster compute
+- **INT4** (4-bit integer) - 4x memory reduction, much faster
+
+### Why Quantize?
+
+1. **Faster inference** - 1.5-2.5x throughput improvement
+2. **Lower memory** - 2-4x VRAM reduction (fit bigger models)
+3. **Lower latency** - 30-50% faster response times
+4. **Minimal quality loss** - Typically <2% degradation
+
+### Live Demo
+
+Watch as we:
+1. Show the quantization process with `llm-compressor`
+2. Deploy two models side-by-side:
+   - **Original:** Qwen2.5-7B-Instruct (FP16) - ~20GB VRAM
+   - **Quantized:** Qwen3.5-9B-quantized (INT4) - ~19GB VRAM
+3. Compare outputs in the web UI
+
+**Demo URL:** https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+
+---
 
 ## Part 2: Hands-On Benchmarking with guidellm (30 min)
 
@@ -17,8 +48,30 @@ Now **you** will benchmark these models using `guidellm` - a tool for load testi
 
 #### Install guidellm
 
+**Option 1: Using a virtual environment (recommended)**
+
 ```bash
-pip install guidellm
+# Create virtual environment
+python3 -m venv guidellm-env
+
+# Activate it
+source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
+
+# Install guidellm with numpy constraint
+pip install 'numpy<2' guidellm
+```
+
+**Option 2: Using system Python**
+
+```bash
+# Install with numpy constraint to avoid compatibility issues
+pip install 'numpy<2' guidellm
+```
+
+**Option 3: Using the requirements file**
+
+```bash
+pip install -r participant-requirements.txt
 ```
 
 #### Model Endpoints
@@ -118,6 +171,19 @@ guidellm \
   --max-concurrency 3
 ```
 
+---
+
+## Key Metrics to Compare
+
+| Metric | What it Means | Expected Improvement |
+|--------|---------------|---------------------|
+| **Throughput** | Requests/sec or tokens/sec | 1.5-2x faster |
+| **P50 Latency** | Median response time | 30-40% lower |
+| **P95 Latency** | 95th percentile (worst 5%) | 30-40% lower |
+| **Time to First Token** | How fast generation starts | Similar |
+| **VRAM Usage** | Memory consumed | 50-75% less |
+
+---
 
 ## Discussion Questions
 
@@ -136,6 +202,75 @@ guidellm \
    - Quantized models handle more concurrent requests
    - Memory efficiency = more batch throughput
 
+---
+
+## Troubleshooting
+
+### guidellm Installation Issues
+
+**Error: "A module that was compiled using NumPy 1.x cannot be run in NumPy 2.x"**
+
+This is a common numpy compatibility issue. Fix with:
+
+```bash
+# Option 1: Use a virtual environment (RECOMMENDED)
+python3 -m venv guidellm-env
+source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
+pip install 'numpy<2' guidellm
+
+# Option 2: Downgrade numpy in your current environment
+pip install 'numpy<2' --force-reinstall
+pip install guidellm
+
+# Option 3: Use pipx (isolated install)
+pipx install guidellm --pip-args="numpy<2"
+```
+
+**After fixing, verify installation:**
+
+```bash
+guidellm --help
+```
+
+If you see help text, you're ready to go!
+
+### Connection Errors
+
+If guidellm cannot reach the endpoints:
+
+1. **Check your internet connection** - endpoints are publicly accessible
+2. **Verify URLs** - make sure you're using the full HTTPS URLs
+3. **Try curl first**:
+   ```bash
+   curl https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1/models
+   ```
+4. **Check firewall** - some corporate networks block external API access
+
+### Slow Responses
+
+If models are responding slowly:
+
+- **Expected under load** - 50 participants sharing 2 models
+- **Try different times** - benchmark during demo breaks
+- **Reduce request count** - use `--request-count 3` for quick tests
+- **Check load** - others may be benchmarking simultaneously
+
+### Alternative Testing (No guidellm)
+
+If guidellm doesn't work, use curl with timing:
+
+```bash
+# Time a single request
+time curl -X POST https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "Qwen/Qwen2.5-7B-Instruct",
+    "prompt": "Explain quantum computing",
+    "max_tokens": 100
+  }'
+```
+
+---
 
 ## Resources
 
@@ -144,6 +279,17 @@ guidellm \
 - **LLM Compressor:** https://github.com/vllm-project/llm-compressor
 - **RedHat AI Models:** https://huggingface.co/RedHatAI
 
+---
+
+## Cleanup
+
+After the workshop, you can uninstall guidellm:
+
+```bash
+pip uninstall guidellm
+```
+
+---
 
 ## Next Steps
 

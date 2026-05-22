@@ -38,14 +38,18 @@ This hands-on workshop teaches LLM quantization through live demonstration and p
 ### Quick Start (2 minutes)
 
 ```bash
-# 1. Install guidellm
-pip install guidellm
+# 1. Create virtual environment (recommended)
+python3 -m venv guidellm-env
+source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
 
-# 2. Set endpoints
+# 2. Install guidellm
+pip install 'numpy<2' guidellm
+
+# 3. Set endpoints
 export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
 export QUANTIZED_API="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
 
-# 3. Benchmark original model
+# 4. Benchmark original model
 guidellm \
   --target "$ORIGINAL_API" \
   --model "Qwen/Qwen2.5-7B-Instruct" \
@@ -53,7 +57,7 @@ guidellm \
   --emulated-tokens 100 \
   --request-count 10
 
-# 4. Benchmark quantized model
+# 5. Benchmark quantized model
 guidellm \
   --target "$QUANTIZED_API" \
   --model "RedHatAI/Qwen3.5-9B-quantized.w4a16" \

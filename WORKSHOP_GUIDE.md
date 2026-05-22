@@ -48,8 +48,30 @@ Now **you** will benchmark these models using `guidellm` - a tool for load testi
 
 #### Install guidellm
 
+**Option 1: Using a virtual environment (recommended)**
+
 ```bash
-pip install guidellm
+# Create virtual environment
+python3 -m venv guidellm-env
+
+# Activate it
+source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
+
+# Install guidellm with numpy constraint
+pip install 'numpy<2' guidellm
+```
+
+**Option 2: Using system Python**
+
+```bash
+# Install with numpy constraint to avoid compatibility issues
+pip install 'numpy<2' guidellm
+```
+
+**Option 3: Using the requirements file**
+
+```bash
+pip install -r participant-requirements.txt
 ```
 
 #### Model Endpoints
@@ -186,21 +208,31 @@ guidellm \
 
 ### guidellm Installation Issues
 
-If you encounter dependency conflicts with numpy or other packages:
+**Error: "A module that was compiled using NumPy 1.x cannot be run in NumPy 2.x"**
+
+This is a common numpy compatibility issue. Fix with:
 
 ```bash
-# Option 1: Use a virtual environment (recommended)
+# Option 1: Use a virtual environment (RECOMMENDED)
 python3 -m venv guidellm-env
 source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
+pip install 'numpy<2' guidellm
+
+# Option 2: Downgrade numpy in your current environment
+pip install 'numpy<2' --force-reinstall
 pip install guidellm
 
-# Option 2: Use pipx (isolated install)
-pipx install guidellm
-
-# Option 3: Downgrade numpy if needed
-pip install 'numpy<2'
-pip install guidellm
+# Option 3: Use pipx (isolated install)
+pipx install guidellm --pip-args="numpy<2"
 ```
+
+**After fixing, verify installation:**
+
+```bash
+guidellm --help
+```
+
+If you see help text, you're ready to go!
 
 ### Connection Errors
 

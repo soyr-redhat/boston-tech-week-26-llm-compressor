@@ -57,14 +57,20 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 ## Setup (Before Workshop)
 
 ```bash
-# Install guidellm (5 seconds)
-pip install guidellm
+# Create virtual environment (recommended)
+python3 -m venv guidellm-env
+source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
+
+# Install guidellm
+pip install 'numpy<2' guidellm
 
 # Verify installation
-guidellm --version
+guidellm --help
 ```
 
 That's it! The vLLM models are already running in the cloud for you.
+
+**Having issues?** See the [troubleshooting section](workshop-guide#troubleshooting) in the full workshop guide.
 
 ## Live Infrastructure
 

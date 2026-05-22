@@ -1,11 +1,14 @@
-
 # Quick Start - LLM Benchmarking
 
 ## Setup (2 minutes)
 
 ```bash
-# Install guidellm
-pip install guidellm
+# Create and activate virtual environment (recommended)
+python3 -m venv guidellm-env
+source guidellm-env/bin/activate  # On Windows: guidellm-env\Scripts\activate
+
+# Install guidellm with numpy constraint
+pip install 'numpy<2' guidellm
 
 # Set endpoints
 export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
@@ -74,3 +77,6 @@ curl $ORIGINAL_API/models
 
 Watch the live comparison: https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 
+---
+
+**Questions?** Raise your hand or find the instructor
