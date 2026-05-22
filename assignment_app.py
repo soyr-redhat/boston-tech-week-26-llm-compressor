@@ -7,6 +7,7 @@ Automatically assigns participants to pre-provisioned JupyterLab instances
 from flask import Flask, render_template_string, redirect, session, jsonify
 import json
 import os
+import subprocess
 from pathlib import Path
 from threading import Lock
 
@@ -17,6 +18,8 @@ app.secret_key = os.environ.get('SECRET_KEY', 'workshop-secret-key-change-in-pro
 TOTAL_USERS = int(os.environ.get('TOTAL_USERS', '50'))
 BASE_URL = os.environ.get('BASE_URL', 'https://jupyter-{user_id}.apps.ocp.ntdrq.sandbox503.opentlc.com')
 ASSIGNMENTS_FILE = Path('/tmp/assignments.json')
+AUTO_PROVISION = os.environ.get('AUTO_PROVISION', 'true').lower() == 'true'
+NAMESPACE = os.environ.get('NAMESPACE', 'workshop')
 
 # Thread-safe lock for assignments
 assignments_lock = Lock()
@@ -37,6 +40,38 @@ def save_assignments(state):
     with open(ASSIGNMENTS_FILE, 'w') as f:
         json.dump(state, f, indent=2)
 
+def provision_user(user_number):
+    """Provision a new JupyterLab instance for user"""
+    user_id = f'user{user_number}'
+
+    try:
+        # Run oc process and apply
+        cmd = f"""
+        oc process -f /app/jupyter-user-template.yaml \
+          -p USER_ID={user_id} \
+          --namespace={NAMESPACE} \
+          | oc apply -n {NAMESPACE} -f -
+        """
+
+        result = subprocess.run(
+            cmd,
+            shell=True,
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+
+        if result.returncode != 0:
+            print(f"❌ Failed to provision {user_id}: {result.stderr}")
+            return False
+
+        print(f"✓ Auto-provisioned {user_id}")
+        return True
+
+    except Exception as e:
+        print(f"❌ Error provisioning {user_id}: {e}")
+        return False
+
 def get_assignment(session_id):
     """Get or create assignment for this session"""
     with assignments_lock:
@@ -48,8 +83,14 @@ def get_assignment(session_id):
 
         # Find next available user
         next_user = state['next_available']
-        if next_user > TOTAL_USERS:
-            return None  # No more users available
+
+        # Auto-provision if we've exceeded pre-provisioned capacity
+        if next_user > TOTAL_USERS and AUTO_PROVISION:
+            print(f"Capacity exceeded ({TOTAL_USERS}), auto-provisioning user{next_user}...")
+            if not provision_user(next_user):
+                return None  # Failed to provision
+        elif next_user > TOTAL_USERS:
+            return None  # No auto-provisioning, workshop full
 
         # Assign user
         state['assignments'][session_id] = next_user
