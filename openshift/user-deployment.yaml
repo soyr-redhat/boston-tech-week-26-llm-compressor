@@ -23,7 +23,7 @@ spec:
       containers:
       - name: vllm
         image: vllm/vllm-openai:latest
-        command: ["vllm", "serve", "Qwen/Qwen2.5-7B-Instruct", "--port", "8080", "--host", "0.0.0.0", "--max-model-len", "8192"]
+        command: ["vllm", "serve", "Qwen/Qwen2.5-7B-Instruct", "--port", "8080", "--host", "0.0.0.0", "--max-model-len", "8192", "--tensor-parallel-size", "2"]
         env:
         - name: HOME
           value: "/tmp"
@@ -33,13 +33,13 @@ spec:
         - containerPort: 8080
         resources:
           requests:
-            nvidia.com/gpu: "1"
-            cpu: "2"
-            memory: "4Gi"
-          limits:
-            nvidia.com/gpu: "1"
+            nvidia.com/gpu: "2"
             cpu: "4"
             memory: "8Gi"
+          limits:
+            nvidia.com/gpu: "2"
+            cpu: "8"
+            memory: "16Gi"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -59,7 +59,7 @@ spec:
       containers:
       - name: vllm
         image: vllm/vllm-openai:latest
-        command: ["vllm", "serve", "RedHatAI/Qwen3.5-9B-quantized.w4a16", "--port", "8081", "--host", "0.0.0.0", "--max-model-len", "8192"]
+        command: ["vllm", "serve", "RedHatAI/Qwen3.5-9B-quantized.w4a16", "--port", "8081", "--host", "0.0.0.0", "--max-model-len", "8192", "--tensor-parallel-size", "2"]
         env:
         - name: HOME
           value: "/tmp"
@@ -69,13 +69,13 @@ spec:
         - containerPort: 8081
         resources:
           requests:
-            nvidia.com/gpu: "1"
-            cpu: "2"
-            memory: "4Gi"
-          limits:
-            nvidia.com/gpu: "1"
+            nvidia.com/gpu: "2"
             cpu: "4"
             memory: "8Gi"
+          limits:
+            nvidia.com/gpu: "2"
+            cpu: "8"
+            memory: "16Gi"
 ---
 apiVersion: v1
 kind: Service
