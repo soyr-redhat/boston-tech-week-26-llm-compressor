@@ -56,18 +56,17 @@ Welcome to the hands-on workshop on LLM quantization and performance benchmarkin
 
 ## Setup (Before Workshop)
 
+**Mac/Linux:**
 ```bash
-# Install uv package manager (if not already installed)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Install guidellm
-uv tool install guidellm
-
-# Verify installation
-guidellm --help
+curl -sSL https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.sh | bash
 ```
 
-That's it! The vLLM models are already running in the cloud for you.
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.ps1 | iex
+```
+
+That's it! The installer handles everything and the vLLM models are already running in the cloud for you.
 
 **Having issues?** See the [troubleshooting section](workshop-guide#troubleshooting) in the full workshop guide.
 

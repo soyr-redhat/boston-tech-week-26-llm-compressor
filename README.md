@@ -38,17 +38,16 @@ This hands-on workshop teaches LLM quantization through live demonstration and p
 ### Quick Start (2 minutes)
 
 ```bash
-# 1. Install uv (if not already installed)
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# 1. Run the installer (Mac/Linux)
+curl -sSL https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.sh | bash
 
-# 2. Install guidellm
-uv tool install guidellm
+# Windows: irm https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.ps1 | iex
 
-# 3. Set endpoints
+# 2. Set endpoints
 export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
 export QUANTIZED_API="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
 
-# 4. Benchmark original model
+# 3. Benchmark original model
 guidellm \
   --target "$ORIGINAL_API" \
   --model "Qwen/Qwen2.5-7B-Instruct" \
@@ -56,7 +55,7 @@ guidellm \
   --emulated-tokens 100 \
   --request-count 10
 
-# 5. Benchmark quantized model
+# 4. Benchmark quantized model
 guidellm \
   --target "$QUANTIZED_API" \
   --model "RedHatAI/Qwen3.5-9B-quantized.w4a16" \

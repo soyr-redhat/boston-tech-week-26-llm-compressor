@@ -46,34 +46,30 @@ Now **you** will benchmark these models using `guidellm` - a tool for load testi
 
 ### Setup (5 min)
 
-#### Install uv (if not already installed)
-
-```bash
-# Install uv package manager
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# On Windows (PowerShell):
-# powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
 #### Install guidellm
 
-**Option 1: Using uv tool (recommended)**
+**One-line installer (recommended for all users):**
 
+**Mac/Linux:**
 ```bash
-# Install guidellm as an isolated tool
-uv tool install guidellm
+curl -sSL https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.sh | bash
 ```
 
-**Option 2: Using uv with a virtual environment**
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.ps1 | iex
+```
+
+The installer will:
+- Detect your system
+- Install guidellm with the best method available
+- Test the installation
+- Show you the next steps
+
+**Manual installation (if the script doesn't work):**
 
 ```bash
-# Create and use a virtual environment
-uv venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install guidellm
-uv pip install guidellm
+pip install guidellm
 ```
 
 #### Model Endpoints
@@ -210,20 +206,22 @@ guidellm \
 
 ### guidellm Installation Issues
 
-**Error: "A module that was compiled using NumPy 1.x cannot be run in NumPy 2.x"**
+**If the one-liner installer fails:**
 
-If you see numpy compatibility errors, use uv for better dependency isolation:
+Try manual installation:
 
 ```bash
-# Uninstall any existing guidellm
-pip uninstall guidellm  # if installed via pip
-uv tool uninstall guidellm  # if installed via uv tool
-
-# Install with uv (handles dependencies automatically)
-uv tool install guidellm
+pip install guidellm
 ```
 
-**After fixing, verify installation:**
+**If you see numpy compatibility errors:**
+
+```bash
+pip install 'numpy<2' --force-reinstall
+pip install guidellm
+```
+
+**Verify installation:**
 
 ```bash
 guidellm --help
@@ -283,10 +281,6 @@ time curl -X POST https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
 After the workshop, you can uninstall guidellm:
 
 ```bash
-# If installed via uv tool
-uv tool uninstall guidellm
-
-# If installed via pip
 pip uninstall guidellm
 ```
 

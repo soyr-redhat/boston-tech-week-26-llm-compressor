@@ -1,22 +1,26 @@
 # Quick Start - LLM Benchmarking
 
-## Setup (2 minutes)
+## Setup (1 minute)
 
+**Mac/Linux:**
 ```bash
-# Install uv if not already installed
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Install guidellm (isolated, no venv needed)
-uv tool install guidellm
-
-# Set endpoints
-export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
-export QUANTIZED_API="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
+curl -sSL https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.sh | bash
 ```
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/soyr-redhat/boston-tech-week-26-llm-compressor/main/install.ps1 | iex
+```
+
+The script will install guidellm and show you the next steps.
 
 ## Quick Test (1 minute)
 
 ```bash
+# Set endpoints (if not already done)
+export ORIGINAL_API="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
+export QUANTIZED_API="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1"
+
 # Test original model
 guidellm \
   --target "$ORIGINAL_API" \
@@ -58,9 +62,8 @@ guidellm \
 
 **Installation error?**
 ```bash
-# Reinstall guidellm
-uv tool uninstall guidellm
-uv tool install guidellm
+# Manual install as fallback
+pip install guidellm
 ```
 
 **Connection error?**
