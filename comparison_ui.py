@@ -8,6 +8,7 @@ import gradio as gr
 import requests
 import time
 import json
+import threading
 from typing import Dict, Tuple
 
 def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
@@ -85,47 +86,95 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
         yield f"❌ Error: {str(e)}", {}
 
 def compare_models(prompt: str, original_port: str, quantized_port: str, max_tokens: int):
-    """Compare responses from both models with streaming"""
+    """Compare responses from both models with concurrent streaming"""
 
     if not prompt.strip():
         yield "⚠️ Please enter a prompt", "", ""
         return
 
-    orig_metrics = None
-    quant_metrics = None
+    # Shared state between threads
+    state = {
+        'orig_text': '',
+        'orig_metrics': None,
+        'quant_text': '',
+        'quant_metrics': None,
+        'orig_done': False,
+        'quant_done': False,
+    }
 
-    # Stream original model
-    for orig_text, metrics in query_vllm_stream(original_port, prompt, max_tokens):
-        orig_result = f"**Response:**\n{orig_text}\n\n"
-        if metrics:
-            orig_metrics = metrics
+    def stream_original():
+        for text, metrics in query_vllm_stream(original_port, prompt, max_tokens):
+            state['orig_text'] = text
+            if metrics:
+                state['orig_metrics'] = metrics
+                state['orig_done'] = True
+
+    def stream_quantized():
+        for text, metrics in query_vllm_stream(quantized_port, prompt, max_tokens):
+            state['quant_text'] = text
+            if metrics:
+                state['quant_metrics'] = metrics
+                state['quant_done'] = True
+
+    # Start both models in parallel
+    orig_thread = threading.Thread(target=stream_original)
+    quant_thread = threading.Thread(target=stream_quantized)
+
+    orig_thread.start()
+    quant_thread.start()
+
+    # Stream updates while both are running
+    while not (state['orig_done'] and state['quant_done']):
+        # Format original output
+        orig_result = f"**Response:**\n{state['orig_text']}\n\n"
+        if state['orig_metrics']:
             orig_result += f"**Metrics:**\n"
-            orig_result += f"⏱️ Latency: {metrics['latency_ms']}ms\n"
-            orig_result += f"🚀 Speed: {metrics['tokens_per_sec']} tokens/sec\n"
-            orig_result += f"📊 Tokens: {metrics['tokens']}"
-        else:
+            orig_result += f"⏱️ Latency: {state['orig_metrics']['latency_ms']}ms\n"
+            orig_result += f"🚀 Speed: {state['orig_metrics']['tokens_per_sec']} tokens/sec\n"
+            orig_result += f"📊 Tokens: {state['orig_metrics']['tokens']}"
+        elif state['orig_text']:
             orig_result += f"*Generating...*"
-
-        yield orig_result, "⏳ Waiting for original model to finish...", ""
-
-    # Stream quantized model
-    for quant_text, metrics in query_vllm_stream(quantized_port, prompt, max_tokens):
-        quant_result = f"**Response:**\n{quant_text}\n\n"
-        if metrics:
-            quant_metrics = metrics
-            quant_result += f"**Metrics:**\n"
-            quant_result += f"⏱️ Latency: {metrics['latency_ms']}ms\n"
-            quant_result += f"🚀 Speed: {metrics['tokens_per_sec']} tokens/sec\n"
-            quant_result += f"📊 Tokens: {metrics['tokens']}"
         else:
+            orig_result = "*Waiting for response...*"
+
+        # Format quantized output
+        quant_result = f"**Response:**\n{state['quant_text']}\n\n"
+        if state['quant_metrics']:
+            quant_result += f"**Metrics:**\n"
+            quant_result += f"⏱️ Latency: {state['quant_metrics']['latency_ms']}ms\n"
+            quant_result += f"🚀 Speed: {state['quant_metrics']['tokens_per_sec']} tokens/sec\n"
+            quant_result += f"📊 Tokens: {state['quant_metrics']['tokens']}"
+        elif state['quant_text']:
             quant_result += f"*Generating...*"
+        else:
+            quant_result = "*Waiting for response...*"
 
         yield orig_result, quant_result, ""
+        time.sleep(0.1)  # Update every 100ms
+
+    # Wait for threads to complete
+    orig_thread.join()
+    quant_thread.join()
+
+    # Final outputs with metrics
+    orig_result = f"**Response:**\n{state['orig_text']}\n\n"
+    if state['orig_metrics']:
+        orig_result += f"**Metrics:**\n"
+        orig_result += f"⏱️ Latency: {state['orig_metrics']['latency_ms']}ms\n"
+        orig_result += f"🚀 Speed: {state['orig_metrics']['tokens_per_sec']} tokens/sec\n"
+        orig_result += f"📊 Tokens: {state['orig_metrics']['tokens']}"
+
+    quant_result = f"**Response:**\n{state['quant_text']}\n\n"
+    if state['quant_metrics']:
+        quant_result += f"**Metrics:**\n"
+        quant_result += f"⏱️ Latency: {state['quant_metrics']['latency_ms']}ms\n"
+        quant_result += f"🚀 Speed: {state['quant_metrics']['tokens_per_sec']} tokens/sec\n"
+        quant_result += f"📊 Tokens: {state['quant_metrics']['tokens']}"
 
     # Final comparison summary
-    if orig_metrics and quant_metrics:
-        speedup = quant_metrics['tokens_per_sec'] / orig_metrics['tokens_per_sec']
-        latency_reduction = ((orig_metrics['latency_ms'] - quant_metrics['latency_ms']) / orig_metrics['latency_ms']) * 100
+    if state['orig_metrics'] and state['quant_metrics']:
+        speedup = state['quant_metrics']['tokens_per_sec'] / state['orig_metrics']['tokens_per_sec']
+        latency_reduction = ((state['orig_metrics']['latency_ms'] - state['quant_metrics']['latency_ms']) / state['orig_metrics']['latency_ms']) * 100
 
         summary = f"""
 ## 📊 Comparison Results
@@ -133,11 +182,11 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
 **Speedup:** {speedup:.2f}x faster
 **Latency Improvement:** {abs(latency_reduction):.1f}% {'faster' if latency_reduction > 0 else 'slower'}
 
-| Metric | Original (FP16) | Quantized (INT4/INT8) | Difference |
-|--------|----------------|----------------------|------------|
-| Latency | {orig_metrics['latency_ms']}ms | {quant_metrics['latency_ms']}ms | {abs(latency_reduction):.1f}% |
-| Speed | {orig_metrics['tokens_per_sec']} tok/s | {quant_metrics['tokens_per_sec']} tok/s | {speedup:.2f}x |
-| Tokens | {orig_metrics['tokens']} | {quant_metrics['tokens']} | Same |
+| Metric | Original (FP16) | Quantized (INT4) | Difference |
+|--------|----------------|------------------|------------|
+| Latency | {state['orig_metrics']['latency_ms']}ms | {state['quant_metrics']['latency_ms']}ms | {abs(latency_reduction):.1f}% |
+| Speed | {state['orig_metrics']['tokens_per_sec']} tok/s | {state['quant_metrics']['tokens_per_sec']} tok/s | {speedup:.2f}x |
+| Tokens | {state['orig_metrics']['tokens']} | {state['quant_metrics']['tokens']} | Same |
 
 **Quality Check:** Compare the text responses above to assess if quantization affected output quality.
 """
