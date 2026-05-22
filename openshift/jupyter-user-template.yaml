@@ -57,8 +57,8 @@ objects:
           "\n",
           "| Model | Precision | Size | GPUs |\n",
           "|-------|-----------|------|------|\n",
-          "| Qwen2.5-7B-Instruct | FP16 | ~14GB | 2× L4 |\n",
-          "| Qwen3.5-9B-quantized | INT4 | ~5GB | 2× L4 |\n",
+          "| Qwen2.5-7B-Instruct | FP16 | ~14GB | 2x L4 |\n",
+          "| Qwen3.5-9B-quantized | INT4 | ~5GB | 2x L4 |\n",
           "\n",
           "Both are served via vLLM on OpenShift."
          ]
@@ -100,7 +100,7 @@ objects:
           "ORIGINAL_API = \"http://vllm-original.workshop.svc.cluster.local:8000/v1\"\n",
           "QUANTIZED_API = \"http://vllm-quantized.workshop.svc.cluster.local:8000/v1\"\n",
           "\n",
-          "print(\"✓ Setup complete!\")\n",
+          "print(\"Setup complete!\")\n",
           "print(f\"Original API: {ORIGINAL_API}\")\n",
           "print(f\"Quantized API: {QUANTIZED_API}\")"
          ]
@@ -131,7 +131,7 @@ objects:
           "    --data \"prompt_tokens=100,output_tokens=100\" \\\n",
           "    --max-requests 10\n",
           "\n",
-          "print(\"\\n✓ Original model benchmark complete!\")\n",
+          "print(\"\\nOriginal model benchmark complete!\")\n",
           "print(\"Results saved to: original/benchmarks.csv, original/benchmarks.html\")"
          ]
         },
@@ -161,7 +161,7 @@ objects:
           "    --data \"prompt_tokens=100,output_tokens=100\" \\\n",
           "    --max-requests 10\n",
           "\n",
-          "print(\"\\n✓ Quantized model benchmark complete!\")\n",
+          "print(\"\\nQuantized model benchmark complete!\")\n",
           "print(\"Results saved to: quantized/benchmarks.csv, quantized/benchmarks.html\")"
          ]
         },
@@ -201,10 +201,10 @@ objects:
           "            print(f\"  - {col}: {orig[col]:.2f} vs {quant[col]:.2f}\")\n",
           "    \n",
           "except FileNotFoundError as e:\n",
-          "    print(f\"❌ Could not find benchmark results. Make sure to run the benchmark cells above first.\")\n",
+          "    print(f\"ERROR:Could not find benchmark results. Make sure to run the benchmark cells above first.\")\n",
           "    print(f\"   Error: {e}\")\n",
           "except Exception as e:\n",
-          "    print(f\"❌ Error loading results: {e}\")\n",
+          "    print(f\"ERROR:Error loading results: {e}\")\n",
           "    print(\"\\nShowing raw CSV preview instead:\")\n",
           "    print(\"\\nOriginal:\")\n",
           "    !tail -3 original/benchmarks.csv\n",
@@ -260,14 +260,14 @@ objects:
           "            plt.savefig('benchmark_comparison.png', dpi=150, bbox_inches='tight')\n",
           "            plt.show()\n",
           "            \n",
-          "            print(\"\\n✓ Charts saved to: benchmark_comparison.png\")\n",
+          "            print(\"\\nCharts saved to: benchmark_comparison.png\")\n",
           "        else:\n",
           "            print(\"No suitable metrics found for visualization\")\n",
           "    else:\n",
           "        print(\"No numeric columns found\")\n",
           "    \n",
           "except Exception as e:\n",
-          "    print(f\"❌ Could not create charts: {e}\")\n",
+          "    print(f\"ERROR:Could not create charts: {e}\")\n",
           "    print(\"Make sure you've run the benchmark cells above first.\")"
          ]
         },
