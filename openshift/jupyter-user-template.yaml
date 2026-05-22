@@ -3,7 +3,6 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: jupyter-user
-  namespace: workshop
   annotations:
     description: "Per-user JupyterLab instance for Boston Tech Week 2026 workshop"
     tags: "jupyter,notebook,workshop"
