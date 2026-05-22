@@ -23,11 +23,14 @@ This policy ensures users cannot interfere with each other's work:
 **JupyterLab instances have authentication disabled** for this workshop to minimize friction.
 
 - Users do NOT need tokens or passwords to access JupyterLab
-- Anyone with the URL can access any workspace
-- This is acceptable for a 60-minute workshop with a known audience in a controlled environment
+- Each workspace URL includes a random 10-character suffix for security through obscurity
+  - Example: `https://jupyter-user1-k3x9m2p7q1.apps.ocp.ntdrq.sandbox503.opentlc.com`
+- Users cannot guess other workspaces by changing the number (each has a unique random suffix)
 
-**Security trade-off:**
-- Users could theoretically access other users' workspaces if they know the URL pattern
+**Security through obscurity:**
+- Each user gets a unique URL with a random suffix (10 chars, lowercase + digits = 36^10 = 3.6 quadrillion combinations)
+- URLs are only shared via the assignment app, never displayed publicly
+- For a 60-minute workshop, this provides sufficient isolation
 - For a production environment, enable per-user tokens or integrate with OpenShift OAuth
 
 ### What Users Can Access
