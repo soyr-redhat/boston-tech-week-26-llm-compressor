@@ -1,0 +1,29 @@
+---
+# NetworkPolicy to isolate Jupyter user pods from each other
+# Only allows ingress from OpenShift router (for external access)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: jupyter-user-isolation
+  namespace: workshop
+spec:
+  # Apply to all Jupyter user pods
+  podSelector:
+    matchLabels:
+      app: jupyter
+
+  policyTypes:
+  - Ingress
+  # Note: Not restricting egress since workshop uses public HTTPS routes
+
+  # INGRESS: Only allow traffic from OpenShift router (for external route access)
+  # Block all pod-to-pod access between Jupyter instances
+  ingress:
+  - from:
+    # Allow from OpenShift ingress router (for external route access via HTTPS)
+    - namespaceSelector:
+        matchLabels:
+          network.openshift.io/policy-group: ingress
+    ports:
+    - protocol: TCP
+      port: 8888
