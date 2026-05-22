@@ -85,7 +85,7 @@ Your workspace includes:
 3. **Hands-On (30 min):** Guide participants through Jupyter notebook
 4. **Discussion:** Review metrics and production considerations
 
-**Full Setup Guide:** [INSTRUCTOR_SETUP.md](docs/INSTRUCTOR_SETUP.md)
+**Pre-Event Checklist:** [pre-event-checklist.md](docs/pre-event-checklist.md)
 
 ---
 
@@ -159,7 +159,7 @@ Your workspace includes:
 │   ├── workshop-guide.md
 │   ├── instructor-guide.md
 │   ├── cluster-status.md
-│   ├── INSTRUCTOR_SETUP.md        # Detailed setup guide
+│   ├── pre-event-checklist.md     # Pre-workshop setup checklist
 │   └── SECURITY.md                # Security architecture
 ├── README.md                      # This file
 ├── pyproject.toml                 # Project metadata

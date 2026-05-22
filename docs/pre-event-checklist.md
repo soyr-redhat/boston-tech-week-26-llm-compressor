@@ -1,4 +1,4 @@
-# Instructor Setup Guide - Boston Tech Week 2026
+# Pre-Event Checklist - Boston Tech Week 2026
 
 ## Pre-Workshop Deployment (Day Before)
 
