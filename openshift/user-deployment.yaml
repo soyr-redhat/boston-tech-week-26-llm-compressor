@@ -23,7 +23,7 @@ spec:
       containers:
       - name: vllm
         image: vllm/vllm-openai:latest
-        command: ["vllm", "serve", "RedHatAI/Qwen3.5-9B-FP8-dynamic", "--port", "8080", "--host", "0.0.0.0", "--max-model-len", "8192"]
+        command: ["vllm", "serve", "Qwen/Qwen2.5-7B-Instruct", "--port", "8080", "--host", "0.0.0.0", "--max-model-len", "8192"]
         env:
         - name: HOME
           value: "/tmp"
