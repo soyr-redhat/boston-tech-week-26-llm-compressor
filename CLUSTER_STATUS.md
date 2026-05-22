@@ -2,7 +2,7 @@
 
 **Last Updated:** 2026-05-22  
 **Cluster:** https://console-openshift-console.apps.ocp.ntdrq.sandbox503.opentlc.com  
-**Namespace:** workshop-user1
+**Namespace:** workshop
 
 ---
 
@@ -39,7 +39,7 @@
 - **Theme:** Everforest (custom CSS)
 - **Features:** Concurrent streaming, live metrics, side-by-side comparison
 - **Internal Service:** comparison-ui:7860
-- **Public URL:** https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+- **Public URL:** https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 - **Health Check:** ✅ Accessible
 
 ---
@@ -81,7 +81,7 @@
 |---------|----------|----------|
 | Original Model | vllm-original:8080 | https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com |
 | Quantized Model | vllm-quantized:8081 | https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com |
-| Comparison UI | comparison-ui:7860 | https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com |
+| Comparison UI | comparison-ui:7860 | https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com |
 
 All routes use TLS edge termination with automatic redirect from HTTP.
 
@@ -131,47 +131,47 @@ curl https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/health
 
 ### Check Pod Status
 ```bash
-oc get pods -n workshop-user1
-oc describe pod vllm-original-55ffd6c7d5-lxknk -n workshop-user1
+oc get pods -n workshop
+oc describe pod vllm-original-55ffd6c7d5-lxknk -n workshop
 ```
 
 ### View Logs
 ```bash
 # Follow logs (real-time)
-oc logs -f deployment/vllm-original -n workshop-user1
-oc logs -f deployment/vllm-quantized -n workshop-user1
-oc logs -f deployment/comparison-ui -n workshop-user1
+oc logs -f deployment/vllm-original -n workshop
+oc logs -f deployment/vllm-quantized -n workshop
+oc logs -f deployment/comparison-ui -n workshop
 
 # Last 50 lines
-oc logs deployment/vllm-original -n workshop-user1 --tail=50
+oc logs deployment/vllm-original -n workshop --tail=50
 ```
 
 ### Restart Services
 ```bash
 # Restart a deployment
-oc rollout restart deployment/vllm-original -n workshop-user1
-oc rollout restart deployment/vllm-quantized -n workshop-user1
-oc rollout restart deployment/comparison-ui -n workshop-user1
+oc rollout restart deployment/vllm-original -n workshop
+oc rollout restart deployment/vllm-quantized -n workshop
+oc rollout restart deployment/comparison-ui -n workshop
 
 # Watch restart progress
-oc rollout status deployment/vllm-original -n workshop-user1
+oc rollout status deployment/vllm-original -n workshop
 ```
 
 ### Scale Resources
 ```bash
 # Scale replicas
-oc scale deployment/vllm-original --replicas=0 -n workshop-user1  # Stop
-oc scale deployment/vllm-original --replicas=1 -n workshop-user1  # Start
+oc scale deployment/vllm-original --replicas=0 -n workshop  # Stop
+oc scale deployment/vllm-original --replicas=1 -n workshop  # Start
 
 # Update resource limits
 oc set resources deployment/vllm-original \
   --limits=cpu=8,memory=16Gi \
-  -n workshop-user1
+  -n workshop
 ```
 
 ### Access Pod Shell
 ```bash
-oc exec -it deployment/vllm-original -n workshop-user1 -- /bin/bash
+oc exec -it deployment/vllm-original -n workshop -- /bin/bash
 ```
 
 ---
@@ -180,17 +180,17 @@ oc exec -it deployment/vllm-original -n workshop-user1 -- /bin/bash
 
 ### CPU/Memory Usage
 ```bash
-oc adm top pods -n workshop-user1
+oc adm top pods -n workshop
 ```
 
 ### Events
 ```bash
-oc get events -n workshop-user1 --sort-by='.lastTimestamp'
+oc get events -n workshop --sort-by='.lastTimestamp'
 ```
 
 ### Routes Status
 ```bash
-oc get routes -n workshop-user1
+oc get routes -n workshop
 ```
 
 ---
@@ -215,13 +215,13 @@ All services running stable with no errors.
 ### If Pod Crashes
 ```bash
 # Check logs for root cause
-oc logs deployment/vllm-original -n workshop-user1 --previous
+oc logs deployment/vllm-original -n workshop --previous
 
 # Restart deployment
-oc rollout restart deployment/vllm-original -n workshop-user1
+oc rollout restart deployment/vllm-original -n workshop
 
 # If persistent issues, delete and recreate
-oc delete deployment vllm-original -n workshop-user1
+oc delete deployment vllm-original -n workshop
 oc apply -f openshift/user-deployment.yaml
 ```
 
@@ -229,16 +229,16 @@ oc apply -f openshift/user-deployment.yaml
 ```bash
 # Reduce context length in deployment
 # Edit command args to use --max-model-len 4096 instead of 8192
-oc edit deployment vllm-original -n workshop-user1
+oc edit deployment vllm-original -n workshop
 ```
 
 ### If Route Unreachable
 ```bash
 # Check route exists
-oc get route vllm-original-api -n workshop-user1
+oc get route vllm-original-api -n workshop
 
 # Recreate route if missing
-oc expose service vllm-original --name=vllm-original-api -n workshop-user1
+oc expose service vllm-original --name=vllm-original-api -n workshop
 ```
 
 ---
@@ -262,7 +262,7 @@ oc expose service vllm-original --name=vllm-original-api -n workshop-user1
 ## Security
 
 - ✅ TLS enabled on all routes (edge termination)
-- ✅ Namespace isolation (workshop-user1)
+- ✅ Namespace isolation (workshop)
 - ✅ Resource limits prevent runaway consumption
 - ✅ No authentication required (public workshop)
 - ✅ Read-only access for participants (APIs only)
@@ -273,13 +273,13 @@ oc expose service vllm-original --name=vllm-original-api -n workshop-user1
 
 **OpenShift Console:** https://console-openshift-console.apps.ocp.ntdrq.sandbox503.opentlc.com  
 **Logged in as:** cluster-admin  
-**Namespace:** workshop-user1  
+**Namespace:** workshop  
 **Region:** AWS us-east-1 (assumed)
 
 **For issues during workshop:**
 1. Check this document first
-2. Review pod logs: `oc logs deployment/<name> -n workshop-user1`
-3. Restart if needed: `oc rollout restart deployment/<name> -n workshop-user1`
+2. Review pod logs: `oc logs deployment/<name> -n workshop`
+3. Restart if needed: `oc rollout restart deployment/<name> -n workshop`
 
 ---
 

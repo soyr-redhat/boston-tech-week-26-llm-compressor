@@ -12,7 +12,7 @@
 
 ```bash
 # Check pods are running
-oc get pods -n workshop-user1
+oc get pods -n workshop
 
 # Should see:
 # vllm-original-xxx         1/1     Running
@@ -20,13 +20,13 @@ oc get pods -n workshop-user1
 # comparison-ui-xxx         1/1     Running
 
 # Check logs for errors
-oc logs deployment/vllm-original -n workshop-user1 --tail=20
-oc logs deployment/vllm-quantized -n workshop-user1 --tail=20
+oc logs deployment/vllm-original -n workshop --tail=20
+oc logs deployment/vllm-quantized -n workshop --tail=20
 ```
 
 ### 2. Test Comparison UI
 
-Open: https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+Open: https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 
 - Try example prompt
 - Verify both models respond
@@ -315,12 +315,12 @@ Start with small models (1-3B) to learn, then scale to production."
 - Share your benchmark results
 
 ### If models crash
-- Check pod logs: `oc logs deployment/vllm-original -n workshop-user1`
-- Out of memory? Restart: `oc rollout restart deployment/vllm-original -n workshop-user1`
+- Check pod logs: `oc logs deployment/vllm-original -n workshop`
+- Out of memory? Restart: `oc rollout restart deployment/vllm-original -n workshop`
 - Show pre-recorded results as backup
 
 ### If endpoints are unreachable
-- Verify routes: `oc get routes -n workshop-user1`
+- Verify routes: `oc get routes -n workshop`
 - Check network policies
 - Use instructor laptop as proxy
 

@@ -71,7 +71,7 @@ curl $ORIGINAL_API/models
 
 ## Demo UI
 
-Watch the live comparison: https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+Watch the live comparison: https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 
 ---
 

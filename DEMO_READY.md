@@ -24,7 +24,7 @@
 ### Comparison UI
 
 ✅ **Instructor Demo Interface**
-- URL: https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+- URL: https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 - Theme: Everforest (matching instructor's nvim config)
 - Features:
   - Side-by-side concurrent comparison
@@ -83,19 +83,19 @@ curl -X POST https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1/comp
   }'
 
 # Test 3: Access UI
-open https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+open https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 ```
 
 ## Day-Of Setup
 
 ### 15 Minutes Before
-1. Verify both vLLM pods are running: `oc get pods -n workshop-user1`
-2. Check logs for errors: `oc logs -f deployment/vllm-original -n workshop-user1`
+1. Verify both vLLM pods are running: `oc get pods -n workshop`
+2. Check logs for errors: `oc logs -f deployment/vllm-original -n workshop`
 3. Test UI in browser
 4. Run one full comparison to warm up models
 
 ### During Workshop
-1. Share comparison UI link: https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+1. Share comparison UI link: https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 2. Demonstrate concurrent execution
 3. Show metrics and speedup
 4. Share API endpoints for participant benchmarking:
@@ -135,7 +135,7 @@ open https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 ## Contact
 
 **Cluster:** https://console-openshift-console.apps.ocp.ntdrq.sandbox503.opentlc.com  
-**Namespace:** workshop-user1  
+**Namespace:** workshop  
 **Admin Access:** Already logged in via `oc`
 
 ---

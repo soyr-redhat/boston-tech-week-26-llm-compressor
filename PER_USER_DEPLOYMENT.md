@@ -7,7 +7,7 @@ Each workshop participant gets their own:
 - ✅ Own vLLM original model instance
 - ✅ Own vLLM quantized model instance
 - ✅ Own comparison UI
-- ✅ **Unique URL:** `https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com`
+- ✅ **Unique URL:** `https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com`
 
 ## Quick Start
 
@@ -19,7 +19,7 @@ Each workshop participant gets their own:
 
 **Result:**
 - Namespace: `workshop-user1`
-- URL: `https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com`
+- URL: `https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com`
 
 ### Provision Multiple Users
 
@@ -37,7 +37,7 @@ Creates user1, user2, ..., user20 with unique URLs for each.
 
 **Output:**
 ```
-https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 https://user2-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 ...
 ```
@@ -78,7 +78,7 @@ oc scale deployment/vllm-quantized --replicas=1 -n workshop-user2
 **1 instructor demo + shared read-only access:**
 
 - Instructor uses `user1`
-- All participants watch at: `https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com`
+- All participants watch at: `https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com`
 - Participants can experiment but instructor drives
 
 ### Option 3: Shared vLLM Backend
@@ -201,7 +201,7 @@ https://{username}-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 ```
 
 Examples:
-- user1: https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+- user1: https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 - user2: https://user2-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 - alice: https://alice-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 
@@ -220,7 +220,7 @@ oc exec -n workshop-user1 deployment/vllm-original -- \
   curl -s http://localhost:8080/health
 
 # Get URL
-URL=$(oc get route user1-comparison-ui -n workshop-user1 -o jsonpath='{.spec.host}')
+URL=$(oc get route comparison-ui -n workshop-user1 -o jsonpath='{.spec.host}')
 echo "https://$URL"
 
 # Open in browser and test!

@@ -36,7 +36,7 @@ Watch as we:
    - **Quantized:** Qwen3.5-9B-quantized (INT4) - ~19GB VRAM
 3. Compare outputs in the web UI
 
-**Demo URL:** https://user1-comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+**Demo URL:** https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
 
 ---
 
