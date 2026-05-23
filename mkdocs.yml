@@ -36,10 +36,8 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Setup:
-      - Pre-Event Checklist: pre-event-checklist.md
-      - Cluster Status: cluster-status.md
   - Technical:
+      - Cluster Status: cluster-status.md
       - Security Architecture: SECURITY.md
 
 extra:

@@ -85,7 +85,7 @@ Your workspace includes:
 3. **Hands-On (30 min):** Guide participants through Jupyter notebook
 4. **Discussion:** Review metrics and production considerations
 
-**Pre-Event Checklist:** [pre-event-checklist.md](docs/pre-event-checklist.md)
+**Pre-Event Checklist:** [PRE_EVENT_CHECKLIST.md](PRE_EVENT_CHECKLIST.md)
 
 ---
 
@@ -155,12 +155,9 @@ Your workspace includes:
 │   └── install.ps1                # Install script (Windows)
 ├── docs/                          # GitHub Pages documentation
 │   ├── index.md
-│   ├── quick-start.md
-│   ├── workshop-guide.md
-│   ├── instructor-guide.md
-│   ├── cluster-status.md
-│   ├── pre-event-checklist.md     # Pre-workshop setup checklist
+│   ├── cluster-status.md          # Infrastructure status
 │   └── SECURITY.md                # Security architecture
+├── PRE_EVENT_CHECKLIST.md         # Instructor pre-workshop setup
 ├── README.md                      # This file
 ├── pyproject.toml                 # Project metadata
 └── mkdocs.yml                     # Documentation config
