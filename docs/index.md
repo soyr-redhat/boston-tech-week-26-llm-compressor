@@ -33,8 +33,8 @@ That's it! Everything runs in your browser - no installation required.
 
 ### Demo UI
 
-Watch the instructor's live comparison:  
-https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+Try inferencing with the dense and quantized model in real time!:  
+<a href="https://red.ht/build-and-brew-inference" target="_blank">https://red.ht/build-and-brew-inference</a>
 
 ---
 
