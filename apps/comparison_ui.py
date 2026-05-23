@@ -280,6 +280,12 @@ hr {
 .gap {
     gap: 8px !important;
 }
+
+/* Hide settings button and theme selector */
+.settings-button, button[aria-label*="settings"], button[aria-label*="Settings"],
+footer, .footer, #footer, [id*="settings"], [class*="settings-btn"] {
+    display: none !important;
+}
 """
 
 def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
@@ -433,7 +439,7 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
     yield orig_result, quant_result, summary
 
 # Compact Gradio UI - outputs first, then input
-with gr.Blocks(css=EVERFOREST_CSS, title="LLM Quantization") as demo:
+with gr.Blocks(title="LLM Quantization") as demo:
     gr.Markdown("# LLM Quantization Comparison")
 
     # Output windows FIRST
@@ -488,5 +494,6 @@ if __name__ == "__main__":
     demo.launch(
         server_name="0.0.0.0",
         server_port=7860,
-        share=False
+        share=False,
+        css=EVERFOREST_CSS
     )
