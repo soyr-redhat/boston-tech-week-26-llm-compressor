@@ -178,5 +178,3 @@ oc logs deployment/workshop-assignment -n workshop
 - **Isolation:** NetworkPolicy prevents pod-to-pod access between users
 - **RBAC:** JupyterLab pods use default ServiceAccount (no cluster permissions)
 - **URL Obfuscation:** Hash-based suffixes prevent user enumeration
-
-See [SECURITY.md](SECURITY.md) for full architecture.

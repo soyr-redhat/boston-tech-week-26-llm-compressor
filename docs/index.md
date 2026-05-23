@@ -41,7 +41,6 @@ Try inferencing with the dense and quantized model in real time!:
 ## Technical Details
 
 - **[Infrastructure Status](cluster-status.md)** - Resource usage and operations
-- **[Security Architecture](SECURITY.md)** - Isolation and access control
 - **<a href="https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor" target="_blank">GitHub Repository</a>** - Source code
 
 ---
