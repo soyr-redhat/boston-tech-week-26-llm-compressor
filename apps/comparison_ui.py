@@ -444,8 +444,12 @@ with gr.Blocks(title="LLM Quantization") as demo:
 
     # Output windows FIRST
     with gr.Row():
-        original_output = gr.Markdown(label="Original (FP16)")
-        quantized_output = gr.Markdown(label="Quantized (INT4)")
+        with gr.Column():
+            gr.Markdown("## Original (FP16)")
+            original_output = gr.Markdown()
+        with gr.Column():
+            gr.Markdown("## Quantized (INT4)")
+            quantized_output = gr.Markdown()
 
     comparison_summary = gr.Markdown()
 
