@@ -52,7 +52,7 @@ Your workspace includes:
 
 ---
 
-## For Instructors
+## For Future Instructors
 
 ### Pre-Workshop Setup
 

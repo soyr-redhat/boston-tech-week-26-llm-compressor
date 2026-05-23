@@ -52,6 +52,9 @@ Try inferencing with the dense and quantized model in real time!:
 - Memory and compute trade-offs
 - When to quantize (and when not to)
 
+![LLM Compressor Workflow](assets/llm-compressor.png)
+*LLM Compressor: Transform models with quantization, pruning, and distillation*
+
 ### Performance Benchmarking
 - Using guidellm to load test LLM APIs
 - Interpreting metrics: throughput, latency, P95/P99
@@ -85,6 +88,9 @@ Try inferencing with the dense and quantized model in real time!:
 - **guidellm:** <a href="https://github.com/vllm-project/guidellm" target="_blank">github.com/vllm-project/guidellm</a>
 - **LLM Compressor:** <a href="https://github.com/vllm-project/llm-compressor" target="_blank">github.com/vllm-project/llm-compressor</a>
 - **RedHat AI Models:** <a href="https://huggingface.co/RedHatAI" target="_blank">huggingface.co/RedHatAI</a>
+
+![RedHat AI Model Collection](assets/redhat-ai-models.png)
+*Browse enterprise-ready quantized models at huggingface.co/RedHatAI*
 
 ---
 
