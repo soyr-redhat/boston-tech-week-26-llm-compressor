@@ -11,7 +11,7 @@
 
 | Service | Model | GPUs | Endpoints |
 |---------|-------|------|-----------|
-| vllm-original | Qwen/Qwen2.5-7B-Instruct (FP16) | 2x L4 | <a href="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com</a> |
+| vllm-original | Qwen/Qwen3.5-9B (FP16) | 2x L4 | <a href="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com</a> |
 | vllm-quantized | RedHatAI/Qwen3.5-9B-quantized.w4a16 (INT4) | 2x L4 | <a href="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com</a> |
 
 ### Workshop Infrastructure

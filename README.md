@@ -124,7 +124,7 @@ Your workspace includes:
 
 | Service | Model | GPUs | Purpose |
 |---------|-------|------|---------|
-| **vLLM Original** | Qwen/Qwen2.5-7B-Instruct (FP16) | 2x L4 | Baseline model |
+| **vLLM Original** | Qwen/Qwen3.5-9B (FP16) | 2x L4 | Baseline model |
 | **vLLM Quantized** | RedHatAI/Qwen3.5-9B-quantized.w4a16 (INT4) | 2x L4 | Quantized comparison |
 | **Assignment App** | Flask | - | Auto-assigns users to workspaces |
 | **Comparison UI** | Gradio | - | Instructor demo interface |
@@ -190,9 +190,9 @@ Your workspace includes:
 ## Models
 
 ### Original Model
-- **Name:** Qwen/Qwen2.5-7B-Instruct
+- **Name:** Qwen/Qwen3.5-9B
 - **Precision:** FP16
-- **Size:** ~14GB
+- **Size:** ~18GB
 - **GPUs:** 2x NVIDIA L4
 - **Endpoint:** https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
 

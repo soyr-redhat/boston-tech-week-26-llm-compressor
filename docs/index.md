@@ -71,7 +71,7 @@ Try inferencing with the dense and quantized model in real time!:
 
 | Model | Precision | Size | GPUs |
 |-------|-----------|------|------|
-| Qwen/Qwen2.5-7B-Instruct | FP16 | ~14GB | 2x L4 |
+| Qwen/Qwen3.5-9B | FP16 | ~18GB | 2x L4 |
 | RedHatAI/Qwen3.5-9B-quantized.w4a16 | INT4 | ~5GB | 2x L4 |
 
 **Expected Performance:**

@@ -23,7 +23,7 @@ spec:
       containers:
       - name: vllm
         image: vllm/vllm-openai:latest
-        command: ["vllm", "serve", "Qwen/Qwen2.5-7B-Instruct", "--port", "8080", "--host", "0.0.0.0", "--max-model-len", "8192", "--tensor-parallel-size", "2"]
+        command: ["vllm", "serve", "Qwen/Qwen3.5-9B", "--port", "8080", "--host", "0.0.0.0", "--max-model-len", "8192", "--tensor-parallel-size", "2"]
         env:
         - name: HOME
           value: "/tmp"

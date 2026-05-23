@@ -300,16 +300,17 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
     except:
         model_name = "deployed-model"
 
+    # Use chat completions API for proper instruct formatting
     payload = {
         "model": model_name,
-        "prompt": prompt,
+        "messages": [{"role": "user", "content": prompt}],
         "max_tokens": max_tokens,
         "temperature": 0.7,
         "top_p": 0.9,
         "stream": True
     }
 
-    url = f"{base_url}/v1/completions"
+    url = f"{base_url}/v1/chat/completions"
 
     try:
         start_time = time.time()
@@ -332,7 +333,9 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
                     try:
                         data = json.loads(data_str)
                         if 'choices' in data and len(data['choices']) > 0:
-                            delta = data['choices'][0].get('text', '')
+                            # Chat completions use delta.content instead of text
+                            delta_obj = data['choices'][0].get('delta', {})
+                            delta = delta_obj.get('content', '')
                             if delta:
                                 full_text += delta
                                 token_count += 1
