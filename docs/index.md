@@ -11,7 +11,7 @@
 ### Getting Started
 
 1. **Visit the workshop landing page:**  
-   [https://red.ht/build-and-brew-26-workshop-provision](https://red.ht/build-and-brew-26-workshop-provision)
+   <a href="https://red.ht/build-and-brew-26-workshop-provision" target="_blank">https://red.ht/build-and-brew-26-workshop-provision</a>
 
 2. **Click "Get My Workspace"** to receive your personal JupyterLab URL
 
