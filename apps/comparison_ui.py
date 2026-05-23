@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-vLLM Model Comparison - Everforest Theme
+vLLM Model Comparison - Red Hat Theme
 Boston Tech Week 2026 - LLM Quantization Workshop
 """
 
@@ -11,27 +11,23 @@ import json
 import threading
 from typing import Dict, Tuple
 
-# Compact Everforest-inspired CSS
-EVERFOREST_CSS = """
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+# Red Hat Theme CSS
+REDHAT_CSS = """
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Mono:wght@400;500;600&family=Red+Hat+Text:wght@400;500;600;700&display=swap');
 
 :root {
-    --bg0: #2f383e;
-    --bg1: #374247;
-    --bg2: #404c51;
-    --bg3: #4a555b;
-    --bg4: #525c62;
-    --fg: #d3c6aa;
-    --red: #e67e80;
-    --orange: #e69875;
-    --yellow: #dbbc7f;
-    --green: #a7c080;
-    --aqua: #83c092;
-    --blue: #7fbbb3;
-    --purple: #d699b6;
-    --grey0: #7a8478;
-    --grey1: #859289;
-    --grey2: #9da9a0;
+    --bg0: #1a1a1a;
+    --bg1: #242424;
+    --bg2: #2e2e2e;
+    --bg3: #383838;
+    --bg4: #424242;
+    --fg: #f5f5f5;
+    --red: #ee0000;
+    --red-dark: #a60000;
+    --red-darker: #5f0000;
+    --grey0: #6a6a6a;
+    --grey1: #8a8a8a;
+    --grey2: #aaaaaa;
 }
 
 * {
@@ -40,7 +36,7 @@ EVERFOREST_CSS = """
 
 body, .gradio-container {
     background: var(--bg0) !important;
-    font-family: 'IBM Plex Sans', system-ui, sans-serif !important;
+    font-family: 'Red Hat Text', system-ui, sans-serif !important;
     color: var(--fg) !important;
     line-height: 1.5;
     padding: 0 !important;
@@ -62,7 +58,7 @@ body, .gradio-container {
 
 /* Compact headers */
 h1, h2, h3, h4 {
-    font-family: 'IBM Plex Sans', sans-serif !important;
+    font-family: 'Red Hat Text', sans-serif !important;
     font-weight: 600 !important;
     margin: 0 0 8px 0 !important;
     padding: 0 !important;
@@ -71,7 +67,7 @@ h1, h2, h3, h4 {
 
 h1 {
     font-size: 1.4rem !important;
-    color: var(--green) !important;
+    color: var(--red) !important;
     border-bottom: 1px solid var(--bg3);
     padding-bottom: 8px !important;
     margin-bottom: 12px !important;
@@ -79,19 +75,19 @@ h1 {
 
 h2 {
     font-size: 1.1rem !important;
-    color: var(--aqua) !important;
+    color: var(--grey2) !important;
 }
 
 h3 {
     font-size: 0.95rem !important;
-    color: var(--blue) !important;
+    color: var(--grey1) !important;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 p, span, label, .prose {
     color: var(--fg) !important;
-    font-family: 'IBM Plex Sans', sans-serif !important;
+    font-family: 'Red Hat Text', sans-serif !important;
     margin: 0 !important;
     padding: 0 !important;
 }
@@ -101,7 +97,7 @@ p, span, label, .prose {
 }
 
 code, pre {
-    font-family: 'IBM Plex Mono', monospace !important;
+    font-family: 'Red Hat Mono', monospace !important;
     background: var(--bg1) !important;
     color: var(--fg) !important;
     font-size: 0.9em !important;
@@ -131,7 +127,7 @@ input[type="text"], textarea {
 }
 
 input:focus, textarea:focus {
-    border-color: var(--green) !important;
+    border-color: var(--red) !important;
     outline: none !important;
 }
 
@@ -142,9 +138,9 @@ textarea {
 /* Compact buttons */
 button {
     background: var(--bg2) !important;
-    border: 1px solid var(--green) !important;
-    color: var(--green) !important;
-    font-family: 'IBM Plex Sans', sans-serif !important;
+    border: 1px solid var(--red) !important;
+    color: var(--red) !important;
+    font-family: 'Red Hat Text', sans-serif !important;
     font-weight: 500 !important;
     padding: 8px 16px !important;
     border-radius: 3px !important;
@@ -153,13 +149,13 @@ button {
 }
 
 button:hover {
-    background: var(--green) !important;
-    color: var(--bg0) !important;
+    background: var(--red) !important;
+    color: white !important;
 }
 
 .primary {
-    background: var(--green) !important;
-    color: var(--bg0) !important;
+    background: var(--red) !important;
+    color: white !important;
 }
 
 /* Output areas with scrolling and darker borders */
@@ -196,12 +192,12 @@ th, td {
 
 th {
     background: var(--bg2) !important;
-    color: var(--green) !important;
+    color: var(--red) !important;
     font-weight: 600;
 }
 
 strong {
-    color: var(--yellow) !important;
+    color: var(--red) !important;
 }
 
 /* Compact rows and columns */
@@ -499,5 +495,5 @@ if __name__ == "__main__":
         server_name="0.0.0.0",
         server_port=7860,
         share=False,
-        css=EVERFOREST_CSS
+        css=REDHAT_CSS
     )

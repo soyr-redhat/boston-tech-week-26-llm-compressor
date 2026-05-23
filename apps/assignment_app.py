@@ -132,8 +132,8 @@ LANDING_PAGE = """
 
         body {
             font-family: 'Red Hat Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #2f383e 0%, #1a1f23 100%);
-            color: #d3c6aa;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            color: #f5f5f5;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -143,11 +143,11 @@ LANDING_PAGE = """
 
         .container {
             max-width: 600px;
-            background: rgba(47, 56, 62, 0.9);
-            border: 2px solid #4a5459;
+            background: rgba(36, 36, 36, 0.95);
+            border: 2px solid #424242;
             border-radius: 12px;
             padding: 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
         }
 
         h1 {
@@ -158,15 +158,15 @@ LANDING_PAGE = """
         }
 
         h2 {
-            color: #a7c080;
+            color: #aaaaaa;
             font-size: 1.5em;
             margin-bottom: 30px;
             font-weight: 400;
         }
 
         .info {
-            background: rgba(26, 31, 35, 0.6);
-            border-left: 4px solid #a7c080;
+            background: rgba(26, 26, 26, 0.6);
+            border-left: 4px solid #ee0000;
             padding: 20px;
             margin-bottom: 30px;
             border-radius: 4px;
@@ -178,7 +178,7 @@ LANDING_PAGE = """
         }
 
         .info strong {
-            color: #e68183;
+            color: #ee0000;
         }
 
         .button {
@@ -208,20 +208,20 @@ LANDING_PAGE = """
             margin-top: 30px;
             text-align: center;
             font-size: 0.9em;
-            color: #a7c080;
+            color: #aaaaaa;
         }
 
         .footer {
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 1px solid #4a5459;
+            border-top: 1px solid #424242;
             text-align: center;
             font-size: 0.85em;
-            color: #859289;
+            color: #8a8a8a;
         }
 
         .footer a {
-            color: #a7c080;
+            color: #ee0000;
             text-decoration: none;
         }
 
@@ -277,8 +277,8 @@ ASSIGNED_PAGE = """
 
         body {
             font-family: 'Red Hat Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #2f383e 0%, #1a1f23 100%);
-            color: #d3c6aa;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            color: #f5f5f5;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -288,16 +288,16 @@ ASSIGNED_PAGE = """
 
         .container {
             max-width: 600px;
-            background: rgba(47, 56, 62, 0.9);
-            border: 2px solid #4a5459;
+            background: rgba(36, 36, 36, 0.95);
+            border: 2px solid #424242;
             border-radius: 12px;
             padding: 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
             text-align: center;
         }
 
         h1 {
-            color: #a7c080;
+            color: #aaaaaa;
             font-size: 2em;
             margin-bottom: 20px;
         }
@@ -310,8 +310,8 @@ ASSIGNED_PAGE = """
         }
 
         .info {
-            background: rgba(26, 31, 35, 0.6);
-            border-left: 4px solid #a7c080;
+            background: rgba(26, 26, 26, 0.6);
+            border-left: 4px solid #ee0000;
             padding: 20px;
             margin: 30px 0;
             border-radius: 4px;
@@ -319,14 +319,14 @@ ASSIGNED_PAGE = """
         }
 
         .url {
-            background: rgba(26, 31, 35, 0.8);
+            background: rgba(26, 26, 26, 0.8);
             padding: 15px;
             border-radius: 6px;
             font-family: 'Red Hat Mono', monospace;
             font-size: 0.9em;
             word-break: break-all;
             margin: 20px 0;
-            border: 1px solid #4a5459;
+            border: 1px solid #424242;
         }
 
         .button {
@@ -354,7 +354,7 @@ ASSIGNED_PAGE = """
         .countdown {
             margin-top: 20px;
             font-size: 0.9em;
-            color: #859289;
+            color: #8a8a8a;
         }
     </style>
 </head>
@@ -411,8 +411,8 @@ FULL_PAGE = """
 
         body {
             font-family: 'Red Hat Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #2f383e 0%, #1a1f23 100%);
-            color: #d3c6aa;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            color: #f5f5f5;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -422,16 +422,16 @@ FULL_PAGE = """
 
         .container {
             max-width: 600px;
-            background: rgba(47, 56, 62, 0.9);
-            border: 2px solid #4a5459;
+            background: rgba(36, 36, 36, 0.95);
+            border: 2px solid #424242;
             border-radius: 12px;
             padding: 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
             text-align: center;
         }
 
         h1 {
-            color: #e68183;
+            color: #ee0000;
             font-size: 2em;
             margin-bottom: 20px;
         }
