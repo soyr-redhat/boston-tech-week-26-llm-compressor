@@ -123,6 +123,7 @@ LANDING_PAGE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boston Tech Week 2026 - LLM Quantization Workshop</title>
+    <link rel="icon" type="image/svg+xml" href="https://soyr-redhat.github.io/boston-tech-week-26-llm-compressor/assets/redhat.svg">
     <style>
         * {
             margin: 0;
@@ -268,6 +269,7 @@ ASSIGNED_PAGE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Workshop Workspace</title>
+    <link rel="icon" type="image/svg+xml" href="https://soyr-redhat.github.io/boston-tech-week-26-llm-compressor/assets/redhat.svg">
     <style>
         * {
             margin: 0;
@@ -402,6 +404,7 @@ FULL_PAGE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workshop Full</title>
+    <link rel="icon" type="image/svg+xml" href="https://soyr-redhat.github.io/boston-tech-week-26-llm-compressor/assets/redhat.svg">
     <style>
         * {
             margin: 0;

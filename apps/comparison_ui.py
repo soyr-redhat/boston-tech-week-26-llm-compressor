@@ -435,7 +435,10 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
     yield orig_result, quant_result, summary
 
 # Compact Gradio UI - outputs first, then input
-with gr.Blocks(title="LLM Quantization") as demo:
+with gr.Blocks(
+    title="LLM Quantization",
+    head='<link rel="icon" type="image/svg+xml" href="https://soyr-redhat.github.io/boston-tech-week-26-llm-compressor/assets/redhat.svg">'
+) as demo:
     gr.Markdown("# LLM Quantization Comparison")
 
     # Output windows FIRST
