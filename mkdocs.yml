@@ -6,15 +6,7 @@ edit_uri: edit/main/docs/
 
 theme:
   name: material
-  palette:
-    - scheme: slate
-      primary: red
-      accent: red
-  font:
-    text: Red Hat Text
-    code: Red Hat Mono
   features:
-    - navigation.tabs
     - navigation.sections
     - navigation.instant
     - navigation.tracking

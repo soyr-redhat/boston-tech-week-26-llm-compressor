@@ -11,7 +11,7 @@
 ### Getting Started
 
 1. **Visit the workshop landing page:**  
-   https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com
+   <a>https://red.ht/build-and-brew-26-workshop-provision</a>
 
 2. **Click "Get My Workspace"** to receive your personal JupyterLab URL
 
@@ -35,26 +35,6 @@ That's it! Everything runs in your browser - no installation required.
 
 Watch the instructor's live comparison:  
 https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
-
----
-
-## For Instructors
-
-### Pre-Event Setup
-
-**Review the checklist:** [Pre-Event Checklist](pre-event-checklist.md)
-
-**Key Steps:**
-1. Provision 50 JupyterLab instances
-2. Deploy vLLM models and comparison UI
-3. Test the assignment landing page
-4. Reset assignment counter if needed
-
-### During Workshop
-
-1. **Share workshop URL** with participants: `https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com`
-2. **Live demo** using comparison UI (30 min)
-3. **Facilitate hands-on** as participants work through notebook (30 min)
 
 ---
 
