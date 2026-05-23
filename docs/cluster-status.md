@@ -11,15 +11,15 @@
 
 | Service | Model | GPUs | Endpoints |
 |---------|-------|------|-----------|
-| vllm-original | Qwen/Qwen2.5-7B-Instruct (FP16) | 2x L4 | https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com |
-| vllm-quantized | RedHatAI/Qwen3.5-9B-quantized.w4a16 (INT4) | 2x L4 | https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com |
+| vllm-original | Qwen/Qwen2.5-7B-Instruct (FP16) | 2x L4 | <a href="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com</a> |
+| vllm-quantized | RedHatAI/Qwen3.5-9B-quantized.w4a16 (INT4) | 2x L4 | <a href="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com</a> |
 
 ### Workshop Infrastructure
 
 | Service | Purpose | URL |
 |---------|---------|-----|
-| Assignment App | Auto-assign users to workspaces | https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com |
-| Comparison UI | Instructor demo interface | https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com |
+| Assignment App | Auto-assign users to workspaces | <a href="https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com</a> |
+| Comparison UI | Instructor demo interface | <a href="https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com</a> |
 | JupyterLab (50x) | Per-user notebook environments | https://jupyter-user{N}-{suffix}.apps... |
 
 ---

@@ -39,8 +39,8 @@ This policy ensures users cannot interfere with each other's work:
 
 - Any JupyterLab instance (no authentication)
 - Shared vLLM models via public routes:
-  - https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
-  - https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
+  - <a href="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1" target="_blank">https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1</a>
+  - <a href="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1" target="_blank">https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1</a>
 - Internet (for pip, guidellm, etc.)
 
 ### What Users Cannot Access

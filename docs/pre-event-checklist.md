@@ -72,7 +72,7 @@ Print or share this file with participants at the workshop.
 
 ### Part 1: Demo (30 min)
 
-1. **Show comparison UI** - https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com
+1. **Show comparison UI** - <a href="https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com</a>
    - Run a few prompts side-by-side
    - Point out the performance differences in real-time
 
@@ -179,21 +179,21 @@ resources:
 
 ### Share with Participants
 
-- **GitHub Repo:** https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor
+- **GitHub Repo:** <a href="https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor" target="_blank">https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor</a>
 - **Quick Start:** Point them to QUICK_START.md
-- **Documentation:** https://soyr-redhat.github.io/boston-tech-week-26-llm-compressor
+- **Documentation:** <a href="https://soyr-redhat.github.io/boston-tech-week-26-llm-compressor" target="_blank">https://soyr-redhat.github.io/boston-tech-week-26-llm-compressor</a>
 
 ### After Workshop
 
 Participants can:
 - Download their notebooks with results
 - Clone the repo and run locally
-- Explore RedHat AI models: https://huggingface.co/RedHatAI
-- Try LLM Compressor: https://github.com/vllm-project/llm-compressor
+- Explore RedHat AI models: <a href="https://huggingface.co/RedHatAI" target="_blank">https://huggingface.co/RedHatAI</a>
+- Try LLM Compressor: <a href="https://github.com/vllm-project/llm-compressor" target="_blank">https://github.com/vllm-project/llm-compressor</a>
 
 ---
 
 ## Contact
 
 Questions or issues? Check the repo issues:
-https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor/issues
+<a href="https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor/issues" target="_blank">https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor/issues</a>

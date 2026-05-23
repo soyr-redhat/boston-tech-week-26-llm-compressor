@@ -42,7 +42,7 @@ Try inferencing with the dense and quantized model in real time!:
 
 - **[Infrastructure Status](cluster-status.md)** - Resource usage and operations
 - **[Security Architecture](SECURITY.md)** - Isolation and access control
-- **[GitHub Repository](https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor)** - Source code
+- **<a href="https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor" target="_blank">GitHub Repository</a>** - Source code
 
 ---
 
@@ -82,10 +82,10 @@ Try inferencing with the dense and quantized model in real time!:
 
 ## Resources
 
-- **vLLM:** [docs.vllm.ai](https://docs.vllm.ai/)
-- **guidellm:** [github.com/vllm-project/guidellm](https://github.com/vllm-project/guidellm)
-- **LLM Compressor:** [github.com/vllm-project/llm-compressor](https://github.com/vllm-project/llm-compressor)
-- **RedHat AI Models:** [huggingface.co/RedHatAI](https://huggingface.co/RedHatAI)
+- **vLLM:** <a href="https://docs.vllm.ai/" target="_blank">docs.vllm.ai</a>
+- **guidellm:** <a href="https://github.com/vllm-project/guidellm" target="_blank">github.com/vllm-project/guidellm</a>
+- **LLM Compressor:** <a href="https://github.com/vllm-project/llm-compressor" target="_blank">github.com/vllm-project/llm-compressor</a>
+- **RedHat AI Models:** <a href="https://huggingface.co/RedHatAI" target="_blank">huggingface.co/RedHatAI</a>
 
 ---
 
