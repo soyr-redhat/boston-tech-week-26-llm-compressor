@@ -232,7 +232,7 @@ objects:
           resources:
             requests:
               memory: "2Gi"
-              cpu: "500m"
+              cpu: "400m"
             limits:
               memory: "4Gi"
               cpu: "1"
