@@ -301,17 +301,19 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
         model_name = "deployed-model"
 
     # Use chat completions API for proper instruct formatting
+    # For Qwen3: disable reasoning mode via chat_template_kwargs
     payload = {
         "model": model_name,
-        "messages": [
-            {"role": "system", "content": "Answer directly without showing your thinking process. Do not start with 'Thinking Process' or analyze the request. Give the answer immediately."},
-            {"role": "user", "content": prompt}
-        ],
+        "messages": [{"role": "user", "content": prompt}],
         "max_tokens": max_tokens,
-        "temperature": 0.1,
+        "temperature": 0.7,
         "top_p": 0.9,
-        "stop": ["Thinking Process:", "Analyze the Request:", "Constraint:"],
-        "stream": True
+        "stream": True,
+        "extra_body": {
+            "chat_template_kwargs": {
+                "enable_thinking": False
+            }
+        }
     }
 
     url = f"{base_url}/v1/chat/completions"
@@ -363,47 +365,12 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
     except Exception as e:
         yield f"Error: {str(e)}", {}
 
-def strip_thinking_process(text: str) -> str:
-    """Remove thinking process if model outputs it"""
-    # Common patterns models use for thinking
-    patterns = [
-        "Thinking Process:",
-        "Analyze the Request:",
-        "Constraint:",
-        "Identify Key Concepts:",
-        "Topic:",
-        "Tone:",
-    ]
-
-    # Split into lines and filter
-    lines = text.split('\n')
-    filtered_lines = []
-    skip_mode = False
-
-    for line in lines:
-        # Check if this line starts thinking process
-        if any(pattern in line for pattern in patterns):
-            skip_mode = True
-            continue
-
-        # If we hit a line that looks like actual content (not indented analysis)
-        if skip_mode and line.strip() and not line.startswith(' ') and not line.startswith('\t'):
-            skip_mode = False
-
-        if not skip_mode:
-            filtered_lines.append(line)
-
-    return '\n'.join(filtered_lines).strip()
-
 def format_output(text: str, metrics: dict = None):
     """Format output with inline metrics"""
     if not text:
         return "*waiting...*"
 
-    # Clean thinking process from output
-    cleaned_text = strip_thinking_process(text)
-
-    output = f"{cleaned_text}\n"
+    output = f"{text}\n"
 
     if metrics:
         output += f"\n**Metrics:** {metrics['latency_ms']}ms · {metrics['tokens_per_sec']} tok/s · {metrics['tokens']} tokens"
@@ -460,7 +427,15 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
     quant_result = format_output(state['quant_text'], state['quant_metrics'])
 
     if state['orig_metrics'] and state['quant_metrics']:
-        speedup = state['quant_metrics']['tokens_per_sec'] / state['orig_metrics']['tokens_per_sec']
+        # Prevent division by zero
+        orig_tps = state['orig_metrics']['tokens_per_sec']
+        quant_tps = state['quant_metrics']['tokens_per_sec']
+
+        if orig_tps > 0:
+            speedup = quant_tps / orig_tps
+        else:
+            speedup = 0
+
         latency_diff = state['orig_metrics']['latency_ms'] - state['quant_metrics']['latency_ms']
 
         summary = f"""**Result:** {speedup:.2f}x speedup · {latency_diff:.0f}ms faster
@@ -468,7 +443,7 @@ def compare_models(prompt: str, original_port: str, quantized_port: str, max_tok
 | Metric | Original | Quantized | Δ |
 |--------|----------|-----------|---|
 | Latency | {state['orig_metrics']['latency_ms']}ms | {state['quant_metrics']['latency_ms']}ms | {latency_diff:.0f}ms |
-| Throughput | {state['orig_metrics']['tokens_per_sec']} tok/s | {state['quant_metrics']['tokens_per_sec']} tok/s | {speedup:.2f}x |
+| Throughput | {orig_tps} tok/s | {quant_tps} tok/s | {speedup:.2f}x |
 | Tokens | {state['orig_metrics']['tokens']} | {state['quant_metrics']['tokens']} | — |
 """
     else:
