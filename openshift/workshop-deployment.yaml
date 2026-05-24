@@ -23,7 +23,7 @@ spec:
       containers:
       - name: vllm
         image: vllm/vllm-openai:latest
-        command: ["vllm", "serve", "Qwen/Qwen3.5-9B", "--port", "8080", "--host", "0.0.0.0", "--max-model-len", "8192", "--tensor-parallel-size", "2"]
+        command: ["vllm", "serve", "Qwen/Qwen3.5-9B", "--port", "8080", "--host", "0.0.0.0", "--max-model-len", "8192", "--tensor-parallel-size", "2", "--reasoning-parser", "qwen3", "--default-chat-template-kwargs", "{\"enable_thinking\": false}"]
         env:
         - name: HOME
           value: "/tmp"
@@ -59,7 +59,7 @@ spec:
       containers:
       - name: vllm
         image: vllm/vllm-openai:latest
-        command: ["vllm", "serve", "RedHatAI/Qwen3.5-9B-quantized.w4a16", "--port", "8081", "--host", "0.0.0.0", "--max-model-len", "8192", "--tensor-parallel-size", "2"]
+        command: ["vllm", "serve", "RedHatAI/Qwen3.5-9B-quantized.w4a16", "--port", "8081", "--host", "0.0.0.0", "--max-model-len", "8192", "--tensor-parallel-size", "2", "--reasoning-parser", "qwen3", "--default-chat-template-kwargs", "{\"enable_thinking\": false}"]
         env:
         - name: HOME
           value: "/tmp"
