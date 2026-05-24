@@ -304,12 +304,13 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
     payload = {
         "model": model_name,
         "messages": [
-            {"role": "system", "content": "You are a helpful assistant. Be concise and direct. Do not explain your reasoning process."},
+            {"role": "system", "content": "Answer directly without showing your thinking process. Do not start with 'Thinking Process' or analyze the request. Give the answer immediately."},
             {"role": "user", "content": prompt}
         ],
         "max_tokens": max_tokens,
-        "temperature": 0.3,
+        "temperature": 0.1,
         "top_p": 0.9,
+        "stop": ["Thinking Process:", "Analyze the Request:", "Constraint:"],
         "stream": True
     }
 
@@ -362,12 +363,47 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
     except Exception as e:
         yield f"Error: {str(e)}", {}
 
+def strip_thinking_process(text: str) -> str:
+    """Remove thinking process if model outputs it"""
+    # Common patterns models use for thinking
+    patterns = [
+        "Thinking Process:",
+        "Analyze the Request:",
+        "Constraint:",
+        "Identify Key Concepts:",
+        "Topic:",
+        "Tone:",
+    ]
+
+    # Split into lines and filter
+    lines = text.split('\n')
+    filtered_lines = []
+    skip_mode = False
+
+    for line in lines:
+        # Check if this line starts thinking process
+        if any(pattern in line for pattern in patterns):
+            skip_mode = True
+            continue
+
+        # If we hit a line that looks like actual content (not indented analysis)
+        if skip_mode and line.strip() and not line.startswith(' ') and not line.startswith('\t'):
+            skip_mode = False
+
+        if not skip_mode:
+            filtered_lines.append(line)
+
+    return '\n'.join(filtered_lines).strip()
+
 def format_output(text: str, metrics: dict = None):
     """Format output with inline metrics"""
     if not text:
         return "*waiting...*"
 
-    output = f"{text}\n"
+    # Clean thinking process from output
+    cleaned_text = strip_thinking_process(text)
+
+    output = f"{cleaned_text}\n"
 
     if metrics:
         output += f"\n**Metrics:** {metrics['latency_ms']}ms · {metrics['tokens_per_sec']} tok/s · {metrics['tokens']} tokens"
