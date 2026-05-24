@@ -75,7 +75,7 @@ objects:
          "execution_count": null,
          "metadata": {},
          "outputs": [],
-         "source": "# Create output directory\n!mkdir -p original\n\n# Run benchmark\nprint(\"Benchmarking original model (FP16)...\")\nprint(\"Please wait...\\n\")\n!cd original && guidellm benchmark \\\n    --target \"{ORIGINAL_API}\" \\\n    --profile sweep \\\n    --data \"prompt_tokens=100,output_tokens=100\" \\\n    --max-requests 10 \\\n    --outputs json \\\n    >/dev/null 2>&1\n\nprint(\"Original model benchmark complete!\")\nprint(\"Results saved to: original/benchmarks.json\")"
+         "source": "# Create output directory\n!mkdir -p original\n\n# Run benchmark\nprint(\"Benchmarking original model (FP16)...\")\nprint(\"Please wait...\\n\")\n!cd original && guidellm benchmark \\\n    --target \"{ORIGINAL_API}\" \\\n    --profile sweep \\\n    --data \"prompt_tokens=100,output_tokens=100\" \\\n    --max-requests 5 \\\n    --outputs json \\\n    >/dev/null 2>&1\n\nprint(\"Original model benchmark complete!\")\nprint(\"Results saved to: original/benchmarks.json\")"
         },
         {
          "cell_type": "markdown",
@@ -91,7 +91,7 @@ objects:
          "execution_count": null,
          "metadata": {},
          "outputs": [],
-         "source": "# Create output directory\n!mkdir -p quantized\n\n# Run benchmark\nprint(\"Benchmarking quantized model (INT4)...\")\nprint(\"Please wait...\\n\")\n!cd quantized && guidellm benchmark \\\n    --target \"{QUANTIZED_API}\" \\\n    --profile sweep \\\n    --data \"prompt_tokens=100,output_tokens=100\" \\\n    --max-requests 10 \\\n    --outputs json \\\n    >/dev/null 2>&1\n\nprint(\"Quantized model benchmark complete!\")\nprint(\"Results saved to: quantized/benchmarks.json\")"
+         "source": "# Create output directory\n!mkdir -p quantized\n\n# Run benchmark\nprint(\"Benchmarking quantized model (INT4)...\")\nprint(\"Please wait...\\n\")\n!cd quantized && guidellm benchmark \\\n    --target \"{QUANTIZED_API}\" \\\n    --profile sweep \\\n    --data \"prompt_tokens=100,output_tokens=100\" \\\n    --max-requests 5 \\\n    --outputs json \\\n    >/dev/null 2>&1\n\nprint(\"Quantized model benchmark complete!\")\nprint(\"Results saved to: quantized/benchmarks.json\")"
         },
         {
          "cell_type": "markdown",
