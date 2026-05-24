@@ -303,9 +303,12 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
     # Use chat completions API for proper instruct formatting
     payload = {
         "model": model_name,
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant. Be concise and direct. Do not explain your reasoning process."},
+            {"role": "user", "content": prompt}
+        ],
         "max_tokens": max_tokens,
-        "temperature": 0.7,
+        "temperature": 0.3,
         "top_p": 0.9,
         "stream": True
     }
@@ -461,23 +464,22 @@ with gr.Blocks(
             label="Prompt",
             placeholder="Enter prompt...",
             lines=2,
-            scale=3
+            scale=4
         )
-        with gr.Column(scale=1):
-            max_tokens = gr.Slider(50, 500, 100, step=10, label="Tokens")
-            compare_btn = gr.Button("Compare", variant="primary")
+        compare_btn = gr.Button("Compare", variant="primary", scale=1)
 
-    # Fixed endpoints - no configuration needed
+    # Fixed configuration - no user adjustment
+    max_tokens = gr.Number(value=100, visible=False)
     original_port = gr.Textbox(value="vllm-original:8080", visible=False)
     quantized_port = gr.Textbox(value="vllm-quantized:8081", visible=False)
 
     gr.Examples(
         examples=[
-            ["The future of artificial intelligence is", "vllm-original:8080", "vllm-quantized:8081", 100],
-            ["Write a Python function to sort a list", "vllm-original:8080", "vllm-quantized:8081", 150],
-            ["Explain quantum computing", "vllm-original:8080", "vllm-quantized:8081", 200],
+            ["Write a Python function to calculate fibonacci numbers"],
+            ["What are three benefits of LLM quantization?"],
+            ["Explain how neural networks learn in 2-3 sentences"],
         ],
-        inputs=[prompt, original_port, quantized_port, max_tokens],
+        inputs=[prompt],
         label="Examples"
     )
 
