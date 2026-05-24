@@ -117,6 +117,11 @@ Print or share this file with participants at the workshop.
 - Expected! 50 users hammering 2 shared models
 - Suggest running with fewer requests: `--max-requests 5` instead of 10
 
+**"OpenShift is completely down"**
+- Have participants clone the repo: `git clone https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor.git`
+- Run local setup: `cd boston-tech-week-26-llm-compressor && ./scripts/build_local.sh`
+- Workshop can continue with local JupyterLab (endpoints still accessible if vLLM is up)
+
 ---
 
 ## Post-Workshop
@@ -180,8 +185,8 @@ resources:
 ### Share with Participants
 
 - **GitHub Repo:** <a href="https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor" target="_blank">https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor</a>
-- **Quick Start:** Point them to QUICK_START.md
 - **Documentation:** <a href="https://soyr-redhat.github.io/boston-tech-week-26-llm-compressor" target="_blank">https://soyr-redhat.github.io/boston-tech-week-26-llm-compressor</a>
+- **Local Fallback:** If OpenShift is down, participants can run `./scripts/build_local.sh` to set up locally
 
 ### After Workshop
 

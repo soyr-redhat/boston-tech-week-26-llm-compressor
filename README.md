@@ -130,8 +130,6 @@ Your workspace includes:
 | **Comparison UI** | Gradio | - | Instructor demo interface |
 | **JupyterLab (50x)** | scipy-notebook | - | Per-user workshop environments |
 
-**Security:** [SECURITY.md](SECURITY.md)
-
 ---
 
 ## Repository Structure
@@ -157,7 +155,6 @@ Your workspace includes:
 │   ├── index.md
 │   └── cluster-status.md          # Infrastructure status
 ├── PRE_EVENT_CHECKLIST.md         # Instructor pre-workshop setup
-├── SECURITY.md                    # Security architecture
 ├── README.md                      # This file
 ├── pyproject.toml                 # Project metadata
 └── mkdocs.yml                     # Documentation config
@@ -177,7 +174,6 @@ Your workspace includes:
 - URLs include hash-based suffix (e.g., `jupyter-user1-a0c3761d23`)
 - NetworkPolicy blocks pod-to-pod access between users
 - No authentication required (minimal friction for 60-min workshop)
-- See [SECURITY.md](SECURITY.md) for details
 
 ### Zero Installation
 - Everything runs in browser via JupyterLab
