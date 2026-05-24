@@ -1,7 +1,6 @@
 # Boston Tech Week 2026
 ## LLM Quantization Workshop
 
-**Duration:** 60 minutes  
 **Hands-On:** Interactive notebook in your browser
 
 ---
@@ -10,6 +9,8 @@
 
 ### Getting Started
 
+**Option 1: Cloud Workshop (Recommended)**
+
 1. **Visit the workshop landing page:**  
    <a href="https://red.ht/build-and-brew-26-workshop-provision" target="_blank">https://red.ht/build-and-brew-26-workshop-provision</a>
 
@@ -17,16 +18,28 @@
 
 3. **Open `workshop_notebook.ipynb`** and follow the instructions
 
-That's it! Everything runs in your browser - no installation required.
+Everything runs in your browser - no installation required.
+
+**Option 2: Local Setup**
+
+If you can't access the cloud environment, you can run the workshop locally:
+
+```bash
+git clone https://github.com/soyr-redhat/boston-tech-week-26-llm-compressor.git
+cd boston-tech-week-26-llm-compressor
+./scripts/build_local.sh
+```
+
+See the **[Local Setup](local-setup.md)** guide for detailed instructions.
 
 ### What You'll Do
 
-**Part 1: Understanding Quantization (30 min)**
+**Part 1: Understanding Quantization**
 - Watch live demo comparing FP16 vs INT4 models
 - Learn about precision formats and performance trade-offs
 - See real-time metrics in the comparison UI
 
-**Part 2: Hands-On Benchmarking (30 min)**
+**Part 2: Hands-On Benchmarking**
 - Benchmark both models using guidellm
 - Compare throughput and latency
 - Visualize results with interactive charts
