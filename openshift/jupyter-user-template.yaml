@@ -36,7 +36,7 @@ objects:
         {
          "cell_type": "markdown",
          "metadata": {},
-         "source": "## Part 1: What is Quantization?\n\nModel quantization reduces the precision of model weights to make inference faster and more memory-efficient:\n\n- **FP16/BF16** (16-bit floating point) - Standard precision\n- **FP8** (8-bit floating point) - 2x memory reduction\n- **INT8** (8-bit integer) - 2x memory reduction, faster compute\n- **INT4** (4-bit integer) - 4x memory reduction, much faster\n\n### Why Quantize?\n\n1. **Faster inference** - 1.5-2.5x throughput improvement\n2. **Lower memory** - 2-4x VRAM reduction (fit bigger models)\n3. **Lower latency** - 30-50% faster response times\n4. **Minimal quality loss** - Typically <2% degradation\n\n### Today's Models\n\n| Model | Precision | Size | GPUs |\n|-------|-----------|------|------|\n| Qwen2.5-7B-Instruct | FP16 | ~14GB | 2x L4 |\n| Qwen3.5-9B-quantized | INT4 | ~5GB | 2x L4 |\n\nBoth are served via vLLM on OpenShift."
+         "source": "## Part 1: What is Quantization?\n\nModel quantization reduces the precision of model weights to make inference faster and more memory-efficient:\n\n- **FP16/BF16** (16-bit floating point) - Standard precision\n- **FP8** (8-bit floating point) - 2x memory reduction\n- **INT8** (8-bit integer) - 2x memory reduction, faster compute\n- **INT4** (4-bit integer) - 4x memory reduction, much faster\n\n### Why Quantize?\n\n1. **Faster inference** - 1.5-2.5x throughput improvement\n2. **Lower memory** - 2-4x VRAM reduction (fit bigger models)\n3. **Lower latency** - 30-50% faster response times\n4. **Minimal quality loss** - Typically <2% degradation\n\n### Today's Models\n\n| Model | Precision | Size | GPUs |\n|-------|-----------|------|------|\n| Qwen/Qwen3.5-9B | FP16 | ~18GB | 2x L4 |\n| RedHatAI/Qwen3.5-9B-quantized.w4a16 | INT4 | ~5GB | 2x L4 |\n\nBoth are served via vLLM on OpenShift."
         },
         {
          "cell_type": "markdown",
@@ -67,7 +67,7 @@ objects:
          "source": [
           "## Part 3: Benchmark Original Model (FP16)\n",
           "\n",
-          "We'll benchmark the original Qwen2.5-7B-Instruct model running at FP16 precision."
+          "We'll benchmark the original Qwen/Qwen3.5-9B model running at FP16 precision."
          ]
         },
         {

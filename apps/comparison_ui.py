@@ -467,18 +467,9 @@ with gr.Blocks(
             max_tokens = gr.Slider(50, 500, 100, step=10, label="Tokens")
             compare_btn = gr.Button("Compare", variant="primary")
 
-    with gr.Accordion("Configuration", open=False):
-        with gr.Row():
-            original_port = gr.Textbox(
-                label="Original",
-                value="vllm-original:8080",
-                scale=1
-            )
-            quantized_port = gr.Textbox(
-                label="Quantized",
-                value="vllm-quantized:8081",
-                scale=1
-            )
+    # Fixed endpoints - no configuration needed
+    original_port = gr.Textbox(value="vllm-original:8080", visible=False)
+    quantized_port = gr.Textbox(value="vllm-quantized:8081", visible=False)
 
     gr.Examples(
         examples=[
