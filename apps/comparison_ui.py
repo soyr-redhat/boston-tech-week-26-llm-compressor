@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-vLLM Model Comparison - Everforest Theme
+vLLM Model Comparison - Red Hat Theme
 Boston Tech Week 2026 - LLM Quantization Workshop
 """
 
@@ -11,27 +11,23 @@ import json
 import threading
 from typing import Dict, Tuple
 
-# Everforest Theme CSS (matching neovim config)
-EVERFOREST_CSS = """
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap');
+# Red Hat Theme CSS
+REDHAT_CSS = """
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Mono:wght@400;500;600&family=Red+Hat+Text:wght@400;500;600;700&display=swap');
 
 :root {
-    --bg0: #2b3339;
-    --bg1: #323c41;
-    --bg2: #3a454a;
-    --bg3: #445055;
-    --bg4: #4c555b;
-    --fg: #d3c6aa;
-    --red: #e67e80;
-    --orange: #e69875;
-    --yellow: #dbbc7f;
-    --green: #a7c080;
-    --aqua: #83c092;
-    --blue: #7fbbb3;
-    --purple: #d699b6;
-    --grey0: #7a8478;
-    --grey1: #859289;
-    --grey2: #9da9a0;
+    --bg0: #1a1a1a;
+    --bg1: #242424;
+    --bg2: #2e2e2e;
+    --bg3: #383838;
+    --bg4: #424242;
+    --fg: #f5f5f5;
+    --red: #ee0000;
+    --red-dark: #a60000;
+    --red-darker: #5f0000;
+    --grey0: #6a6a6a;
+    --grey1: #8a8a8a;
+    --grey2: #aaaaaa;
 }
 
 * {
@@ -40,51 +36,29 @@ EVERFOREST_CSS = """
 
 body, .gradio-container {
     background: var(--bg0) !important;
-    font-family: 'Inter', system-ui, sans-serif !important;
+    font-family: 'Red Hat Text', system-ui, sans-serif !important;
     color: var(--fg) !important;
-    line-height: 1.6;
+    line-height: 1.5;
     padding: 0 !important;
     margin: 0 !important;
-    height: 100vh !important;
-    overflow: hidden !important;
 }
 
-/* Compact main container with flex layout */
+/* Compact main container */
 #component-0, .contain, .wrap {
     background: var(--bg0) !important;
     border: none !important;
     padding: 16px !important;
     max-width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100vh !important;
 }
 
 .gradio-container {
     max-width: 100% !important;
     padding: 8px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100vh !important;
-}
-
-/* Output section - top 66% */
-#output-section {
-    flex: 0 0 66vh !important;
-    overflow: hidden !important;
-}
-
-/* Input section - bottom 33% */
-#input-section {
-    flex: 0 0 33vh !important;
-    overflow-y: auto !important;
-    border-top: 2px solid var(--bg4) !important;
-    padding-top: 12px !important;
 }
 
 /* Compact headers */
 h1, h2, h3, h4 {
-    font-family: 'Inter', sans-serif !important;
+    font-family: 'Red Hat Text', sans-serif !important;
     font-weight: 600 !important;
     margin: 0 0 8px 0 !important;
     padding: 0 !important;
@@ -93,7 +67,7 @@ h1, h2, h3, h4 {
 
 h1 {
     font-size: 1.4rem !important;
-    color: var(--green) !important;
+    color: var(--red) !important;
     border-bottom: 1px solid var(--bg3);
     padding-bottom: 8px !important;
     margin-bottom: 12px !important;
@@ -101,7 +75,7 @@ h1 {
 
 h2 {
     font-size: 1.1rem !important;
-    color: var(--aqua) !important;
+    color: var(--grey2) !important;
 }
 
 h3 {
@@ -113,7 +87,7 @@ h3 {
 
 p, span, label, .prose {
     color: var(--fg) !important;
-    font-family: 'Inter', sans-serif !important;
+    font-family: 'Red Hat Text', sans-serif !important;
     margin: 0 !important;
     padding: 0 !important;
 }
@@ -123,14 +97,14 @@ p, span, label, .prose {
 }
 
 code, pre {
-    font-family: 'JetBrains Mono', monospace !important;
-    background: transparent !important;
+    font-family: 'Red Hat Mono', monospace !important;
+    background: var(--bg1) !important;
     color: var(--fg) !important;
     font-size: 0.9em !important;
 }
 
 pre {
-    border: 1px solid var(--bg3) !important;
+    border: 1px solid var(--bg4) !important;
     border-radius: 3px !important;
     padding: 8px !important;
     margin: 4px 0 !important;
@@ -139,70 +113,62 @@ pre {
 code {
     padding: 2px 4px !important;
     border-radius: 2px !important;
-    border: 1px solid var(--bg3) !important;
 }
 
-/* Compact inputs with subtle borders */
+/* Compact inputs with darker borders */
 input[type="text"], textarea {
-    background: transparent !important;
-    border: 1px solid var(--bg3) !important;
+    background: var(--bg1) !important;
+    border: 2px solid var(--bg4) !important;
     border-radius: 3px !important;
     color: var(--fg) !important;
-    padding: 8px 12px !important;
+    padding: 6px 10px !important;
     margin: 0 !important;
     font-size: 0.9rem !important;
 }
 
 input:focus, textarea:focus {
-    border-color: var(--green) !important;
+    border-color: var(--red) !important;
     outline: none !important;
-    background: rgba(167, 192, 128, 0.05) !important;
 }
 
 textarea {
     min-height: 60px !important;
-    max-height: 100px !important;
 }
 
 /* Compact buttons */
 button {
-    background: transparent !important;
-    border: 1px solid var(--green) !important;
-    color: var(--green) !important;
-    font-family: 'Inter', sans-serif !important;
+    background: var(--bg2) !important;
+    border: 1px solid var(--red) !important;
+    color: var(--red) !important;
+    font-family: 'Red Hat Text', sans-serif !important;
     font-weight: 500 !important;
     padding: 8px 16px !important;
     border-radius: 3px !important;
     font-size: 0.9rem !important;
     margin: 4px 0 !important;
-    transition: all 0.2s ease !important;
 }
 
 button:hover {
-    background: var(--green) !important;
-    color: var(--bg0) !important;
+    background: var(--red) !important;
+    color: white !important;
 }
 
 .primary {
-    background: var(--green) !important;
-    color: var(--bg0) !important;
-    border: 1px solid var(--green) !important;
+    background: var(--red) !important;
+    color: white !important;
 }
 
-/* Output areas - fit within 66vh section */
+/* Output areas with scrolling and darker borders */
 .markdown-output, .output-markdown {
-    background: transparent !important;
-    border: 1px solid var(--bg3) !important;
+    background: var(--bg1) !important;
+    border: 2px solid var(--bg4) !important;
     border-radius: 3px !important;
     padding: 10px !important;
     color: var(--fg) !important;
-    height: calc(66vh - 200px) !important;
-    min-height: calc(66vh - 200px) !important;
-    max-height: calc(66vh - 200px) !important;
+    min-height: 300px !important;
+    max-height: 500px !important;
     overflow-y: auto !important;
-    overflow-x: hidden !important;
     font-size: 0.9rem !important;
-    word-wrap: break-word !important;
 }
 
 /* Compact slider */
@@ -225,14 +191,13 @@ th, td {
 }
 
 th {
-    background: transparent !important;
-    color: var(--green) !important;
+    background: var(--bg2) !important;
+    color: var(--red) !important;
     font-weight: 600;
-    border-bottom: 2px solid var(--bg3) !important;
 }
 
 strong {
-    color: var(--green) !important;
+    color: var(--red) !important;
 }
 
 /* Compact rows and columns */
@@ -479,45 +444,42 @@ with gr.Blocks(
 ) as demo:
     gr.Markdown("# LLM Quantization Comparison")
 
-    # Output section - top 66%
-    with gr.Group(elem_id="output-section"):
-        with gr.Row():
-            with gr.Column():
-                gr.Markdown("## Original (FP16)")
-                original_output = gr.Markdown()
-            with gr.Column():
-                gr.Markdown("## Quantized (INT4)")
-                quantized_output = gr.Markdown()
+    # Output windows FIRST
+    with gr.Row():
+        with gr.Column():
+            gr.Markdown("## Original (FP16)")
+            original_output = gr.Markdown()
+        with gr.Column():
+            gr.Markdown("## Quantized (INT4)")
+            quantized_output = gr.Markdown()
 
-        comparison_summary = gr.Markdown()
+    comparison_summary = gr.Markdown()
 
-    # Input section - bottom 33%
-    with gr.Group(elem_id="input-section"):
-        with gr.Row():
-            prompt = gr.Textbox(
-                label="Prompt",
-                placeholder="Enter prompt...",
-                lines=2,
-                scale=4
-            )
-            compare_btn = gr.Button("Compare", variant="primary", scale=1)
-
-        # Fixed token limit to prevent overload with 50 concurrent users
-        max_tokens = gr.Number(value=100, visible=False)
-
-        # Fixed endpoints - no configuration needed
-        original_port = gr.Textbox(value="vllm-original:8080", visible=False)
-        quantized_port = gr.Textbox(value="vllm-quantized:8081", visible=False)
-
-        gr.Examples(
-            examples=[
-                ["Write a Python function to calculate fibonacci numbers"],
-                ["What are the main benefits of LLM quantization?"],
-                ["Explain how neural networks work in 2-3 sentences"],
-            ],
-            inputs=[prompt],
-            label="Examples"
+    # Input section BELOW outputs
+    with gr.Row():
+        prompt = gr.Textbox(
+            label="Prompt",
+            placeholder="Enter prompt...",
+            lines=2,
+            scale=3
         )
+        with gr.Column(scale=1):
+            max_tokens = gr.Slider(50, 500, 100, step=10, label="Tokens")
+            compare_btn = gr.Button("Compare", variant="primary")
+
+    # Fixed endpoints - no configuration needed
+    original_port = gr.Textbox(value="vllm-original:8080", visible=False)
+    quantized_port = gr.Textbox(value="vllm-quantized:8081", visible=False)
+
+    gr.Examples(
+        examples=[
+            ["The future of artificial intelligence is", "vllm-original:8080", "vllm-quantized:8081", 100],
+            ["Write a Python function to sort a list", "vllm-original:8080", "vllm-quantized:8081", 150],
+            ["Explain quantum computing", "vllm-original:8080", "vllm-quantized:8081", 200],
+        ],
+        inputs=[prompt, original_port, quantized_port, max_tokens],
+        label="Examples"
+    )
 
     compare_btn.click(
         fn=compare_models,
@@ -530,5 +492,5 @@ if __name__ == "__main__":
         server_name="0.0.0.0",
         server_port=7860,
         share=False,
-        css=EVERFOREST_CSS
+        css=REDHAT_CSS
     )
