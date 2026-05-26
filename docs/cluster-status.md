@@ -9,10 +9,10 @@
 
 ### vLLM Models
 
-| Service | Model | GPUs | Endpoints |
-|---------|-------|------|-----------|
-| vllm-original | Qwen/Qwen3.5-9B (FP16) | 2x L4 | <a href="https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com</a> |
-| vllm-quantized | RedHatAI/Qwen3.5-9B-quantized.w4a16 (INT4) | 2x L4 | <a href="https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com</a> |
+| Service | Model | Endpoint |
+|---------|-------|----------|
+| vllm-original | Qwen/Qwen3.6-35B-A3B (FP16, 72GB) | http://95.133.252.99:8000/v1 |
+| vllm-quantized | RedHatAI/Qwen3.6-35B-A3B-NVFP4 (25GB) | http://95.133.252.99:8001/v1 |
 
 ### Workshop Infrastructure
 

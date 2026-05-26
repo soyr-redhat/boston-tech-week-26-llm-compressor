@@ -146,12 +146,12 @@ The benchmarking requires access to the hosted vLLM models. If you see connectio
 3. **Use workshop Wi-Fi** - If at the event, connect to the provided network
 
 The endpoints are:
-- Original (FP16): `https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1`
-- Quantized (INT4): `https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1`
+- Original (FP16): `http://95.133.252.99:8000/v1`
+- Quantized (NVFP4): `http://95.133.252.99:8001/v1`
 
 You can test connectivity with:
 ```bash
-curl https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1/models
+curl http://95.133.252.99:8000/v1/models
 ```
 
 ### Package Installation Fails
