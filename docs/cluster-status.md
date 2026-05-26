@@ -5,63 +5,6 @@
 
 ---
 
-## Deployed Services
-
-### vLLM Models
-
-| Service | Model | Endpoint |
-|---------|-------|----------|
-| vllm-original | Qwen/Qwen3.6-35B-A3B (FP16, 72GB) | http://95.133.252.99:8000/v1 |
-| vllm-quantized | RedHatAI/Qwen3.6-35B-A3B-NVFP4 (25GB) | http://95.133.252.99:8001/v1 |
-
-### Workshop Infrastructure
-
-| Service | Purpose | URL |
-|---------|---------|-----|
-| Assignment App | Auto-assign users to workspaces | <a href="https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://workshop.apps.ocp.ntdrq.sandbox503.opentlc.com</a> |
-| Comparison UI | Instructor demo interface | <a href="https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com" target="_blank">https://comparison-ui.apps.ocp.ntdrq.sandbox503.opentlc.com</a> |
-| JupyterLab (50x) | Per-user notebook environments | https://jupyter-user{N}-{suffix}.apps... |
-
----
-
-## Resource Usage
-
-### GPU Allocation
-- **Total:** 4x NVIDIA L4 (23GB VRAM each)
-- **vllm-original:** 2 GPUs (tensor parallel)
-- **vllm-quantized:** 2 GPUs (tensor parallel)
-- **JupyterLab instances:** No GPU (CPU-only benchmarking)
-
-### Compute Resources
-```yaml
-vllm-original:
-  requests: 4 CPU, 8GB RAM, 2 GPUs
-  limits: 8 CPU, 16GB RAM, 2 GPUs
-  
-vllm-quantized:
-  requests: 4 CPU, 8GB RAM, 2 GPUs
-  limits: 8 CPU, 16GB RAM, 2 GPUs
-
-jupyter (per user):
-  requests: 500m CPU, 2GB RAM
-  limits: 1 CPU, 4GB RAM
-
-comparison-ui:
-  requests: 500m CPU, 1GB RAM
-  limits: 1 CPU, 2GB RAM
-
-assignment-app:
-  requests: 100m CPU, 256MB RAM
-  limits: 200m CPU, 512MB RAM
-```
-
-### Storage
-- **Model Weights:** ~20GB cached in pods
-- **JupyterLab home dirs:** emptyDir (ephemeral)
-- **Assignment state:** /tmp in assignment app pod
-
----
-
 ## Health Checks
 
 ### Check Pod Status
@@ -72,10 +15,10 @@ oc get pods -n workshop
 ### Test vLLM Endpoints
 ```bash
 # Original model
-curl https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1/models
+curl http://95.133.252.99:8000/v1/models
 
 # Quantized model
-curl https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1/models
+curl http://95.133.252.99:8001/v1/models
 ```
 
 ### Check Assignment App
