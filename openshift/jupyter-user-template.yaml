@@ -128,6 +128,22 @@ objects:
         {
          "cell_type": "markdown",
          "metadata": {},
+         "source": [
+          "## Part 7: Model Details\n",
+          "\n",
+          "Technical comparison of the two model configurations."
+         ]
+        },
+        {
+         "cell_type": "code",
+         "execution_count": null,
+         "metadata": {},
+         "outputs": [],
+         "source": "# Model configuration comparison\nimport pandas as pd\n\nmodel_specs = {\n    'Specification': [\n        'Model Name',\n        'Precision',\n        'Model Size',\n        'Parameters',\n        'Quantization Method',\n        'VRAM Usage (per GPU)',\n        'GPUs Used',\n        'Tensor Parallelism',\n        'Max Context Length'\n    ],\n    'Original (FP16)': [\n        'Qwen/Qwen3.5-9B',\n        'FP16 (16-bit)',\n        '~18 GB',\n        '9 billion',\n        'None',\n        '~9 GB',\n        '2x NVIDIA L4',\n        'Enabled (TP=2)',\n        '8,192 tokens'\n    ],\n    'Quantized (INT4)': [\n        'RedHatAI/Qwen3.5-9B-quantized.w4a16',\n        'INT4 weights, INT16 activations',\n        '~5 GB',\n        '9 billion',\n        'W4A16 (4-bit weights, 16-bit activations)',\n        '~5 GB',\n        '2x NVIDIA L4',\n        'Enabled (TP=2)',\n        '8,192 tokens'\n    ],\n    'Reduction': [\n        '—',\n        '4x smaller precision',\n        '72% smaller',\n        'Same',\n        '—',\n        '44% less VRAM',\n        'Same',\n        'Same',\n        'Same'\n    ]\n}\n\ndf = pd.DataFrame(model_specs)\nprint(\"\\nMODEL CONFIGURATION COMPARISON\")\nprint(\"=\" * 100)\nprint(df.to_string(index=False))\nprint(\"=\" * 100)\n\nprint(\"\\nKey Insights:\")\nprint(\"  - Same model architecture (Qwen3.5-9B), different numeric precision\")\nprint(\"  - 72% reduction in model size without changing parameters\")\nprint(\"  - 44% less VRAM required per GPU\")\nprint(\"  - Both use tensor parallelism across 2 GPUs for faster inference\")\nprint(\"  - Quantization reduces storage and memory, not parameter count\")"
+        },
+        {
+         "cell_type": "markdown",
+         "metadata": {},
          "source": "## Summary\n\nYou've successfully benchmarked both models and compared their performance.\n\nThe comparison above shows the throughput and latency differences between the original FP16 model and the quantized INT4 model."
         },
         {
