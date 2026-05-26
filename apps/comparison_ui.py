@@ -328,6 +328,7 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
 
         full_text = ""
         token_count = 0
+        completion_tokens = 0
 
         for line in response.iter_lines():
             if line:
@@ -344,16 +345,20 @@ def query_vllm_stream(port: str, prompt: str, max_tokens: int = 100):
                             delta = delta_obj.get('content', '')
                             if delta:
                                 full_text += delta
-                                token_count += 1
                                 yield full_text, None
+                        # Check for usage info in final chunk
+                        if 'usage' in data:
+                            completion_tokens = data['usage'].get('completion_tokens', 0)
                     except:
                         pass
 
         elapsed = time.time() - start_time
+        # Use actual completion tokens if available, otherwise count characters/4 as rough estimate
+        actual_tokens = completion_tokens if completion_tokens > 0 else len(full_text.split())
         metrics = {
             "latency_ms": round(elapsed * 1000, 2),
-            "tokens": token_count,
-            "tokens_per_sec": round(token_count / elapsed, 2) if elapsed > 0 else 0,
+            "tokens": actual_tokens,
+            "tokens_per_sec": round(actual_tokens / elapsed, 2) if elapsed > 0 else 0,
             "total_time": round(elapsed, 2)
         }
 
