@@ -128,38 +128,6 @@ objects:
         {
          "cell_type": "markdown",
          "metadata": {},
-         "source": [
-          "## Part 7: Advanced - Load Testing\n",
-          "\n",
-          "Optional: Run a concurrent load test to see how models perform under stress."
-         ]
-        },
-        {
-         "cell_type": "code",
-         "execution_count": null,
-         "metadata": {},
-         "outputs": [],
-         "source": "# Load test with 5 concurrent users\nprint(\"Running load test with 5 concurrent users...\")\nprint(\"Please wait...\\n\")\n\nprint(\"Original model under load:\")\n!cd original && guidellm benchmark \\\n    --target \"{ORIGINAL_API}\" \\\n    --profile concurrent \\\n    --rate 5 \\\n    --data \"prompt_tokens=100,output_tokens=100\" \\\n    --max-requests 25 \\\n    --outputs json \\\n    >/dev/null 2>&1\n\nprint(\"\\nQuantized model under load:\")\n!cd quantized && guidellm benchmark \\\n    --target \"{QUANTIZED_API}\" \\\n    --profile concurrent \\\n    --rate 5 \\\n    --data \"prompt_tokens=100,output_tokens=100\" \\\n    --max-requests 25 \\\n    --outputs json \\\n    >/dev/null 2>&1\n\nprint(\"\\nLoad test complete!\")\nprint(\"Results appended to: original/benchmarks.json, quantized/benchmarks.json\")"
-        },
-        {
-         "cell_type": "markdown",
-         "metadata": {},
-         "source": [
-          "### Visualize Load Test Results\n",
-          "\n",
-          "Compare performance under idle vs concurrent load."
-         ]
-        },
-        {
-         "cell_type": "code",
-         "execution_count": null,
-         "metadata": {},
-         "outputs": [],
-         "source": "# Load and compare idle vs load test results\ntry:\n    with open('original/benchmarks.json', 'r') as f:\n        original_data = json.load(f)\n    with open('quantized/benchmarks.json', 'r') as f:\n        quantized_data = json.load(f)\n    \n    # First benchmark = sweep (idle), Last benchmark = concurrent (load)\n    orig_idle = original_data['benchmarks'][0]\n    orig_load = original_data['benchmarks'][-1]\n    quant_idle = quantized_data['benchmarks'][0]\n    quant_load = quantized_data['benchmarks'][-1]\n    \n    # Extract metrics\n    def get_metrics(bench):\n        return {\n            'throughput': bench['metrics']['requests_per_second']['successful']['mean'],\n            'p50_latency': bench['metrics']['request_latency']['successful']['percentiles']['p50'],\n            'p95_latency': bench['metrics']['request_latency']['successful']['percentiles']['p95'],\n            'p99_latency': bench['metrics']['request_latency']['successful']['percentiles']['p99'],\n        }\n    \n    orig_idle_m = get_metrics(orig_idle)\n    orig_load_m = get_metrics(orig_load)\n    quant_idle_m = get_metrics(quant_idle)\n    quant_load_m = get_metrics(quant_load)\n    \n    # Create comparison visualizations\n    fig, axes = plt.subplots(1, 2, figsize=(14, 5))\n    \n    # Chart 1: Throughput - Idle vs Load\n    scenarios = ['Idle', 'Load\\n(5 concurrent)']\n    x = range(len(scenarios))\n    width = 0.35\n    \n    orig_throughput = [orig_idle_m['throughput'], orig_load_m['throughput']]\n    quant_throughput = [quant_idle_m['throughput'], quant_load_m['throughput']]\n    \n    axes[0].bar([i - width/2 for i in x], orig_throughput, width, label='Original (FP16)', color='#ee0000')\n    axes[0].bar([i + width/2 for i in x], quant_throughput, width, label='Quantized (INT4)', color='#00a8e1')\n    \n    axes[0].set_title('Throughput: Idle vs Concurrent Load', fontsize=14, fontweight='bold')\n    axes[0].set_ylabel('Requests/sec (higher is better)')\n    axes[0].set_xticks(x)\n    axes[0].set_xticklabels(scenarios)\n    axes[0].legend()\n    axes[0].grid(axis='y', alpha=0.3)\n    \n    # Chart 2: P95 Latency - Idle vs Load\n    orig_p95 = [orig_idle_m['p95_latency'], orig_load_m['p95_latency']]\n    quant_p95 = [quant_idle_m['p95_latency'], quant_load_m['p95_latency']]\n    \n    axes[1].bar([i - width/2 for i in x], orig_p95, width, label='Original (FP16)', color='#ee0000')\n    axes[1].bar([i + width/2 for i in x], quant_p95, width, label='Quantized (INT4)', color='#00a8e1')\n    \n    axes[1].set_title('P95 Latency: Idle vs Concurrent Load', fontsize=14, fontweight='bold')\n    axes[1].set_ylabel('Latency (sec, lower is better)')\n    axes[1].set_xticks(x)\n    axes[1].set_xticklabels(scenarios)\n    axes[1].legend()\n    axes[1].grid(axis='y', alpha=0.3)\n    \n    plt.tight_layout()\n    plt.savefig('load_test_comparison.png', dpi=150, bbox_inches='tight')\n    plt.show()\n    \n    # Print comparison table\n    print(\"\\nLOAD TEST COMPARISON\")\n    print(\"=\" * 80)\n    print(f\"\\n{'Scenario':<20} {'Model':<20} {'Throughput (req/s)':<20} {'P95 Latency (s)':<20}\")\n    print(\"-\" * 80)\n    print(f\"{'Idle':<20} {'Original (FP16)':<20} {orig_idle_m['throughput']:<20.2f} {orig_idle_m['p95_latency']:<20.2f}\")\n    print(f\"{'Idle':<20} {'Quantized (INT4)':<20} {quant_idle_m['throughput']:<20.2f} {quant_idle_m['p95_latency']:<20.2f}\")\n    print(f\"{'Load (5 concurrent)':<20} {'Original (FP16)':<20} {orig_load_m['throughput']:<20.2f} {orig_load_m['p95_latency']:<20.2f}\")\n    print(f\"{'Load (5 concurrent)':<20} {'Quantized (INT4)':<20} {quant_load_m['throughput']:<20.2f} {quant_load_m['p95_latency']:<20.2f}\")\n    print(\"\\n\" + \"=\" * 80)\n    \n    # Calculate degradation under load\n    orig_degradation = ((orig_idle_m['throughput'] - orig_load_m['throughput']) / orig_idle_m['throughput']) * 100\n    quant_degradation = ((quant_idle_m['throughput'] - quant_load_m['throughput']) / quant_idle_m['throughput']) * 100\n    \n    print(\"\\nKey Insights:\")\n    print(f\"  - Original model throughput degrades {orig_degradation:.1f}% under concurrent load\")\n    print(f\"  - Quantized model throughput degrades {quant_degradation:.1f}% under concurrent load\")\n    print(f\"  - Quantized model maintains {quant_load_m['throughput']/orig_load_m['throughput']:.2f}x advantage under load\")\n    print(\"\\nChart saved to: load_test_comparison.png\")\n    \nexcept FileNotFoundError as e:\n    print(f\"ERROR: Could not find benchmark results. Make sure to run the load test cell above first.\")\n    print(f\"   Error: {e}\")\nexcept Exception as e:\n    print(f\"ERROR: Error analyzing results: {e}\")\n    import traceback\n    traceback.print_exc()"
-        },
-        {
-         "cell_type": "markdown",
-         "metadata": {},
          "source": "## Summary\n\nYou've successfully benchmarked both models and compared their performance.\n\nThe comparison above shows the throughput and latency differences between the original FP16 model and the quantized INT4 model."
         },
         {
