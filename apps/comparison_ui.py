@@ -481,8 +481,8 @@ with gr.Blocks(
 
     # Fixed configuration - no user adjustment
     max_tokens = gr.Number(value=100, visible=False)
-    original_port = gr.Textbox(value="vllm-original:8080", visible=False)
-    quantized_port = gr.Textbox(value="vllm-quantized:8081", visible=False)
+    original_port = gr.Textbox(value="95.133.252.99:8000", visible=False)
+    quantized_port = gr.Textbox(value="95.133.252.99:8001", visible=False)
 
     gr.Examples(
         examples=[

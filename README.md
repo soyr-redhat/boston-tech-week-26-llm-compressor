@@ -190,14 +190,14 @@ Your workspace includes:
 - **Precision:** FP16
 - **Size:** ~19GB
 - **GPUs:** 2x NVIDIA L4
-- **Endpoint:** https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
+- **Endpoint:** http://95.133.252.99:8000/v1
 
 ### Quantized Model
 - **Name:** RedHatAI/Qwen3.5-9B-quantized.w4a16
 - **Precision:** INT4 (weights), INT16 (activations)
 - **Size:** ~11GB
 - **GPUs:** 2x NVIDIA L4
-- **Endpoint:** https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
+- **Endpoint:** http://95.133.252.99:8001/v1
 
 **Performance Expectations:**
 - 1.5-2x throughput improvement
