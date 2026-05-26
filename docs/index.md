@@ -31,13 +31,13 @@
 
 | Model | Precision | Size | GPUs |
 |-------|-----------|------|------|
-| Qwen/Qwen3.5-9B | FP16 | ~18GB | 2x L4 |
-| RedHatAI/Qwen3.5-9B-quantized.w4a16 | INT4 | ~5GB | 2x L4 |
+| Qwen/Qwen3.5-9B | FP16 | ~19GB | 2x L4 |
+| RedHatAI/Qwen3.5-9B-quantized.w4a16 | INT4 | ~11GB | 2x L4 |
 
 **Expected Performance:**
 - 1.5-2x throughput improvement
 - 30-40% latency reduction
-- 50-75% memory savings
+- 42% memory savings
 - <2% quality degradation
 
 ---

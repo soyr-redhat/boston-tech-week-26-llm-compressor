@@ -188,21 +188,21 @@ Your workspace includes:
 ### Original Model
 - **Name:** Qwen/Qwen3.5-9B
 - **Precision:** FP16
-- **Size:** ~18GB
+- **Size:** ~19GB
 - **GPUs:** 2x NVIDIA L4
 - **Endpoint:** https://vllm-original.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
 
 ### Quantized Model
 - **Name:** RedHatAI/Qwen3.5-9B-quantized.w4a16
 - **Precision:** INT4 (weights), INT16 (activations)
-- **Size:** ~5GB
+- **Size:** ~11GB
 - **GPUs:** 2x NVIDIA L4
 - **Endpoint:** https://vllm-quantized.apps.ocp.ntdrq.sandbox503.opentlc.com/v1
 
 **Performance Expectations:**
 - 1.5-2x throughput improvement
 - 30-40% latency reduction
-- 50-75% memory savings
+- 42% memory savings
 - <2% quality degradation
 
 ---
