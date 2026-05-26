@@ -485,7 +485,7 @@ with gr.Blocks(
         compare_btn = gr.Button("Compare", variant="primary", scale=1)
 
     # Fixed configuration - no user adjustment
-    max_tokens = gr.Number(value=100, visible=False)
+    max_tokens = gr.Number(value=200, visible=False)
     original_port = gr.Textbox(value="95.133.252.99:8000", visible=False)
     quantized_port = gr.Textbox(value="95.133.252.99:8001", visible=False)
 
