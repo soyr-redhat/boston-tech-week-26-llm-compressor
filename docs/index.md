@@ -31,13 +31,13 @@
 
 | Model | Precision | Size |
 |-------|-----------|------|
-| Qwen/Qwen3.6-35B-A3B | FP16 | ~70GB |
-| RedHatAI/Qwen3.6-35B-A3B-NVFP4 | NVFP4 | ~20GB |
+| Qwen/Qwen3.6-35B-A3B | FP16 | 72GB |
+| RedHatAI/Qwen3.6-35B-A3B-NVFP4 | NVFP4 | 25GB |
 
 **Expected Performance:**
-- 1.5-2x throughput improvement (with MTP speculative decoding)
+- 1.5-2x throughput improvement
 - 30-40% latency reduction
-- ~70% memory savings
+- ~65% memory savings
 - <2% quality degradation
 
 ---

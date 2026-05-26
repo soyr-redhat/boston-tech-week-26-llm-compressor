@@ -188,20 +188,19 @@ Your workspace includes:
 ### Original Model
 - **Name:** Qwen/Qwen3.6-35B-A3B
 - **Precision:** FP16
-- **Size:** ~70GB (estimated)
+- **Size:** 72GB
 - **Endpoint:** http://95.133.252.99:8000/v1
 
 ### Quantized Model
 - **Name:** RedHatAI/Qwen3.6-35B-A3B-NVFP4
 - **Precision:** NVFP4 (4-bit floating point)
-- **Size:** ~20GB (estimated)
-- **Speculative Decoding:** MTP (Multi-Token Prediction) with 1 speculative token
+- **Size:** 25GB
 - **Endpoint:** http://95.133.252.99:8001/v1
 
 **Performance Expectations:**
-- 1.5-2x throughput improvement with speculative decoding
+- 1.5-2x throughput improvement
 - 30-40% latency reduction
-- ~70% memory savings
+- ~65% memory savings
 - <2% quality degradation
 
 ---
