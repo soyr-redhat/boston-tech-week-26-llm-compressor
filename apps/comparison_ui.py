@@ -464,7 +464,7 @@ with gr.Blocks(
             gr.Markdown("## Original (FP16)")
             original_output = gr.Markdown()
         with gr.Column():
-            gr.Markdown("## Quantized (INT4)")
+            gr.Markdown("## Quantized (NVFP4)")
             quantized_output = gr.Markdown()
 
     comparison_summary = gr.Markdown()

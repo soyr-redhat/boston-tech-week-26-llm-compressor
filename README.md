@@ -186,23 +186,22 @@ Your workspace includes:
 ## Models
 
 ### Original Model
-- **Name:** Qwen/Qwen3.5-9B
+- **Name:** Qwen/Qwen3.6-35B-A3B
 - **Precision:** FP16
-- **Size:** ~19GB
-- **GPUs:** 2x NVIDIA L4
+- **Size:** ~70GB (estimated)
 - **Endpoint:** http://95.133.252.99:8000/v1
 
 ### Quantized Model
-- **Name:** RedHatAI/Qwen3.5-9B-quantized.w4a16
-- **Precision:** INT4 (weights), INT16 (activations)
-- **Size:** ~11GB
-- **GPUs:** 2x NVIDIA L4
+- **Name:** RedHatAI/Qwen3.6-35B-A3B-NVFP4
+- **Precision:** NVFP4 (4-bit floating point)
+- **Size:** ~20GB (estimated)
+- **Speculative Decoding:** MTP (Multi-Token Prediction) with 1 speculative token
 - **Endpoint:** http://95.133.252.99:8001/v1
 
 **Performance Expectations:**
-- 1.5-2x throughput improvement
+- 1.5-2x throughput improvement with speculative decoding
 - 30-40% latency reduction
-- 42% memory savings
+- ~70% memory savings
 - <2% quality degradation
 
 ---

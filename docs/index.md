@@ -29,15 +29,15 @@
 
 ## Models Used
 
-| Model | Precision | Size | GPUs |
-|-------|-----------|------|------|
-| Qwen/Qwen3.5-9B | FP16 | ~19GB | 2x L4 |
-| RedHatAI/Qwen3.5-9B-quantized.w4a16 | INT4 | ~11GB | 2x L4 |
+| Model | Precision | Size |
+|-------|-----------|------|
+| Qwen/Qwen3.6-35B-A3B | FP16 | ~70GB |
+| RedHatAI/Qwen3.6-35B-A3B-NVFP4 | NVFP4 | ~20GB |
 
 **Expected Performance:**
-- 1.5-2x throughput improvement
+- 1.5-2x throughput improvement (with MTP speculative decoding)
 - 30-40% latency reduction
-- 42% memory savings
+- ~70% memory savings
 - <2% quality degradation
 
 ---
